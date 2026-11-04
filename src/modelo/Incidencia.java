@@ -1,4 +1,4 @@
-package modelosPOJO;
+package modelo;
 
 
 public class Incidencia {
