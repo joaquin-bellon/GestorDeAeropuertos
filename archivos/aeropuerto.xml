@@ -1,0 +1,648 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Aeropuerto codigo="MAD-AIR" nombre="Adolfo Suárez Madrid-Barajas" estado="OPERATIVO">
+    <Ubicacion>
+        <Ciudad>Madrid</Ciudad>
+        <Pais>España</Pais>
+        <Coordenadas latitud="40.4983" longitud="-3.5676" />
+    </Ubicacion>
+    <Terminales>
+        <Terminal codigo="T1" nombre="Terminal 1" estado="OPERATIVA">
+            <Plantas>
+                <Planta numero="0" />
+                <Planta numero="1" />
+                <Planta numero="2" />
+            </Plantas>
+        </Terminal>
+        <Terminal codigo="T2" nombre="Terminal 2" estado="OPERATIVA">
+            <Plantas>
+                <Planta numero="0" />
+                <Planta numero="1" />
+            </Plantas>
+        </Terminal>
+        <Terminal codigo="T4" nombre="Terminal 4" estado="OPERATIVA">
+            <Plantas>
+                <Planta numero="0" />
+                <Planta numero="1" />
+                <Planta numero="2" />
+            </Plantas>
+        </Terminal>
+    </Terminales>
+    <Aerolineas>
+        <Aerolinea codigo="IB" pais="España" estado="ACTIVA">
+            <Nombre>Iberia</Nombre>
+            <Contacto>
+                <Telefono>900100200</Telefono>
+                <Email>contacto@iberia.es</Email>
+                <Web>https://www.iberia.com</Web>
+            </Contacto>
+            <BasePrincipal codigo="MAD" />
+            <Servicios>
+                <Servicio tipo="CHECKIN" disponible="true" />
+                <Servicio tipo="EQUIPAJE" disponible="true" />
+                <Servicio tipo="VIP" disponible="true" />
+            </Servicios>
+        </Aerolinea>
+        <Aerolinea codigo="FR" pais="Irlanda" estado="ACTIVA">
+            <Nombre>Ryanair</Nombre>
+            <Contacto>
+                <Telefono>910500600</Telefono>
+                <Email>contacto@ryanair.es</Email>
+                <Web>https://www.ryanair.com</Web>
+            </Contacto>
+            <BasePrincipal codigo="MAD" />
+            <Servicios>
+                <Servicio tipo="CHECKIN" disponible="true" />
+                <Servicio tipo="EQUIPAJE" disponible="true" />
+                <Servicio tipo="VIP" disponible="false" />
+            </Servicios>
+        </Aerolinea>
+        <Aerolinea codigo="LH" pais="Alemania" estado="ACTIVA">
+            <Nombre>Lufthansa</Nombre>
+            <Contacto>
+                <Telefono>910700800</Telefono>
+                <Email>contacto@lufthansa.com</Email>
+                <Web>https://www.lufthansa.com</Web>
+            </Contacto>
+            <BasePrincipal codigo="FRA" />
+            <Servicios>
+                <Servicio tipo="CHECKIN" disponible="true" />
+                <Servicio tipo="EQUIPAJE" disponible="true" />
+                <Servicio tipo="VIP" disponible="true" />
+            </Servicios>
+        </Aerolinea>
+        <Aerolinea codigo="AF" pais="Francia" estado="ACTIVA">
+            <Nombre>Air France</Nombre>
+            <Contacto>
+                <Telefono>910900100</Telefono>
+                <Email>contacto@airfrance.fr</Email>
+                <Web>https://www.airfrance.com</Web>
+            </Contacto>
+            <BasePrincipal codigo="CDG" />
+            <Servicios>
+                <Servicio tipo="CHECKIN" disponible="true" />
+                <Servicio tipo="EQUIPAJE" disponible="true" />
+                <Servicio tipo="VIP" disponible="true" />
+            </Servicios>
+        </Aerolinea>
+        <Aerolinea codigo="TP" pais="Portugal" estado="ACTIVA">
+            <Nombre>TAP Air Portugal</Nombre>
+            <Contacto>
+                <Telefono>911100200</Telefono>
+                <Email>contacto@tap.pt</Email>
+                <Web>https://www.flytap.com</Web>
+            </Contacto>
+            <BasePrincipal codigo="LIS" />
+            <Servicios>
+                <Servicio tipo="CHECKIN" disponible="true" />
+                <Servicio tipo="EQUIPAJE" disponible="true" />
+                <Servicio tipo="VIP" disponible="false" />
+            </Servicios>
+        </Aerolinea>
+    </Aerolineas>
+    <Aviones>
+        <Avion matricula="EC-MXY" aerolinea="IB" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A320-200</Nombre>
+                <AñoFabricacion>2018</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>180</Pasajeros>
+                <EquipajeMaximo unidad="kg">3200</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="156" />
+                <Clase tipo="BUSINESS" plazas="24" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="EC-NAB" aerolinea="IB" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A321neo</Nombre>
+                <AñoFabricacion>2020</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>220</Pasajeros>
+                <EquipajeMaximo unidad="kg">3900</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="190" />
+                <Clase tipo="BUSINESS" plazas="30" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="EI-DCL" aerolinea="FR" estado="OPERATIVO">
+            <Modelo fabricante="Boeing">
+                <Nombre>737-800</Nombre>
+                <AñoFabricacion>2017</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>189</Pasajeros>
+                <EquipajeMaximo unidad="kg">3000</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="189" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="EI-HGT" aerolinea="FR" estado="OPERATIVO">
+            <Modelo fabricante="Boeing">
+                <Nombre>737 MAX 8</Nombre>
+                <AñoFabricacion>2022</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>197</Pasajeros>
+                <EquipajeMaximo unidad="kg">3150</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="197" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="D-AIZP" aerolinea="LH" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A320-200</Nombre>
+                <AñoFabricacion>2019</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>180</Pasajeros>
+                <EquipajeMaximo unidad="kg">3200</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="156" />
+                <Clase tipo="BUSINESS" plazas="24" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="D-ABUA" aerolinea="LH" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A321</Nombre>
+                <AñoFabricacion>2016</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>215</Pasajeros>
+                <EquipajeMaximo unidad="kg">3700</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="185" />
+                <Clase tipo="BUSINESS" plazas="30" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="F-GKXA" aerolinea="AF" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A320-200</Nombre>
+                <AñoFabricacion>2018</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>180</Pasajeros>
+                <EquipajeMaximo unidad="kg">3200</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="156" />
+                <Clase tipo="BUSINESS" plazas="24" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="F-HBLR" aerolinea="AF" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A220-300</Nombre>
+                <AñoFabricacion>2021</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>145</Pasajeros>
+                <EquipajeMaximo unidad="kg">2500</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="125" />
+                <Clase tipo="BUSINESS" plazas="20" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="CS-TVA" aerolinea="TP" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A321LR</Nombre>
+                <AñoFabricacion>2020</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>206</Pasajeros>
+                <EquipajeMaximo unidad="kg">3600</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="176" />
+                <Clase tipo="BUSINESS" plazas="30" />
+            </Configuracion>
+        </Avion>
+        <Avion matricula="CS-TVB" aerolinea="TP" estado="OPERATIVO">
+            <Modelo fabricante="Airbus">
+                <Nombre>A320neo</Nombre>
+                <AñoFabricacion>2023</AñoFabricacion>
+            </Modelo>
+            <Capacidad>
+                <Pasajeros>174</Pasajeros>
+                <EquipajeMaximo unidad="kg">3000</EquipajeMaximo>
+            </Capacidad>
+            <Configuracion>
+                <Clase tipo="ECONOMICA" plazas="150" />
+                <Clase tipo="BUSINESS" plazas="24" />
+            </Configuracion>
+        </Avion>
+    </Aviones>
+    <Destinos>
+        <Destino codigo="MAD" pais="España" tipo="NACIONAL">
+            <Ciudad>Madrid</Ciudad>
+            <Aeropuerto codigo="MAD">
+                <Nombre>Adolfo Suárez Madrid-Barajas</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="40.4983" longitud="-3.5676" />
+            </Ubicacion>
+            <Distancia unidad="km">0</Distancia>
+        </Destino>
+        <Destino codigo="BCN" pais="España" tipo="NACIONAL">
+            <Ciudad>Barcelona</Ciudad>
+            <Aeropuerto codigo="BCN">
+                <Nombre>Josep Tarradellas Barcelona-El Prat</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="41.2974" longitud="2.0833" />
+            </Ubicacion>
+            <Distancia unidad="km">505</Distancia>
+        </Destino>
+        <Destino codigo="LIS" pais="Portugal" tipo="INTERNACIONAL">
+            <Ciudad>Lisboa</Ciudad>
+            <Aeropuerto codigo="LIS">
+                <Nombre>Humberto Delgado</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="38.7742" longitud="-9.1342" />
+            </Ubicacion>
+            <Distancia unidad="km">503</Distancia>
+        </Destino>
+        <Destino codigo="CDG" pais="Francia" tipo="INTERNACIONAL">
+            <Ciudad>París</Ciudad>
+            <Aeropuerto codigo="CDG">
+                <Nombre>Charles de Gaulle</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="49.0097" longitud="2.5479" />
+            </Ubicacion>
+            <Distancia unidad="km">1053</Distancia>
+        </Destino>
+        <Destino codigo="FRA" pais="Alemania" tipo="INTERNACIONAL">
+            <Ciudad>Fráncfort</Ciudad>
+            <Aeropuerto codigo="FRA">
+                <Nombre>Frankfurt Airport</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="50.0379" longitud="8.5622" />
+            </Ubicacion>
+            <Distancia unidad="km">1449</Distancia>
+        </Destino>
+        <Destino codigo="FCO" pais="Italia" tipo="INTERNACIONAL">
+            <Ciudad>Roma</Ciudad>
+            <Aeropuerto codigo="FCO">
+                <Nombre>Leonardo da Vinci-Fiumicino</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="41.8003" longitud="12.2389" />
+            </Ubicacion>
+            <Distancia unidad="km">1363</Distancia>
+        </Destino>
+        <Destino codigo="LHR" pais="Reino Unido" tipo="INTERNACIONAL">
+            <Ciudad>Londres</Ciudad>
+            <Aeropuerto codigo="LHR">
+                <Nombre>Heathrow</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="51.4700" longitud="-0.4543" />
+            </Ubicacion>
+            <Distancia unidad="km">1263</Distancia>
+        </Destino>
+        <Destino codigo="AMS" pais="Países Bajos" tipo="INTERNACIONAL">
+            <Ciudad>Ámsterdam</Ciudad>
+            <Aeropuerto codigo="AMS">
+                <Nombre>Schiphol</Nombre>
+            </Aeropuerto>
+            <Ubicacion>
+                <Coordenadas latitud="52.3105" longitud="4.7683" />
+            </Ubicacion>
+            <Distancia unidad="km">1480</Distancia>
+        </Destino>
+    </Destinos>
+    <Puertas>
+        <Puerta codigo="A01" terminal="T1" planta="0" tipo="SCHENGEN" estado="OPERATIVA" />
+        <Puerta codigo="A02" terminal="T1" planta="0" tipo="SCHENGEN" estado="OPERATIVA" />
+        <Puerta codigo="A03" terminal="T1" planta="1" tipo="NO_SCHENGEN" estado="OPERATIVA" />
+        <Puerta codigo="A04" terminal="T1" planta="1" tipo="NO_SCHENGEN" estado="MANTENIMIENTO" />
+        <Puerta codigo="B01" terminal="T2" planta="0" tipo="SCHENGEN" estado="OPERATIVA" />
+        <Puerta codigo="B02" terminal="T2" planta="0" tipo="SCHENGEN" estado="OPERATIVA" />
+        <Puerta codigo="B03" terminal="T2" planta="1" tipo="INTERNACIONAL" estado="OPERATIVA" />
+        <Puerta codigo="B04" terminal="T2" planta="1" tipo="INTERNACIONAL" estado="CERRADA" />
+    </Puertas>
+    <Vuelos>
+        <Vuelo codigo="IB3456" aerolinea="IB" avion="EC-MXY" estado="PROGRAMADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A01</Puerta>
+                </Origen>
+                <Destino codigo="LHR" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>08:45</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>10:05</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="IB4512" aerolinea="IB" avion="EC-NAB" estado="PROGRAMADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A02</Puerta>
+                </Origen>
+                <Destino codigo="BCN" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>09:30</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>10:40</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="PENDIENTE" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="IB6789" aerolinea="IB" avion="EC-MXY" estado="RETRASADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A03</Puerta>
+                </Origen>
+                <Destino codigo="LHR" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>12:15</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>13:35</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="FR7890" aerolinea="FR" avion="EI-DCL" estado="RETRASADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T2</Terminal>
+                    <Puerta>B01</Puerta>
+                </Origen>
+                <Destino codigo="LIS" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>10:00</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>10:55</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="PENDIENTE" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="FR7821" aerolinea="FR" avion="EI-HGT" estado="RETRASADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T2</Terminal>
+                    <Puerta>B02</Puerta>
+                </Origen>
+                <Destino codigo="CDG" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>11:20</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>13:35</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="FR8123" aerolinea="FR" avion="EI-DCL" estado="PROGRAMADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T2</Terminal>
+                    <Puerta>B01</Puerta>
+                </Origen>
+                <Destino codigo="BCN" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>15:10</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>16:20</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="LH1234" aerolinea="LH" avion="D-AIZP" estado="CANCELADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T2</Terminal>
+                    <Puerta>B03</Puerta>
+                </Origen>
+                <Destino codigo="FRA" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>14:00</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>16:35</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="CANCELADO">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="CANCELADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="LH5678" aerolinea="LH" avion="D-ABUA" estado="PROGRAMADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T2</Terminal>
+                    <Puerta>B02</Puerta>
+                </Origen>
+                <Destino codigo="FCO" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>17:30</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>20:00</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="AF2201" aerolinea="AF" avion="F-GKXA" estado="RETRASADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A03</Puerta>
+                </Origen>
+                <Destino codigo="CDG" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>16:00</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>18:05</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="AF3305" aerolinea="AF" avion="F-HBLR" estado="PROGRAMADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A03</Puerta>
+                </Origen>
+                <Destino codigo="LHR" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>18:20</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>19:45</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="TP4410" aerolinea="TP" avion="CS-TVA" estado="RETRASADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A02</Puerta>
+                </Origen>
+                <Destino codigo="LIS" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>19:10</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>20:15</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+        <Vuelo codigo="TP5520" aerolinea="TP" avion="CS-TVB" estado="PROGRAMADO">
+            <Ruta>
+                <Origen codigo="MAD">
+                    <Terminal>T1</Terminal>
+                    <Puerta>A01</Puerta>
+                </Origen>
+                <Destino codigo="AMS" />
+            </Ruta>
+            <Horario>
+                <Salida fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>20:30</Hora>
+                </Salida>
+                <Llegada fecha="2026-10-15" zonaHoraria="Europe/Madrid">
+                    <Hora>22:55</Hora>
+                </Llegada>
+            </Horario>
+            <Embarque estado="PENDIENTE">
+                <Inicio minutosAntes="45" />
+                <Cierre minutosAntes="15" />
+            </Embarque>
+            <Operaciones>
+                <Servicio tipo="CATERING" estado="COMPLETADO" />
+                <Servicio tipo="LIMPIEZA" estado="COMPLETADO" />
+                <Servicio tipo="COMBUSTIBLE" estado="COMPLETADO" />
+            </Operaciones>
+        </Vuelo>
+    </Vuelos>
+</Aeropuerto>
