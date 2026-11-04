@@ -37,11 +37,20 @@ public class VuelosGestor {
 	private ArrayList<Vuelo> vuelos;
 	private ConfiguracionGestor gestorConfiguracion;
 
-	public VuelosGestor(ConfiguracionGestor gestorConfiguracion) {
+	private static VuelosGestor instancia;
+
+	public static VuelosGestor getInstance() {
+		if (instancia == null) {
+			instancia = new VuelosGestor();
+		}
+		return instancia;
+	}
+
+	private VuelosGestor() {
 		doc = abrirDoc();
 		nodoVuelos = (Element) doc.getElementsByTagName("Vuelos").item(0);
 		vuelos = cargarVuelos();
-		this.gestorConfiguracion = gestorConfiguracion;
+		this.gestorConfiguracion = ConfiguracionGestor.getInstance();
 	}
 
 	public void mostrarVueloPorReservaYEmbarque(Scanner sc, ReservasGestor gestorReservas, EmbarquesGestor gestorEmbarques) {

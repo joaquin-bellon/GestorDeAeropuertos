@@ -28,11 +28,20 @@ public class EquipajesGestor {
 	private VuelosGestor gestorVuelos;
 	private ConfiguracionGestor gestorConfiguracion;
 	private ArrayList<Equipaje> equipajes;
-	public EquipajesGestor (ReservasGestor gestorReservas, PasajerosGestor gestorPasajeros, VuelosGestor gestorVuelos, ConfiguracionGestor gestorConfiguracion) {
-		this.gestorReservas = gestorReservas;
-		this.gestorPasajeros = gestorPasajeros;
-		this.gestorVuelos = gestorVuelos;
-		this.gestorConfiguracion = gestorConfiguracion;
+	private static EquipajesGestor instancia;
+
+	public static EquipajesGestor getInstance() {
+		if (instancia == null) {
+			instancia = new EquipajesGestor();
+		}
+		return instancia;
+	}
+
+	private EquipajesGestor() {
+		this.gestorReservas = ReservasGestor.getInstance();
+		this.gestorPasajeros = PasajerosGestor.getInstance();
+		this.gestorVuelos = VuelosGestor.getInstance();
+		this.gestorConfiguracion = ConfiguracionGestor.getInstance();
 		equipajes = abrirCSV();
 	}
 

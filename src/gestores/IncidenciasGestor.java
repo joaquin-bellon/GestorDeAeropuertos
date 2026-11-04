@@ -22,10 +22,19 @@ public class IncidenciasGestor {
 	private VuelosGestor gestorVuelos;
 	private ReservasGestor gestorReservas;
 	private EquipajesGestor gestorEquipajes;
-	public IncidenciasGestor(VuelosGestor gestorVuelos, ReservasGestor gestorReservas, EquipajesGestor gestorEquipajes) {
-		this.gestorVuelos = gestorVuelos;
-		this.gestorReservas = gestorReservas;
-		this.gestorEquipajes = gestorEquipajes;
+	private static IncidenciasGestor instancia;
+
+	public static IncidenciasGestor getInstance() {
+		if (instancia == null) {
+			instancia = new IncidenciasGestor();
+		}
+		return instancia;
+	}
+
+	private IncidenciasGestor() {
+		this.gestorVuelos = VuelosGestor.getInstance();
+		this.gestorReservas = ReservasGestor.getInstance();
+		this.gestorEquipajes = EquipajesGestor.getInstance();
 		abrirTxt();
 	}
 	private void abrirTxt() {

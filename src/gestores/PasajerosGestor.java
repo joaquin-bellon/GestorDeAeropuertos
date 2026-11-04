@@ -26,7 +26,16 @@ import modelo.Vuelo;
 
 public class PasajerosGestor {
 	private ArrayList<Pasajero> pasajeros;
-	public PasajerosGestor() {
+	private static PasajerosGestor instancia;
+
+	public static PasajerosGestor getInstance() {
+		if (instancia == null) {
+			instancia = new PasajerosGestor();
+		}
+		return instancia;
+	}
+
+	private PasajerosGestor() {
 		pasajeros =(ArrayList<Pasajero>) abrirCSV();
 	}
 

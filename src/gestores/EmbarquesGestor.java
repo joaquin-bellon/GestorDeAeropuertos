@@ -27,9 +27,18 @@ public class EmbarquesGestor {
 	private VuelosGestor gestorVuelos;
 	private ArrayList<Embarque> embarques;
 
-	public EmbarquesGestor(ReservasGestor gestorReservas, VuelosGestor gestorVuelos) {
-		this.gestorReservas = gestorReservas;
-		this.gestorVuelos = gestorVuelos;
+	private static EmbarquesGestor instancia;
+
+	public static EmbarquesGestor getInstance() {
+		if (instancia == null) {
+			instancia = new EmbarquesGestor();
+		}
+		return instancia;
+	}
+
+	private EmbarquesGestor() {
+		this.gestorReservas = ReservasGestor.getInstance();
+		this.gestorVuelos = VuelosGestor.getInstance();
 		embarques = abrirCSV();
 	}
 
