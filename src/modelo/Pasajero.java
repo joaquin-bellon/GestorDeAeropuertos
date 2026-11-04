@@ -1,4 +1,4 @@
-package modelosPOJO;
+package modelo;
 
 import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;

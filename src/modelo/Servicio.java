@@ -1,4 +1,4 @@
-package modelosPOJO;
+package modelo;
 
 public class Servicio {
 	private String tipo;
