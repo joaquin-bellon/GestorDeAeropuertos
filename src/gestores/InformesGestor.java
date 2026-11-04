@@ -29,16 +29,23 @@ public class InformesGestor {
 	private IncidenciasGestor gestorIncidencias;
 	private ConfiguracionGestor gestorConfiguracion;
 
-	public InformesGestor(PasajerosGestor gestorPasajeros, VuelosGestor gestorVuelos, ReservasGestor gestorReservas,
-			EmbarquesGestor gestorEmbarques, EquipajesGestor gestorEquipajes, IncidenciasGestor gestorIncidencias,
-			ConfiguracionGestor gestorConfiguracion) {
-		this.gestorPasajeros = gestorPasajeros;
-		this.gestorVuelos = gestorVuelos;
-		this.gestorReservas = gestorReservas;
-		this.gestorEmbarques = gestorEmbarques;
-		this.gestorEquipajes = gestorEquipajes;
-		this.gestorIncidencias = gestorIncidencias;
-		this.gestorConfiguracion = gestorConfiguracion;
+	private static InformesGestor instancia;
+
+	public static InformesGestor getInstance() {
+		if (instancia == null) {
+			instancia = new InformesGestor();
+		}
+		return instancia;
+	}
+
+	private InformesGestor() {
+		this.gestorPasajeros = PasajerosGestor.getInstance();
+		this.gestorVuelos = VuelosGestor.getInstance();
+		this.gestorReservas = ReservasGestor.getInstance();
+		this.gestorEmbarques = EmbarquesGestor.getInstance();
+		this.gestorEquipajes = EquipajesGestor.getInstance();
+		this.gestorIncidencias = IncidenciasGestor.getInstance();
+		this.gestorConfiguracion = ConfiguracionGestor.getInstance();
 	}
 
 	public void ControlGeneral(Scanner sc) {

@@ -35,9 +35,18 @@ public class ReservasGestor {
 	private PasajerosGestor gestorPasajeros;
 	private VuelosGestor gestorVuelos;
 
-	public ReservasGestor(PasajerosGestor gestorPasajeros, VuelosGestor gestorVuelos) {
-		this.gestorPasajeros = gestorPasajeros;
-		this.gestorVuelos = gestorVuelos;
+	private static ReservasGestor instancia;
+
+	public static ReservasGestor getInstance() {
+		if (instancia == null) {
+			instancia = new ReservasGestor();
+		}
+		return instancia;
+	}
+
+	private ReservasGestor() {
+		this.gestorPasajeros = PasajerosGestor.getInstance();
+		this.gestorVuelos = VuelosGestor.getInstance();
 		reservas =(ArrayList<Reserva>) abrirCSV();
 	}
 

@@ -20,16 +20,23 @@ public class OperativaGestor {
 	private EquipajesGestor gestorEquipajes;
 	private IncidenciasGestor gestorIncidencias;
 	private ConfiguracionGestor gestorConfiguracion;
-	public OperativaGestor(PasajerosGestor gestorPasajeros, VuelosGestor gestorVuelos, ReservasGestor gestorReservas,
-			EmbarquesGestor gestorEmbarques, EquipajesGestor gestorEquipajes, IncidenciasGestor gestorIncidencias,
-			ConfiguracionGestor gestorConfiguracion) {
-		this.gestorPasajeros = gestorPasajeros;
-		this.gestorVuelos = gestorVuelos;
-		this.gestorReservas = gestorReservas;
-		this.gestorEmbarques = gestorEmbarques;
-		this.gestorEquipajes = gestorEquipajes;
-		this.gestorIncidencias = gestorIncidencias;
-		this.gestorConfiguracion = gestorConfiguracion;
+	private static OperativaGestor instancia;
+
+	public static OperativaGestor getInstance() {
+		if (instancia == null) {
+			instancia = new OperativaGestor();
+		}
+		return instancia;
+	}
+
+	private OperativaGestor() {
+		this.gestorPasajeros = PasajerosGestor.getInstance();
+		this.gestorVuelos = VuelosGestor.getInstance();
+		this.gestorReservas = ReservasGestor.getInstance();
+		this.gestorEmbarques = EmbarquesGestor.getInstance();
+		this.gestorEquipajes = EquipajesGestor.getInstance();
+		this.gestorIncidencias = IncidenciasGestor.getInstance();
+		this.gestorConfiguracion = ConfiguracionGestor.getInstance();
 	}
 	public void comprobarOcupacionDelVuelo(Scanner sc) {
 		Vuelo vuelo = gestorVuelos.pedirVuelo(sc, "a comprobar");

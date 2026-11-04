@@ -18,7 +18,16 @@ public class ConfiguracionGestor {
 	private JsonNode raiz;
 	private JsonNode aeropuerto;
 
-	public ConfiguracionGestor() {
+	private static ConfiguracionGestor instancia;
+
+	public static ConfiguracionGestor getInstance() {
+		if (instancia == null) {
+			instancia = new ConfiguracionGestor();
+		}
+		return instancia;
+	}
+
+	private ConfiguracionGestor() {
 		this.objectMapper = new ObjectMapper();
 		this.raiz = abrirJson();
 		this.aeropuerto = raiz.get("aeropuerto");
