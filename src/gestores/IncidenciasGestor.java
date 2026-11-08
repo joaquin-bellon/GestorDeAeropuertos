@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 import modelo.Incidencia;
 import modelo.Vuelo;
+import utilidades.Utilidades;
 
 public class IncidenciasGestor {
 	private ArrayList<Incidencia> incidencias;

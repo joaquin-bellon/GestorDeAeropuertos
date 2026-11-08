@@ -21,6 +21,7 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import modelo.Equipaje;
 import modelo.Reserva;
+import utilidades.Utilidades;
 
 public class EquipajesGestor {
 	private ReservasGestor gestorReservas;
