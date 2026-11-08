@@ -40,6 +40,7 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == registrarsePanel.getLblIniciarSesion()) {
 			registrarsePanel.setVisible(false);
+			vaciarTextos();
 			principalControlador.getFrame().getIniciarSesionPanel().setVisible(true);
 		}
 		
@@ -69,5 +70,10 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 		
 	}
 	
+	public void vaciarTextos () {
+		registrarsePanel.getTextFieldUsuario().setText("");
+		registrarsePanel.getPasswordFieldContrasenia().setText("");
+		registrarsePanel.getPasswordFieldRepetir().setText("");
+	}
 	
 }

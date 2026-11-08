@@ -24,13 +24,13 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 	private JLabel lblUsuario;
 	private JLabel lblContrasenia;
 	private JTextField textFieldUsuario;
-	private JPasswordField passwordField;
+	private JPasswordField passwordFieldContrasenia;
 	private JButton btnRegistrarse;
 	private JButton btnTema;
 	private JLabel lblNoTienesCuenta;
 	private JLabel lblIniciarSesion;
 	private JLabel lblRepetirContrasenia;
-	private JPasswordField passwordField_1;
+	private JPasswordField passwordFieldRepetir;
 
 	public RegistrarsePanel() {
 		setBounds(0, 0, 1200, 800);
@@ -47,20 +47,20 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		lblRepetirContrasenia.setBounds(477, 402, 221, 62);
 		add(lblRepetirContrasenia);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		passwordField_1.setEchoChar('*');
-		passwordField_1.setBounds(477, 463, 244, 25);
-		add(passwordField_1);
+		passwordFieldRepetir = new JPasswordField();
+		passwordFieldRepetir.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		passwordFieldRepetir.setEchoChar('*');
+		passwordFieldRepetir.setBounds(477, 463, 244, 25);
+		add(passwordFieldRepetir);
 		
 		lblIniciarSesion = new JLabel("<html><u>Iniciar Sesion</u></html>");
-		lblIniciarSesion.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		lblIniciarSesion.setBounds(615, 583, 106, 25);
+		lblIniciarSesion.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblIniciarSesion.setBounds(620, 582, 91, 25);
 		add(lblIniciarSesion);
 		
 		lblNoTienesCuenta = new JLabel("¿Ya tienes cuenta?");
-		lblNoTienesCuenta.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		lblNoTienesCuenta.setBounds(512, 583, 106, 25);
+		lblNoTienesCuenta.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblNoTienesCuenta.setBounds(490, 582, 130, 25);
 		add(lblNoTienesCuenta);
 		btnTema.setMargin(new Insets(0, 0, 0, 0));
 		add(btnTema);
@@ -70,11 +70,11 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		btnRegistrarse.setBounds(524, 522, 150, 35);
 		add(btnRegistrarse);
 		
-		passwordField = new JPasswordField();
-		passwordField.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		passwordField.setEchoChar('*');
-		passwordField.setBounds(477, 383, 244, 25);
-		add(passwordField);
+		passwordFieldContrasenia = new JPasswordField();
+		passwordFieldContrasenia.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		passwordFieldContrasenia.setEchoChar('*');
+		passwordFieldContrasenia.setBounds(477, 383, 244, 25);
+		add(passwordFieldContrasenia);
 		
 		textFieldUsuario = new JTextField();
 		textFieldUsuario.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -139,11 +139,11 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 	public void setTextFieldUsuario(JTextField textFieldUsuario) {
 		this.textFieldUsuario = textFieldUsuario;
 	}
-	public JPasswordField getPasswordField() {
-		return passwordField;
+	public JPasswordField getPasswordFieldContrasenia() {
+		return passwordFieldContrasenia;
 	}
-	public void setPasswordField(JPasswordField passwordField) {
-		this.passwordField = passwordField;
+	public void setPasswordFieldContrasenia(JPasswordField passwordField) {
+		this.passwordFieldContrasenia = passwordField;
 	}
 	public JButton getBtnRegistrarse() {
 		return btnRegistrarse;
@@ -168,6 +168,12 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 	}
 	public void setLblIniciarSesion(JLabel lblIniciarSesion) {
 		this.lblIniciarSesion = lblIniciarSesion;
+	}
+	public JPasswordField getPasswordFieldRepetir() {
+		return passwordFieldRepetir;
+	}
+	public void setPasswordFieldRepetir(JPasswordField passwordFieldRepetir) {
+		this.passwordFieldRepetir = passwordFieldRepetir;
 	}
 	
 	

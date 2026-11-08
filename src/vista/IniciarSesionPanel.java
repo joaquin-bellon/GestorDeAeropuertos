@@ -24,7 +24,7 @@ public class IniciarSesionPanel extends JPanel implements ImagenesConTema {
 	private JLabel lblUsuario;
 	private JLabel lblContrasenia;
 	private JTextField textFieldUsuario;
-	private JPasswordField passwordField;
+	private JPasswordField passwordFieldContrasenia;
 	private JButton btnInciarSesion;
 	private JButton btnTema;
 	private JLabel lblNoTienesCuenta;
@@ -41,27 +41,27 @@ public class IniciarSesionPanel extends JPanel implements ImagenesConTema {
 		btnTema.putClientProperty("FlatLaf.style", "arc: 999");
 		
 		lblRegistrarse = new JLabel("<html><u>Registrarse</u></html>");
-		lblRegistrarse.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		lblRegistrarse.setBounds(615, 583, 106, 25);
+		lblRegistrarse.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblRegistrarse.setBounds(620, 583, 79, 25);
 		add(lblRegistrarse);
 		
 		lblNoTienesCuenta = new JLabel("¿No tienes cuenta?");
-		lblNoTienesCuenta.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		lblNoTienesCuenta.setBounds(512, 583, 106, 25);
+		lblNoTienesCuenta.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblNoTienesCuenta.setBounds(490, 583, 140, 25);
 		add(lblNoTienesCuenta);
 		btnTema.setMargin(new Insets(0, 0, 0, 0));
 		add(btnTema);
 		
 		btnInciarSesion = new JButton("Iniciar Sesión");
 		btnInciarSesion.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		btnInciarSesion.setBounds(524, 498, 150, 35);
+		btnInciarSesion.setBounds(524, 522, 150, 35);
 		add(btnInciarSesion);
 		
-		passwordField = new JPasswordField();
-		passwordField.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		passwordField.setEchoChar('*');
-		passwordField.setBounds(478, 439, 244, 25);
-		add(passwordField);
+		passwordFieldContrasenia = new JPasswordField();
+		passwordFieldContrasenia.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		passwordFieldContrasenia.setEchoChar('*');
+		passwordFieldContrasenia.setBounds(478, 439, 244, 25);
+		add(passwordFieldContrasenia);
 		
 		textFieldUsuario = new JTextField();
 		textFieldUsuario.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -126,11 +126,11 @@ public class IniciarSesionPanel extends JPanel implements ImagenesConTema {
 	public void setTextFieldUsuario(JTextField textFieldUsuario) {
 		this.textFieldUsuario = textFieldUsuario;
 	}
-	public JPasswordField getPasswordField() {
-		return passwordField;
+	public JPasswordField getPasswordFieldContrasenia() {
+		return passwordFieldContrasenia;
 	}
 	public void setPasswordField(JPasswordField passwordField) {
-		this.passwordField = passwordField;
+		this.passwordFieldContrasenia = passwordField;
 	}
 	public JButton getBtnInciarSesion() {
 		return btnInciarSesion;
