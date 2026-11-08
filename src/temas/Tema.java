@@ -24,7 +24,6 @@ public class Tema {
 			ImagenesConTema panel = panelConImagenesConTema.get(i);
 			panel.actualizarImagenes();
 			
-			SwingUtilities.updateComponentTreeUI((JPanel) panel);
 			
 		}
 	}
