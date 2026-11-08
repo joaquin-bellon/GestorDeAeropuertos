@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import utilidades.Utilidades;
+
 public class ConfiguracionGestor {
 	private ObjectMapper objectMapper;
 	private JsonNode raiz;

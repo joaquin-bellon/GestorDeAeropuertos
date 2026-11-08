@@ -19,6 +19,7 @@ import modelo.Incidencia;
 import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
+import utilidades.Utilidades;
 
 public class InformesGestor {
 	private PasajerosGestor gestorPasajeros;

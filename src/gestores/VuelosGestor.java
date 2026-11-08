@@ -30,6 +30,7 @@ import modelo.Equipaje;
 import modelo.Reserva;
 import modelo.Servicio;
 import modelo.Vuelo;
+import utilidades.Utilidades;
 
 public class VuelosGestor {
 	private Document doc;

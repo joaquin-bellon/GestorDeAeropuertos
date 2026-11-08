@@ -28,6 +28,7 @@ import modelo.Equipaje;
 import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
+import utilidades.Utilidades;
 
 public class ReservasGestor {
 

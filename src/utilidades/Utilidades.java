@@ -1,9 +1,13 @@
-package gestores;
+package utilidades;
 
+import java.awt.Image;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 public class Utilidades {
 	public static final String RUTA_PASAJEROS = "archivos/pasajeros.csv";
@@ -62,5 +66,14 @@ public class Utilidades {
 	        }
 	    }
 	    return hora;
+	}
+	
+	public static void insertarImagen(String ruta, JLabel label) {
+		ImageIcon original = new ImageIcon("resources/"+ ruta);
+		Image imagen = original.getImage().getScaledInstance(
+				label.getWidth(),
+				label.getHeight(), 
+				Image.SCALE_DEFAULT);
+		label.setIcon(new ImageIcon(imagen));
 	}
 }
