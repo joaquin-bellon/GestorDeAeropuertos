@@ -74,6 +74,7 @@ public class UsuariosGestor {
 	}
 	public void añadirUsuario(Usuario usuario) {
 		usuarios.add(usuario);
+		volcarEnCSV();
 	}
 	
 	public void volcarEnCSV() {
