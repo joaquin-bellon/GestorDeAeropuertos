@@ -55,8 +55,8 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 				}
 				else {
 					Usuario usuarioCreado = new Usuario(nombre,contrasenia,"USER");
-					UsuariosGestor.getInstance().getUsuarios().add(usuarioCreado);
-					principalControlador.setUsuario(usuarioCreado);
+					UsuariosGestor.getInstance().añadirUsuario(usuarioCreado);
+					principalControlador.crearPanelesYControladores(usuarioCreado);;
 				}
 			}
 			

@@ -1,5 +1,13 @@
 package vista;
 
-public class ReservasPanel {
+import javax.swing.JPanel;
+
+public class ReservasPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+
+	public ReservasPanel() {
+
+	}
 
 }
