@@ -12,10 +12,13 @@ import vista.EquipajesPanel;
 import vista.ImagenesConTema;
 import vista.IncidenciasPanel;
 import vista.IniciarSesionPanel;
+import vista.InicioPanel;
+import vista.LateralInterfazPanel;
 import vista.OperativaPanel;
 import vista.PasajerosPanel;
 import vista.RegistrarsePanel;
 import vista.ReservasPanel;
+import vista.SuperiorInterfazPanel;
 import vista.VuelosPanel;
 
 public class PrincipalControlador {
@@ -32,6 +35,9 @@ public class PrincipalControlador {
 	private IncidenciasControlador incidenciasControlador;
 	private OperativaControlador operativaControlador;
 	private CuadroDeMandosControlador cuadroDeMandosControlador;
+	private InicioControlador inicioControlador;
+	private LateralInterfazControlador lateralInterfazControlador;
+	private SuperiorInterfazControlador superiorInterfazControlador;
 	
 	
 	public PrincipalControlador () {
@@ -65,6 +71,10 @@ public class PrincipalControlador {
 		frame.setIncidenciasPanel(new IncidenciasPanel());
 		frame.setOperativaPanel(new OperativaPanel());
 		frame.setCuadroDeMandosPanel(new CuadroDeMandosPanel());
+		
+		frame.setInicioPanel(new InicioPanel());
+		frame.setLateralInterfazPanel(new LateralInterfazPanel());
+		frame.setSuperiorInterfazPanel(new SuperiorInterfazPanel());
 
 		anadirPanelOculto(frame.getPasajerosPanel());
 		anadirPanelOculto(frame.getVuelosPanel());
@@ -74,15 +84,24 @@ public class PrincipalControlador {
 		anadirPanelOculto(frame.getIncidenciasPanel());
 		anadirPanelOculto(frame.getOperativaPanel());
 		anadirPanelOculto(frame.getCuadroDeMandosPanel());
+		
+		anadirPanelVisible(frame.getInicioPanel());
+		anadirPanelVisible(frame.getLateralInterfazPanel());
+		anadirPanelVisible(frame.getSuperiorInterfazPanel());
 
-		pasajerosControlador = new PasajerosControlador();
-		vuelosControlador = new VuelosControlador();
-		reservasControlador = new ReservasControlador();
-		equipajesControlador = new EquipajesControlador();
-		embarquesControlador = new EmbarquesControlador();
-		incidenciasControlador = new IncidenciasControlador();
-		operativaControlador = new OperativaControlador();
-		cuadroDeMandosControlador = new CuadroDeMandosControlador();
+		pasajerosControlador = new PasajerosControlador(this);
+		vuelosControlador = new VuelosControlador(this);
+		reservasControlador = new ReservasControlador(this);
+		equipajesControlador = new EquipajesControlador(this);
+		embarquesControlador = new EmbarquesControlador(this);
+		incidenciasControlador = new IncidenciasControlador(this);
+		operativaControlador = new OperativaControlador(this);
+		cuadroDeMandosControlador = new CuadroDeMandosControlador(this);
+		inicioControlador = new InicioControlador(this);
+		lateralInterfazControlador = new LateralInterfazControlador(this);
+		superiorInterfazControlador = new SuperiorInterfazControlador(this);
+		
+		
 	}
 
 	private void anadirPanelOculto(JPanel panel) {
@@ -90,6 +109,10 @@ public class PrincipalControlador {
 		frame.getContentPane().add(panel);
 	}
 		
+	private void anadirPanelVisible(JPanel panel) {
+		panel.setVisible(true);
+		frame.getContentPane().add(panel);
+	}
 	
 
 	public AppFrame getFrame() {

@@ -19,6 +19,9 @@ public class AppFrame extends JFrame {
 	private IncidenciasPanel incidenciasPanel;
 	private OperativaPanel operativaPanel;
 	private CuadroDeMandosPanel cuadroDeMandosPanel;
+	private InicioPanel inicioPanel;
+	private LateralInterfazPanel lateralInterfazPanel;
+	private SuperiorInterfazPanel superiorInterfazPanel;
 
 	public AppFrame(IniciarSesionPanel logInPanel) {
 		setTitle("Gestor De Aeropuertos");
@@ -115,6 +118,30 @@ public class AppFrame extends JFrame {
 
 	public void setCuadroDeMandosPanel(CuadroDeMandosPanel cuadroDeMandosPanel) {
 		this.cuadroDeMandosPanel = cuadroDeMandosPanel;
+	}
+
+	public InicioPanel getInicioPanel() {
+		return inicioPanel;
+	}
+
+	public void setInicioPanel(InicioPanel inicioPanel) {
+		this.inicioPanel = inicioPanel;
+	}
+
+	public LateralInterfazPanel getLateralInterfazPanel() {
+		return lateralInterfazPanel;
+	}
+
+	public void setLateralInterfazPanel(LateralInterfazPanel lateralInterfazPanel) {
+		this.lateralInterfazPanel = lateralInterfazPanel;
+	}
+
+	public SuperiorInterfazPanel getSuperiorInterfazPanel() {
+		return superiorInterfazPanel;
+	}
+
+	public void setSuperiorInterfazPanel(SuperiorInterfazPanel superiorInterfazPanel) {
+		this.superiorInterfazPanel = superiorInterfazPanel;
 	}
 	
 	
