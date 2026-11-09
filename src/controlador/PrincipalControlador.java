@@ -101,7 +101,58 @@ public class PrincipalControlador {
 		lateralInterfazControlador = new LateralInterfazControlador(this);
 		superiorInterfazControlador = new SuperiorInterfazControlador(this);
 		
+		listPanelesConImagenesConTema.add(frame.getSuperiorInterfazPanel());
 		
+	}
+	
+	public void cerrarSesion() {
+		listPanelesConImagenesConTema.remove(frame.getSuperiorInterfazPanel());
+		
+		
+		frame.getContentPane().remove(frame.getPasajerosPanel());
+		frame.getContentPane().remove(frame.getVuelosPanel());
+		frame.getContentPane().remove(frame.getReservasPanel());
+		frame.getContentPane().remove(frame.getEquipajesPanel());
+		frame.getContentPane().remove(frame.getEmbarquesPanel());
+		frame.getContentPane().remove(frame.getIncidenciasPanel());
+		frame.getContentPane().remove(frame.getOperativaPanel());
+		frame.getContentPane().remove(frame.getCuadroDeMandosPanel());
+		frame.getContentPane().remove(frame.getInicioPanel());
+		frame.getContentPane().remove(frame.getLateralInterfazPanel());
+		frame.getContentPane().remove(frame.getSuperiorInterfazPanel());
+
+		frame.setPasajerosPanel(null);
+		frame.setVuelosPanel(null);
+		frame.setReservasPanel(null);
+		frame.setEquipajesPanel(null);
+		frame.setEmbarquesPanel(null);
+		frame.setIncidenciasPanel(null);
+		frame.setOperativaPanel(null);
+		frame.setCuadroDeMandosPanel(null);
+		frame.setInicioPanel(null);
+		frame.setLateralInterfazPanel(null);
+		frame.setSuperiorInterfazPanel(null);
+
+		pasajerosControlador = null;
+		vuelosControlador = null;
+		reservasControlador = null;
+		equipajesControlador = null;
+		embarquesControlador = null;
+		incidenciasControlador = null;
+		operativaControlador = null;
+		cuadroDeMandosControlador = null;
+		inicioControlador = null;
+		lateralInterfazControlador = null;
+		superiorInterfazControlador = null;
+
+		setUsuario(null);
+
+		iniciarSesionControlador.vaciarTextos();
+		registrarseControlador.vaciarTextos();
+		frame.getIniciarSesionPanel().setVisible(true);
+
+		frame.getContentPane().revalidate();
+		frame.getContentPane().repaint();
 	}
 
 	private void anadirPanelOculto(JPanel panel) {
