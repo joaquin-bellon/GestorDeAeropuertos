@@ -10,7 +10,9 @@ private String contrasenia;
 @CsvBindByPosition (position = 2)
 private String rol;
 
-
+public Usuario () {
+	
+}
 
 public Usuario(String usuario, String contrasenia, String rol) {
 	this.usuario = usuario;
@@ -36,5 +38,13 @@ public void setRol(String rol) {
 	this.rol = rol;
 }
 
+public boolean isAdmin() {
+	if(this.rol.equals("ADMIN")) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
 
 }

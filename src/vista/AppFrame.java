@@ -11,7 +11,14 @@ public class AppFrame extends JFrame {
 	private JPanel contentPane;
 	private IniciarSesionPanel iniciarSesionPanel;
 	private RegistrarsePanel registrarsePanel;
-
+	private PasajerosPanel pasajerosPanel;
+	private VuelosPanel vuelosPanel;
+	private ReservasPanel reservasPanel;
+	private EquipajesPanel equipajesPanel;
+	private EmbarquesPanel embarquesPanel;
+	private IncidenciasPanel incidenciasPanel;
+	private OperativaPanel operativaPanel;
+	private CuadroDeMandosPanel cuadroDeMandosPanel;
 
 	public AppFrame(IniciarSesionPanel logInPanel) {
 		setTitle("Gestor De Aeropuertos");
@@ -44,6 +51,70 @@ public class AppFrame extends JFrame {
 
 	public void setRegistrarsePanel(RegistrarsePanel registrarsePanel) {
 		this.registrarsePanel = registrarsePanel;
+	}
+
+	public PasajerosPanel getPasajerosPanel() {
+		return pasajerosPanel;
+	}
+
+	public void setPasajerosPanel(PasajerosPanel pasajerosPanel) {
+		this.pasajerosPanel = pasajerosPanel;
+	}
+
+	public VuelosPanel getVuelosPanel() {
+		return vuelosPanel;
+	}
+
+	public void setVuelosPanel(VuelosPanel vuelosPanel) {
+		this.vuelosPanel = vuelosPanel;
+	}
+
+	public ReservasPanel getReservasPanel() {
+		return reservasPanel;
+	}
+
+	public void setReservasPanel(ReservasPanel reservasPanel) {
+		this.reservasPanel = reservasPanel;
+	}
+
+	public EquipajesPanel getEquipajesPanel() {
+		return equipajesPanel;
+	}
+
+	public void setEquipajesPanel(EquipajesPanel equipajesPanel) {
+		this.equipajesPanel = equipajesPanel;
+	}
+
+	public EmbarquesPanel getEmbarquesPanel() {
+		return embarquesPanel;
+	}
+
+	public void setEmbarquesPanel(EmbarquesPanel embarquesPanel) {
+		this.embarquesPanel = embarquesPanel;
+	}
+
+	public IncidenciasPanel getIncidenciasPanel() {
+		return incidenciasPanel;
+	}
+
+	public void setIncidenciasPanel(IncidenciasPanel incidenciasPanel) {
+		this.incidenciasPanel = incidenciasPanel;
+	}
+
+	public OperativaPanel getOperativaPanel() {
+		return operativaPanel;
+	}
+
+	public void setOperativaPanel(OperativaPanel operativaPanel) {
+		this.operativaPanel = operativaPanel;
+	}
+
+	public CuadroDeMandosPanel getCuadroDeMandosPanel() {
+		return cuadroDeMandosPanel;
+	}
+
+	public void setCuadroDeMandosPanel(CuadroDeMandosPanel cuadroDeMandosPanel) {
+		this.cuadroDeMandosPanel = cuadroDeMandosPanel;
 	}
 	
 	

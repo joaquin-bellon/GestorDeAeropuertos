@@ -1,5 +1,13 @@
 package vista;
 
-public class VuelosPanel {
+import javax.swing.JPanel;
+
+public class VuelosPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+
+	public VuelosPanel() {
+
+	}
 
 }

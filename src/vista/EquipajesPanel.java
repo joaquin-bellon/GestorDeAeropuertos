@@ -1,5 +1,13 @@
 package vista;
 
-public class EquipajesPanel {
+import javax.swing.JPanel;
+
+public class EquipajesPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+
+	public EquipajesPanel() {
+
+	}
 
 }
