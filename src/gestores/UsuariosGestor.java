@@ -77,7 +77,7 @@ public class UsuariosGestor {
 	}
 	
 	public void volcarEnCSV() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_PASAJEROS)))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_USUARIOS)))) {
 			StatefulBeanToCsv<Usuario> beantoCsv = new StatefulBeanToCsvBuilder<Usuario>(writer).withOrderedResults(true).withApplyQuotesToAll(false).build();
 			beantoCsv.write(usuarios);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {

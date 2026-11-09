@@ -19,7 +19,9 @@ public class HiloErrores extends Thread {
 		label.setText(texto);
 		try {
 			this.sleep(3000);
-			label.setText("");
+			if (label.getText().equals(texto)) {
+				label.setText("");
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

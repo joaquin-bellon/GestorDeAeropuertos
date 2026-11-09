@@ -41,7 +41,7 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		
 		btnTema = new JButton("");
 		btnTema.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnTema.setBounds(1100, 30, 40, 40);
+		btnTema.setBounds(1100, 35, 40, 40);
 		btnTema.putClientProperty("FlatLaf.style", "arc: 999");
 		
 		lblError = new JLabel("");
