@@ -49,7 +49,8 @@ public class InciarSesionControlador implements ActionListener, MouseListener {
 					hiloErrores.start();
 				}
 				else {
-					
+					principalControlador.crearPanelesYControladores(usuario);
+					iniciarSesionPanel.setVisible(false);
 				}
 			}
 			
