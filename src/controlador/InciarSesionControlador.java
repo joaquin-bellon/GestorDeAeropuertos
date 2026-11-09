@@ -5,7 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import gestores.UsuariosGestor;
+import modelo.Usuario;
 import temas.Tema;
+import utilidades.HiloErrores;
 import vista.IniciarSesionPanel;
 
 public class InciarSesionControlador implements ActionListener, MouseListener {
@@ -30,6 +33,26 @@ public class InciarSesionControlador implements ActionListener, MouseListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == iniciarSesionPanel.getBtnInciarSesion()) {
+			String nombre = iniciarSesionPanel.getTextFieldUsuario().getText();
+			String contrasenia = new String (iniciarSesionPanel.getPasswordFieldContrasenia().getPassword());
+			
+			if (nombre.isBlank() || contrasenia.isBlank()) {
+				HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "Rellene todos los campos.");
+				hiloErrores.start();
+			} else {
+				Usuario usuario = UsuariosGestor.getInstance().buscarUsuarioPorNombre(nombre);
+				if (usuario == null) {
+					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "Ese Usuario no existe.");
+					hiloErrores.start();
+				}else if (!usuario.getContrasenia().equals(contrasenia)) {
+					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "La contraseña no coincide.");
+					hiloErrores.start();
+				}
+				else {
+					
+				}
+			}
+			
 			
 		}else if (e.getSource() == iniciarSesionPanel.getBtnTema()) {
 			Tema.cambiarTema(principalControlador.getListPanelesConImagenesConTema());

@@ -15,6 +15,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import utilidades.Utilidades;
+import javax.swing.SwingConstants;
 
 public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 
@@ -31,6 +32,7 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 	private JLabel lblIniciarSesion;
 	private JLabel lblRepetirContrasenia;
 	private JPasswordField passwordFieldRepetir;
+	private JLabel lblError;
 
 	public RegistrarsePanel() {
 		setBounds(0, 0, 1200, 800);
@@ -41,6 +43,13 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		btnTema.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnTema.setBounds(1100, 30, 40, 40);
 		btnTema.putClientProperty("FlatLaf.style", "arc: 999");
+		
+		lblError = new JLabel("");
+		lblError.setHorizontalAlignment(SwingConstants.CENTER);
+		lblError.setForeground((Color) null);
+		lblError.setFont(new Font("SansSerif", Font.BOLD, 12));
+		lblError.setBounds(477, 498, 244, 12);
+		add(lblError);
 		
 		lblRepetirContrasenia = new JLabel("Repetir Contraseña");
 		lblRepetirContrasenia.setFont(new Font("SansSerif", Font.PLAIN, 18));
@@ -108,6 +117,7 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		btnTema.setIcon(new ImageIcon(UIManager.getString("Login.btnTema")));
 		Utilidades.insertarImagen(UIManager.getString("Login.fondo"), lblFondo);
 		lblIniciarSesion.setForeground(UIManager.getColor("Login.enlace"));
+		lblError.setForeground(UIManager.getColor("Login.errorColor"));
 	}
 	public JLabel getLblFondo() {
 		return lblFondo;
@@ -174,6 +184,12 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 	}
 	public void setPasswordFieldRepetir(JPasswordField passwordFieldRepetir) {
 		this.passwordFieldRepetir = passwordFieldRepetir;
+	}
+	public JLabel getLblError() {
+		return lblError;
+	}
+	public void setLblError(JLabel lblError) {
+		this.lblError = lblError;
 	}
 	
 	
