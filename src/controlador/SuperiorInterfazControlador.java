@@ -13,6 +13,8 @@ public class SuperiorInterfazControlador implements ActionListener {
 	public SuperiorInterfazControlador (PrincipalControlador principalControlador) {
 		this.principalControlador = principalControlador;
 		this.superiorInterfazPanel = principalControlador.getFrame().getSuperiorInterfazPanel();
+		superiorInterfazPanel.getLblNombreUsuario().setText(principalControlador.getUsuario().getUsuario());
+		superiorInterfazPanel.getLblRolUsuario().setText(principalControlador.getUsuario().getRol());
 		implementarListeners();
 		
 		

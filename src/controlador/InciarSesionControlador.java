@@ -45,7 +45,7 @@ public class InciarSesionControlador implements ActionListener, MouseListener {
 					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "Ese Usuario no existe.");
 					hiloErrores.start();
 				}else if (!usuario.getContrasenia().equals(contrasenia)) {
-					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "La contraseña no coincide.");
+					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "La contraseña no es correcta.");
 					hiloErrores.start();
 				}
 				else {

@@ -22,10 +22,27 @@ public class SuperiorInterfazPanel extends JPanel implements ImagenesConTema {
 	private JLabel lblGestorAeropuerto;
 	private JLabel lblAplicacionParaGestionar;
 	private JButton btnSalir;
+	private JLabel lblImagenUsuario;
+	private JLabel lblNombreUsuario;
+	private JLabel lblRolUsuario;
 
 	public SuperiorInterfazPanel() {
 		setBounds(0,0, 1200, 110);
 		setLayout(null);
+		
+		lblRolUsuario = new JLabel("");
+		lblRolUsuario.setFont(new Font("SansSerif", Font.PLAIN, 11));
+		lblRolUsuario.setBounds(898, 53, 118, 16);
+		add(lblRolUsuario);
+		
+		lblNombreUsuario = new JLabel("");
+		lblNombreUsuario.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblNombreUsuario.setBounds(898, 34, 118, 20);
+		add(lblNombreUsuario);
+		
+		lblImagenUsuario = new JLabel("");
+		lblImagenUsuario.setBounds(840, 24, 184, 58);
+		add(lblImagenUsuario);
 		
 		lblGestorAeropuerto = new JLabel("Gestor Aeropuerto");
 		lblGestorAeropuerto.setFont(new Font("SansSerif", Font.PLAIN, 24));
@@ -65,6 +82,7 @@ public class SuperiorInterfazPanel extends JPanel implements ImagenesConTema {
 	@Override
 	public void actualizarImagenes() {
 		Utilidades.insertarImagen(UIManager.getString("Cabecera.Fondo"), lblFondo);
+		Utilidades.insertarImagen(UIManager.getString("Cabecera.usuarioEtiqueta"), lblImagenUsuario);
 		btnTema.setIcon(new ImageIcon(UIManager.getString("Login.btnTema")));
 		btnSalir.setIcon(new ImageIcon(UIManager.getString("Cabecera.cerrarSesion")));
 	}
@@ -100,6 +118,23 @@ public class SuperiorInterfazPanel extends JPanel implements ImagenesConTema {
 	public void setBtnSalir(JButton btnSalir) {
 		this.btnSalir = btnSalir;
 	}
+
+	public JLabel getLblNombreUsuario() {
+		return lblNombreUsuario;
+	}
+
+	public void setLblNombreUsuario(JLabel lblNombreUsuario) {
+		this.lblNombreUsuario = lblNombreUsuario;
+	}
+
+	public JLabel getLblRolUsuario() {
+		return lblRolUsuario;
+	}
+
+	public void setLblRolUsuario(JLabel lblRolUsuario) {
+		this.lblRolUsuario = lblRolUsuario;
+	}
+	
 	
 	
 }
