@@ -2,6 +2,7 @@ package controlador;
 
 import java.util.ArrayList;
 
+import modelo.Usuario;
 import vista.AppFrame;
 import vista.ImagenesConTema;
 import vista.IniciarSesionPanel;
@@ -12,6 +13,7 @@ public class PrincipalControlador {
 	private AppFrame frame;
 	private InciarSesionControlador iniciarSesionControlador;
 	private RegistrarseControlador registrarseControlador;
+	private Usuario usuario;
 	
 	
 	public PrincipalControlador () {
@@ -57,6 +59,41 @@ public class PrincipalControlador {
 
 	public RegistrarseControlador getRegistrarseControlador() {
 		return registrarseControlador;
+	}
+
+
+
+
+	public InciarSesionControlador getIniciarSesionControlador() {
+		return iniciarSesionControlador;
+	}
+
+
+
+
+	public void setIniciarSesionControlador(InciarSesionControlador iniciarSesionControlador) {
+		this.iniciarSesionControlador = iniciarSesionControlador;
+	}
+
+
+
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+
+
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+
+
+
+	public void setRegistrarseControlador(RegistrarseControlador registrarseControlador) {
+		this.registrarseControlador = registrarseControlador;
 	}
 
 	

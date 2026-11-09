@@ -9,6 +9,14 @@ private String usuario;
 private String contrasenia;
 @CsvBindByPosition (position = 2)
 private String rol;
+
+
+
+public Usuario(String usuario, String contrasenia, String rol) {
+	this.usuario = usuario;
+	this.contrasenia = contrasenia;
+	this.rol = rol;
+}
 public String getUsuario() {
 	return usuario;
 }
