@@ -21,6 +21,8 @@ public class Utilidades {
 	
 	public static final String RUTA_INCIDENCIAS = "archivos/incidencias.txt";
 	
+	public static final String RUTA_USUARIOS = "archivos/usuarios.csv";
+	
 	public static int leerEntero(Scanner sc) {
 	      while (true) {
 	          try {
