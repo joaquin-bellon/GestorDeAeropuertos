@@ -102,11 +102,13 @@ public class PrincipalControlador {
 		superiorInterfazControlador = new SuperiorInterfazControlador(this);
 		
 		listPanelesConImagenesConTema.add(frame.getSuperiorInterfazPanel());
+		listPanelesConImagenesConTema.add(frame.getLateralInterfazPanel());
 		
 	}
 	
 	public void cerrarSesion() {
 		listPanelesConImagenesConTema.remove(frame.getSuperiorInterfazPanel());
+		listPanelesConImagenesConTema.remove(frame.getLateralInterfazPanel());
 		
 		
 		frame.getContentPane().remove(frame.getPasajerosPanel());
