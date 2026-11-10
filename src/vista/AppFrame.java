@@ -178,6 +178,9 @@ public class AppFrame extends JFrame {
 		
 		jPanel.setVisible(true);
 		
+		contentPane.revalidate();
+		contentPane.repaint();
+		
 	}
 
 }
