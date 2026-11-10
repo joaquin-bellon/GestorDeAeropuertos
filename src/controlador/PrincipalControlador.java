@@ -75,7 +75,7 @@ public class PrincipalControlador {
 		frame.setCuadroDeMandosPanel(new CuadroDeMandosPanel());
 		frame.setConfiguracionPanel(new ConfiguracionPanel());
 		
-		frame.setInicioPanel(new InicioPanel());
+		frame.setInicioPanel(new InicioPanel(usuario.getUsuario()));
 		frame.setLateralInterfazPanel(new LateralInterfazPanel());
 		frame.setSuperiorInterfazPanel(new SuperiorInterfazPanel());
 
