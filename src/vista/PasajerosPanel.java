@@ -130,5 +130,7 @@ public class PasajerosPanel extends PanelGenerico {
 	public JComboBox<String> getComboBoxTipo() {
 		return comboBoxTipo;
 	}
+	
+	
 
 }

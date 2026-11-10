@@ -1,22 +1,12 @@
 package vista;
 
 import java.awt.Font;
-import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import gestores.EmbarquesGestor;
-import gestores.EquipajesGestor;
-import gestores.IncidenciasGestor;
-import gestores.PasajerosGestor;
-import gestores.ReservasGestor;
-import gestores.VuelosGestor;
-import modelo.Incidencia;
-import modelo.Vuelo;
 
 public class InicioPanel extends JPanel {
 
@@ -81,30 +71,9 @@ public class InicioPanel extends JPanel {
 		scrollPaneIncidencias.setBounds(500, 350, 460, 280);
 		add(scrollPaneIncidencias);
 		
-		cargarDatos();
 	}
 
-	public void cargarDatos() {
-		lblTotalPasajeros.setText(String.valueOf(PasajerosGestor.getInstance().getPasajeros().size()));
-		lblTotalVuelos.setText(String.valueOf(VuelosGestor.getInstance().getVuelos().size()));
-		lblTotalReservas.setText(String.valueOf(ReservasGestor.getInstance().obtenerReservasConfirmadas().size()));
-		lblTotalEquipajes.setText(String.valueOf(EquipajesGestor.getInstance().getEquipajes().size()));
-		lblTotalEmbarques.setText(String.valueOf(EmbarquesGestor.getInstance().getEmbarques().size()));
-		
-		ArrayList<Incidencia> incidenciasAbiertas = IncidenciasGestor.getInstance().buscarPorEstado("ABIERTA");
-		
-		lblTotalIncidencias.setText(String.valueOf(incidenciasAbiertas.size()));
 
-		modeloVuelos.setRowCount(0);
-		for (Vuelo vuelo : VuelosGestor.getInstance().obtenerVuelosActivos()) {
-				modeloVuelos.addRow(new Object[] {vuelo.getCodigo(), vuelo.getDestino(), vuelo.getSalida().toString().replace("T", " "), vuelo.getEstado()});
-			}
-
-		modeloIncidencias.setRowCount(0);
-		for (Incidencia incidencia : incidenciasAbiertas) {
-			modeloIncidencias.addRow(new Object[] {incidencia.getCodigo(), incidencia.getVuelo(), incidencia.getTipo(), incidencia.getPrioridad()});
-		}
-	}
 
 	private JLabel crearTarjeta(String titulo, int x, int y) {
 		JPanel tarjeta = new JPanel();

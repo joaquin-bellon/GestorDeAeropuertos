@@ -155,47 +155,48 @@ public class PasajerosGestor {
 		System.out.println("Usuario introducido correctamente");
 	}
 
-	public void eliminarPasajero(Scanner sc, ReservasGestor gestorReservas, EquipajesGestor gestorEquipajes,EmbarquesGestor gestorEmbarques) {
-		Pasajero pasajero = escogerPasajero(sc, "eliminar");
-		boolean reservaEliminada = false , equipajeEliminado = false, embarqueEliminado = false;
-		ArrayList<Reserva> reservasAEliminar = gestorReservas.buscarResevasPorPasajero(pasajero.getCodPasajero());
-		if (reservasAEliminar.size() != 0) {
-			System.out.println("Las siguientes reservas del pasajero han sido eliminadas:");
-			for (int i = (reservasAEliminar.size()-1) ; i >= 0 ; i--) {
-				reservaEliminada = true;
-				System.out.println(" - " +reservasAEliminar.get(i));
-				ArrayList<Equipaje> equipajesAEliminar = gestorEquipajes.buscarEquipajesPorReserva(reservasAEliminar.get(i).getIdReserva());
-				if (equipajesAEliminar.size() != 0) {
-					equipajeEliminado = true;
-					System.out.println("Los siguientes equipajes de la reserva han sido eliminados:");
-					for (Equipaje equipaje : equipajesAEliminar) {
-						System.out.println("   " + equipaje);
-					}
-					gestorEquipajes.getEquipajes().removeAll(equipajesAEliminar);
-				}
+	public boolean eliminarPasajero(String codPasajero) {
+		Pasajero pasajero = buscarPorCodPasajero(codPasajero);
+		if (pasajero == null) {
+			return false;
+		}
 
-				Embarque embarqueAEliminar = gestorEmbarques.buscarPorReserva(reservasAEliminar.get(i).getIdReserva());
-				if (embarqueAEliminar != null) {
-					embarqueEliminado = true;
-					gestorEmbarques.getEmbarques().remove(embarqueAEliminar);
-					System.out.println("Se ha eliminado el embarque asociado a la reserva del pasajero:");
-						System.out.println("   " + embarqueAEliminar);
+		ReservasGestor gestorReservas = ReservasGestor.getInstance();
+		EquipajesGestor gestorEquipajes = EquipajesGestor.getInstance();
+		EmbarquesGestor gestorEmbarques = EmbarquesGestor.getInstance();
+		boolean reservaEliminada = false, equipajeEliminado = false, embarqueEliminado = false;
+
+		ArrayList<Reserva> reservasAEliminar = gestorReservas.buscarResevasPorPasajero(pasajero.getCodPasajero());
+		for (Reserva reserva : reservasAEliminar) {
+			reservaEliminada = true;
+
+			ArrayList<Equipaje> equipajesAEliminar = gestorEquipajes.buscarEquipajesPorReserva(reserva.getIdReserva());
+			if (equipajesAEliminar.size() != 0) {
+				equipajeEliminado = true;
+				gestorEquipajes.getEquipajes().removeAll(equipajesAEliminar);
 			}
-			gestorReservas.getReservas().remove(reservasAEliminar.get(i));
-		}//for
-	}
+
+			Embarque embarqueAEliminar = gestorEmbarques.buscarPorReserva(reserva.getIdReserva());
+			if (embarqueAEliminar != null) {
+				embarqueEliminado = true;
+				gestorEmbarques.getEmbarques().remove(embarqueAEliminar);
+			}
+
+			gestorReservas.getReservas().remove(reserva);
+		}
+
 		if (reservaEliminada) {
 			gestorReservas.volcarEnCSV();
 		}
-		if(equipajeEliminado) {
+		if (equipajeEliminado) {
 			gestorEquipajes.volcarEnCSV();
 		}
-		if(embarqueEliminado) {
+		if (embarqueEliminado) {
 			gestorEmbarques.volcarEnCSV();
 		}
 		pasajeros.remove(pasajero);
 		volcarEnCSV();
-		System.out.println("Pasajero eliminado correctamente");
+		return true;
 	}
 
 	private void aniadirPasajeroAlArray(Scanner sc) {

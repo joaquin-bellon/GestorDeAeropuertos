@@ -305,6 +305,32 @@ public class PrincipalControlador {
 		this.frame = frame;
 	}
 
+	public InicioControlador getInicioControlador() {
+		return inicioControlador;
+	}
+
+	public void setInicioControlador(InicioControlador inicioControlador) {
+		this.inicioControlador = inicioControlador;
+	}
+
+	public LateralInterfazControlador getLateralInterfazControlador() {
+		return lateralInterfazControlador;
+	}
+
+	public void setLateralInterfazControlador(LateralInterfazControlador lateralInterfazControlador) {
+		this.lateralInterfazControlador = lateralInterfazControlador;
+	}
+
+	public SuperiorInterfazControlador getSuperiorInterfazControlador() {
+		return superiorInterfazControlador;
+	}
+
+	public void setSuperiorInterfazControlador(SuperiorInterfazControlador superiorInterfazControlador) {
+		this.superiorInterfazControlador = superiorInterfazControlador;
+	}
+	
+	
+
 	
 	
 	

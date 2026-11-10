@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import utilidades.HiloErrores;
+
 public class PanelGenerico extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -33,6 +35,10 @@ public class PanelGenerico extends JPanel {
 	private JButton btnLimpiar;
 	private JButton btnGuardar;
 	private JButton btnCancelar;
+	private JLabel lblAdvertencia;
+	private JLabel lblConfirmarEliminar;
+	private JButton btnSiEliminar;
+	private JButton btnNoEliminar;
 
 	public PanelGenerico(String titulo, String subtitulo, String tituloFormulario, String[] filtros, String[] columnas) {
 		setBounds(220, 110, 980, 653);
@@ -89,6 +95,25 @@ public class PanelGenerico extends JPanel {
 		btnGuardar.setVisible(false);
 		btnCancelar.setVisible(false);
 
+		lblConfirmarEliminar = new JLabel("¿Seguro que quieres eliminarlo?");
+		lblConfirmarEliminar.setFont(new Font("SansSerif", Font.BOLD, 14));
+		lblConfirmarEliminar.setBounds(20, 594, 296, 36);
+		lblConfirmarEliminar.setVisible(false);
+		add(lblConfirmarEliminar);
+
+		btnSiEliminar = crearBoton("Sí, eliminar", 324);
+		btnSiEliminar.putClientProperty("FlatLaf.style", "arc: 12; background: $Boton.eliminarFondo; foreground: #FFFFFF");
+		btnSiEliminar.setVisible(false);
+
+		btnNoEliminar = crearBoton("No", 476);
+		btnNoEliminar.setVisible(false);
+
+		lblAdvertencia = new JLabel("");
+		lblAdvertencia.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
+		lblAdvertencia.setBounds(640, 85, 320, 30);
+		add(lblAdvertencia);
+
 		panelFormulario = new JPanel();
 		panelFormulario.setLayout(null);
 		panelFormulario.setBorder(BorderFactory.createTitledBorder(""));
@@ -120,6 +145,31 @@ public class PanelGenerico extends JPanel {
 		tabla.setEnabled(!edicion);
 		comboBoxFiltro.setEnabled(!edicion);
 		textFieldBuscar.setEnabled(!edicion);
+		
+		
+	}
+
+	public void modoConfirmarEliminar(boolean confirmando) {
+		btnAniadir.setVisible(!confirmando);
+		btnModificar.setVisible(!confirmando);
+		btnEliminar.setVisible(!confirmando);
+		btnLimpiar.setVisible(!confirmando);
+		lblConfirmarEliminar.setVisible(confirmando);
+		btnSiEliminar.setVisible(confirmando);
+		btnNoEliminar.setVisible(confirmando);
+		tabla.setEnabled(!confirmando);
+		comboBoxFiltro.setEnabled(!confirmando);
+		textFieldBuscar.setEnabled(!confirmando);
+	}
+	
+	public void mostrarError(String texto) {
+		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
+		new HiloErrores(lblAdvertencia, texto).start();
+	}
+
+	public void mostrarExito(String texto) {
+		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Mensaje.exito");
+		new HiloErrores(lblAdvertencia, texto).start();
 	}
 
 	public JComboBox<String> getComboBoxFiltro() {
@@ -164,6 +214,22 @@ public class PanelGenerico extends JPanel {
 
 	public JButton getBtnCancelar() {
 		return btnCancelar;
+	}
+
+	public JLabel getLblAdvertencia() {
+		return lblAdvertencia;
+	}
+
+	public JLabel getLblConfirmarEliminar() {
+		return lblConfirmarEliminar;
+	}
+
+	public JButton getBtnSiEliminar() {
+		return btnSiEliminar;
+	}
+
+	public JButton getBtnNoEliminar() {
+		return btnNoEliminar;
 	}
 
 }

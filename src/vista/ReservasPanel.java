@@ -35,6 +35,8 @@ public class ReservasPanel extends PanelGenerico {
 				new String[] {"Código", "Pasajero", "Vuelo", "Asiento", "Clase", "Estado"});
 
 		getBtnEliminar().setText("Cancelar");
+		getLblConfirmarEliminar().setText("¿Seguro que quieres cancelarla?");
+		getBtnSiEliminar().setText("Sí, cancelar");
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
