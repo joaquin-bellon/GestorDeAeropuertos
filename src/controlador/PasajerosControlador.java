@@ -78,14 +78,14 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 	}
 
 	private void aniadir() {
-		activarEditarFormulario(true);
+		cambiarEditarFormulario(true);
 		vaciarFormulario();
 		pasajerosPanel.getTextFieldCodigo().setText(PasajerosGestor.getInstance().crearNuevoIdentificador());
 		pasajerosPanel.modoEdicion(true);
 	}
 
 	private void modificar() {
-		activarEditarFormulario(true);
+		cambiarEditarFormulario(true);
 		pasajerosPanel.modoEdicion(true);
 		
 	}
@@ -164,10 +164,12 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 	
 	private void cancelar() {
 		pasajerosPanel.modoEdicion(false);
+		cambiarEditarFormulario(false);
 		vaciarFormulario();
 	}
 	
 	public void recargarPanel() {
+		pasajerosPanel.getTextFieldBuscar().setText("");
 		cargarTabla(PasajerosGestor.getInstance().getPasajeros());
 		desactivarFormulario();
 		vaciarFormulario();
@@ -216,7 +218,7 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		pasajerosPanel.getComboBoxTipo().setSelectedItem(pasajero.getTipo());
 	}
 	
-	private void activarEditarFormulario(boolean activo) {
+	private void cambiarEditarFormulario(boolean activo) {
 		pasajerosPanel.getTextFieldNombre().setEditable(activo);
 		pasajerosPanel.getTextFieldApellidos().setEditable(activo);
 		pasajerosPanel.getTextFieldDocumento().setEditable(activo);
@@ -242,14 +244,10 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
