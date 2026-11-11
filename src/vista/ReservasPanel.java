@@ -2,10 +2,15 @@ package vista;
 
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class ReservasPanel extends PanelGenerico {
 
@@ -28,6 +33,18 @@ public class ReservasPanel extends PanelGenerico {
 	private JComboBox<String> comboBoxCanal;
 	private JLabel lblEstado;
 	private JTextField textFieldEstado;
+	private JPanel panelAsociados;
+	private JLabel lblTituloAsociados;
+	private JLabel lblInfoAsociados;
+	private JLabel lblEquipajes;
+	private JScrollPane scrollPaneEquipajes;
+	private JTable tableEquipajes;
+	private DefaultTableModel modeloEquipajes;
+	private JLabel lblEmbarque;
+	private JLabel lblEmbarqueCodigo;
+	private JLabel lblEmbarqueFecha;
+	private JLabel lblEmbarquePuerta;
+	private JLabel lblEmbarqueEstado;
 
 	public ReservasPanel() {
 		super("Reservas", "Consulta, crea, modifica y cancela reservas", "Datos de la reserva",
@@ -131,6 +148,75 @@ public class ReservasPanel extends PanelGenerico {
 		textFieldEstado.setEditable(false);
 		textFieldEstado.setBounds(125, 391, 175, 30);
 		getPanelFormulario().add(textFieldEstado);
+
+		panelAsociados = new JPanel();
+		panelAsociados.setLayout(null);
+		panelAsociados.setBorder(BorderFactory.createTitledBorder(""));
+		panelAsociados.setBounds(640, 130, 320, 500);
+		panelAsociados.setVisible(false);
+		add(panelAsociados);
+
+		lblTituloAsociados = new JLabel("Reserva cancelada");
+		lblTituloAsociados.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblTituloAsociados.setBounds(20, 15, 280, 24);
+		panelAsociados.add(lblTituloAsociados);
+
+		lblInfoAsociados = new JLabel("Revisa sus asociados por si hay incidencias");
+		lblInfoAsociados.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblInfoAsociados.setBounds(20, 42, 280, 20);
+		panelAsociados.add(lblInfoAsociados);
+
+		lblEquipajes = new JLabel("Equipajes");
+		lblEquipajes.setFont(new Font("SansSerif", Font.BOLD, 14));
+		lblEquipajes.setBounds(20, 75, 280, 22);
+		panelAsociados.add(lblEquipajes);
+
+		modeloEquipajes = new DefaultTableModel(new Object[][] {}, new String[] {"Código", "Peso", "Tipo", "Estado"});
+		tableEquipajes = new JTable(modeloEquipajes);
+		tableEquipajes.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		tableEquipajes.setRowHeight(24);
+		tableEquipajes.setDefaultEditor(Object.class, null);
+		tableEquipajes.setRowSelectionAllowed(false);
+		tableEquipajes.getTableHeader().setReorderingAllowed(false);
+		tableEquipajes.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+		tableEquipajes.getColumnModel().getColumn(0).setPreferredWidth(60);
+		tableEquipajes.getColumnModel().getColumn(1).setPreferredWidth(42);
+		tableEquipajes.getColumnModel().getColumn(2).setPreferredWidth(85);
+		tableEquipajes.getColumnModel().getColumn(3).setPreferredWidth(93);
+
+		scrollPaneEquipajes = new JScrollPane(tableEquipajes);
+		scrollPaneEquipajes.setBounds(20, 100, 280, 200);
+		panelAsociados.add(scrollPaneEquipajes);
+
+		lblEmbarque = new JLabel("Embarque");
+		lblEmbarque.setFont(new Font("SansSerif", Font.BOLD, 14));
+		lblEmbarque.setBounds(20, 320, 280, 22);
+		panelAsociados.add(lblEmbarque);
+
+		lblEmbarqueCodigo = new JLabel("");
+		lblEmbarqueCodigo.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblEmbarqueCodigo.setBounds(20, 348, 280, 22);
+		panelAsociados.add(lblEmbarqueCodigo);
+
+		lblEmbarqueFecha = new JLabel("");
+		lblEmbarqueFecha.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblEmbarqueFecha.setBounds(20, 372, 280, 22);
+		panelAsociados.add(lblEmbarqueFecha);
+
+		lblEmbarquePuerta = new JLabel("");
+		lblEmbarquePuerta.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblEmbarquePuerta.setBounds(20, 396, 280, 22);
+		panelAsociados.add(lblEmbarquePuerta);
+
+		lblEmbarqueEstado = new JLabel("");
+		lblEmbarqueEstado.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblEmbarqueEstado.setBounds(20, 420, 280, 22);
+		panelAsociados.add(lblEmbarqueEstado);
+	}
+
+	public void mostrarAsociados(boolean mostrar) {
+		getPanelFormulario().setVisible(!mostrar);
+		panelAsociados.setVisible(mostrar);
 	}
 
 	public JTextField getTextFieldCodigo() {
@@ -167,6 +253,30 @@ public class ReservasPanel extends PanelGenerico {
 
 	public JTextField getTextFieldEstado() {
 		return textFieldEstado;
+	}
+
+	public JLabel getLblTituloAsociados() {
+		return lblTituloAsociados;
+	}
+
+	public DefaultTableModel getModeloEquipajes() {
+		return modeloEquipajes;
+	}
+
+	public JLabel getLblEmbarqueCodigo() {
+		return lblEmbarqueCodigo;
+	}
+
+	public JLabel getLblEmbarqueFecha() {
+		return lblEmbarqueFecha;
+	}
+
+	public JLabel getLblEmbarquePuerta() {
+		return lblEmbarquePuerta;
+	}
+
+	public JLabel getLblEmbarqueEstado() {
+		return lblEmbarqueEstado;
 	}
 
 }
