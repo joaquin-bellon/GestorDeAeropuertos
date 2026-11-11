@@ -9,6 +9,7 @@ public class AppFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JPanel contenido;
 	private IniciarSesionPanel iniciarSesionPanel;
 	private RegistrarsePanel registrarsePanel;
 	private PasajerosPanel pasajerosPanel;
@@ -22,6 +23,7 @@ public class AppFrame extends JFrame {
 	private InicioPanel inicioPanel;
 	private LateralInterfazPanel lateralInterfazPanel;
 	private SuperiorInterfazPanel superiorInterfazPanel;
+	private ConfiguracionPanel configuracionPanel;
 
 	public AppFrame(IniciarSesionPanel logInPanel) {
 		setTitle("Gestor De Aeropuertos");
@@ -143,7 +145,42 @@ public class AppFrame extends JFrame {
 	public void setSuperiorInterfazPanel(SuperiorInterfazPanel superiorInterfazPanel) {
 		this.superiorInterfazPanel = superiorInterfazPanel;
 	}
+
+	public JPanel getContenido() {
+		return contenido;
+	}
+
+	public void setContenido(JPanel contenido) {
+		this.contenido = contenido;
+	}
 	
 	
+	
+	public ConfiguracionPanel getConfiguracionPanel() {
+		return configuracionPanel;
+	}
+
+	public void setConfiguracionPanel(ConfiguracionPanel configuracionPanel) {
+		this.configuracionPanel = configuracionPanel;
+	}
+
+	public void mostrarElPanelPorBoton (JPanel jPanel) {
+		inicioPanel.setVisible(false);
+		pasajerosPanel.setVisible(false);
+		vuelosPanel.setVisible(false);
+		reservasPanel.setVisible(false);
+		embarquesPanel.setVisible(false);
+		equipajesPanel.setVisible(false);
+		incidenciasPanel.setVisible(false);
+		operativaPanel.setVisible(false);
+		cuadroDeMandosPanel.setVisible(false);
+		configuracionPanel.setVisible(false);
+		
+		jPanel.setVisible(true);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
+		
+	}
 
 }

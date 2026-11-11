@@ -230,146 +230,35 @@ public class ReservasGestor {
 
 
 
-	public void insertarReserva(Scanner sc) {
-		aniadirReservaAlArray(sc);
+	public void insertarReserva(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
+		aniadirReservaAlArray(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
 		volcarEnCSV();
-
 	}
 
 
 
-	private void aniadirReservaAlArray(Scanner sc) {
-
-		String [] datos = new String [10];
-		System.out.println("Creación de una Reserva");
-		System.out.println("------------------------------");
-		//Pasajero
-		Vuelo vuelo;
-		datos[1] = gestorPasajeros.pedirPasajero(sc, "de la reserva").getCodPasajero();
-		//Vuelo
-
-		do {
-			System.out.println("Código de vuelo:");
-			datos[2] = sc.nextLine().trim().toUpperCase();
-			vuelo = gestorVuelos.buscarPorCodigo(datos[2]);
-			if ( vuelo == null) {
-				System.err.println("Ese vuelo no existe. Inténtelo de nuevo.");
-				datos[2] = null;
-			}else if (vuelo.getEstado().equals("CANCELADO")) {
-				System.err.println("Ese vuelo está cancelado. Inténtelo de nuevo.");
-				datos[2] = null;
-			}
-			}while(datos[2] == null);
-
-		//fecha
-		LocalDate fecha;
-		do {
-			fecha = Utilidades.pedirFecha(sc, "¿Cúal es la fecha de la reserva?:");
-			if (fecha.isAfter(vuelo.getSalida().toLocalDate())) {
-				System.err.println("La fecha de reserva no puede ser posterior a la salida del vuelo ("
-						+ vuelo.getSalida().toLocalDate() + "). Inténtelo de nuevo.");
-			}
-		}while (fecha.isAfter(vuelo.getSalida().toLocalDate()));
-		datos [8] = String.valueOf(fecha);
-		//Asiento
-		do {
-		System.out.println("Asiento:");
-		datos [3] = sc.nextLine().trim().toUpperCase();
-		if (datos[3].isEmpty()) {
-			System.err.println("No se puede ir de pie, inténtelo de nuevo");
-		}
-		else if (comprobarAsiento(vuelo.getCodigo(), datos[3])) {
-			System.err.println("Ese asiento está ocupado. Inténtelo de nuevo.");
-			datos[3] = "";
-		}
-
-		}while (datos[3].isEmpty());
-		//Clase
-		datos[4] = seleccionarClase(sc, vuelo);
-		//precio
-		datos [5] = String.valueOf(pedirPrecio(sc));
-
-		//Moneda
-		datos [6] = "EUR";
-		//Estado
-		datos [7] = "CONFIRMADA";
-		//Canal
-		datos [9] = escogerCanal(sc);
-
-		datos [0] = crearNuevoIdentificador();
-		reservas.add(new Reserva (datos[0],datos[1],datos[2],datos[3],datos[4],Double.parseDouble(datos[5]),datos[6],datos[7],datos[8],datos[9]));
-		System.out.println("Reserva " + datos[0] + " creada correctamente.");
+	private void aniadirReservaAlArray(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
+		reservas.add(new Reserva(codigo, pasajero, vuelo, asiento, clase, precio, "EUR", "CONFIRMADA", fecha, canal));
 	}
 
 
 
-	private double pedirPrecio(Scanner sc) {
-		double precio = -1;
-		do {
-			try {
-				System.out.println("¿Cúal es el precio de la reserva?");
-				precio = Double.parseDouble(sc.nextLine().trim());
-				if (precio < 100 ) {
-					System.err.println("Introduzca un precio realista.");
-				}
-			}catch (NumberFormatException e) {
-				System.err.println("Introduzca un número.");
-			}
-		}while(precio < 100);
-		return precio;
-	}
-
-
-
-	private String escogerCanal(Scanner sc) {
-		int opcion;
-		System.out.println("Escoja un canal: 1.WEB - 2. APP - 3.TAQUILLA - 4.AGENCIA");
-		opcion = Utilidades.leerOpcion(sc, 1, 4);
-		String canal ="";
-		switch (opcion) {
-		case 1:
-			canal = "WEB";
-			break;
-		case 2:
-			canal = "APP";
-			break;
-		case 3:
-			canal = "TAQUILLA";
-			break;
-		case 4:
-			canal = "AGENCIA";
-		}
-		return canal;
-	}
-
-
-
-	private String seleccionarClase(Scanner sc, Vuelo vuelo) {
-		int opcion;
+	public ArrayList<String> obtenerClasesDelVuelo(Vuelo vuelo) {
 		Element avion = gestorVuelos.sacarAvionVuelo(vuelo);
-		NodeList clases= avion.getElementsByTagName("Clase");
+		NodeList clases = avion.getElementsByTagName("Clase");
 		ArrayList<String> clasesStrings = new ArrayList<String>();
 		for (int i = 0 ; i < clases.getLength() ; i++) {
 			String clase = ((Element) clases.item(i)).getAttribute("tipo");
 			if (!clasesStrings.contains(clase)) {
 				clasesStrings.add(clase);
 			}
-
 		}
-		System.out.print("Escoja clase:");
-		for (int i = 0 ; i < clasesStrings.size() ; i++) {
-			System.out.print(" " + (i+1) + ". " + clasesStrings.get(i));
-		}
-		System.out.println("");
-		opcion = Utilidades.leerOpcion(sc, 1, clasesStrings.size());
-		opcion--;
-
-		return clasesStrings.get(opcion);
+		return clasesStrings;
 	}
 
 
 
-	private String crearNuevoIdentificador() {
+	public String crearNuevoIdentificador() {
 		int dato = 0;
 		for (int i = 0 ; i < reservas.size() ; i++) {
 			String id = reservas.get(i).getIdReserva();
@@ -385,57 +274,17 @@ public class ReservasGestor {
 
 
 
-	public void cancelarReservasManual(Scanner sc, EquipajesGestor gestorEquipajes, EmbarquesGestor gestorEmbarques) {
-		String cod = null;
-		ArrayList<Reserva> reservasEstado = buscarPorEstado("CONFIRMADA");
-		for (Reserva reserva: reservasEstado) {
-			imprimirReserva(reserva);
+	public String cancelarReserva(String codReserva) {
+		Reserva reserva = buscarPorCodigo(codReserva);
+		if (reserva == null) {
+			return "No existe ninguna reserva con el codigo " + codReserva + ".";
 		}
-		do {
-			System.out.println("Introduce el código de la reserva a cancelar:");
-			cod = sc.nextLine().trim().toUpperCase();
-			Reserva reserva = buscarPorCodigo(cod);
-			if (reserva == null) {
-				System.out.println("Esa reserva no existe");
-				cod = null;
-			}
-			else if (reserva.getEstado().equals("CANCELADA")) {
-				System.out.println("Esa reserva ya está cancelada");
-				cod = null;
-			}
-			else {
-				reserva.setEstado("CANCELADA");
-			}
-		}while (cod == null);
+		if (reserva.getEstado().equals("CANCELADA")) {
+			return "La reserva " + codReserva + " ya esta cancelada.";
+		}
+		reserva.setEstado("CANCELADA");
 		volcarEnCSV();
-
-		System.out.println("Equipaje asociado a la Reserva:");
-		ArrayList<Equipaje> equipajesDeLaReserva = gestorEquipajes.buscarEquipajesPorReserva(cod);
-		if (equipajesDeLaReserva.size() != 0) {
-			for (Equipaje equipaje : equipajesDeLaReserva) {
-				System.out.println ("  " + equipaje);
-			}
-		}
-		else {
-			System.out.println("  No hay equipaje asociado a la reserva.");
-		}
-
-
-
-		System.out.println("==================================");
-		System.out.println("Embarque asociado a la Reserva:");
-		Embarque embarqueDeLaReserva = gestorEmbarques.buscarPorReserva(cod);
-		if ( embarqueDeLaReserva != null) {
-			System.out.println ("  " + embarqueDeLaReserva);
-		}
-		else {
-			System.out.println("  No hay embarques asociados a la reserva.");
-		}
-
-
-		System.out.println("Reserva " + cod + " cancelada correctamente");
-
-
+		return "";
 	}
 
 	public Reserva buscarPorCodigo(String cod) {
@@ -502,45 +351,39 @@ public class ReservasGestor {
 
 
 
-	public void actualizarReserva(Scanner sc) {
-		Reserva reserva = pedirReserva(sc, "a actualizar");
-
-		int opcion = 0;
-		System.out.println("--------------------------------");
-		System.out.println(reserva);
-		System.out.println("--------------------------------");
-		System.out.println("Escoge el criterio : 1.Asiento 2. Precio");
-
-		opcion = Utilidades.leerOpcion(sc, 1, 2);
-		System.out.println("--------------------------------");
-
-		switch (opcion) {
-		case 1:
-			System.out.println("Introduce el nuevo asiento.");
-			String asiento = sc.nextLine().trim().toUpperCase();
-			if (asiento.isBlank()) {
-				System.err.println("No se puede ir de pie");
-			}
-			else {
-				boolean ocupado = comprobarAsiento(reserva.getVuelo(), asiento);
-				if (ocupado) {
-					System.out.println("Lo siento. Ese asiento está ocupado.");
-				}
-				else {
-					reserva.setAsiento(asiento);
-					System.out.println("Cambio de asiento efectuado con éxito.");
-				}
-			}
-			break;
-		case 2:
-			System.out.println("Introduce el nuevo precio");
-			double precio = pedirPrecio(sc);
-			reserva.setPrecio(precio);
-			System.out.println("Precio actualizado correctamente.");
-			break;
-		}
+	public void modificarReserva(Reserva reserva, String asiento, double precio) {
+		reserva.setAsiento(asiento);
+		reserva.setPrecio(precio);
 		volcarEnCSV();
+	}
 
+
+
+	public ArrayList<Reserva> filtrarReservas(String criterio, String texto) {
+		ArrayList<Reserva> arrayReservas = new ArrayList<Reserva>();
+		texto = texto.toUpperCase();
+
+		for (Reserva reserva : reservas) {
+			switch (criterio) {
+			case "Código":
+				if (reserva.getIdReserva().toUpperCase().contains(texto)) {
+					arrayReservas.add(reserva);
+				}
+				break;
+			case "Pasajero":
+				if (reserva.getPasajero().toUpperCase().contains(texto)) {
+					arrayReservas.add(reserva);
+				}
+				break;
+			case "Vuelo":
+				if (reserva.getVuelo().toUpperCase().contains(texto)) {
+					arrayReservas.add(reserva);
+				}
+				break;
+			}
+		}
+
+		return arrayReservas;
 	}
 
 

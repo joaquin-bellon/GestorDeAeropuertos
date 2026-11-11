@@ -665,4 +665,14 @@ public class VuelosGestor {
 		return new ArrayList<String>(rutas);
 	}
 	
+	public ArrayList<Vuelo> obtenerVuelosActivos() {
+		ArrayList<Vuelo> vuelosActivos = new ArrayList<Vuelo>();
+		for (Vuelo vuelo : vuelos) {
+			if (!vuelo.getEstado().equals("CANCELADO") && !vuelo.getEstado().equals("CERRADO")) {
+				vuelosActivos.add(vuelo);
+			}
+		}
+		return vuelosActivos;
+	}
+	
 }
