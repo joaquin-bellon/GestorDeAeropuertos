@@ -148,6 +148,11 @@ public class PanelGenerico extends JPanel {
 		
 		
 	}
+	
+	public void habilitarBtnEliminarYModificar(boolean habilitado) {
+		btnEliminar.setEnabled(habilitado);
+		btnModificar.setEnabled(habilitado);
+	}
 
 	public void modoConfirmarEliminar(boolean confirmando) {
 		btnAniadir.setVisible(!confirmando);

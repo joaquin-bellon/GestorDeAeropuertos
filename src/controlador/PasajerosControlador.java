@@ -2,6 +2,8 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.event.ListSelectionEvent;
@@ -11,7 +13,7 @@ import gestores.PasajerosGestor;
 import modelo.Pasajero;
 import vista.PasajerosPanel;
 
-public class PasajerosControlador implements ActionListener, ListSelectionListener{
+public class PasajerosControlador implements ActionListener, ListSelectionListener, KeyListener{
 	private PrincipalControlador principalControlador;
 	private PasajerosPanel pasajerosPanel;
 
@@ -23,8 +25,9 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		
 		implementarListeners();
 		
-		cargarTabla();
+		cargarTabla(PasajerosGestor.getInstance().getPasajeros());
 		desactivarFormulario();
+		pasajerosPanel.habilitarBtnEliminarYModificar(false);
 	}
 
 	private void implementarListeners() {
@@ -36,8 +39,11 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		pasajerosPanel.getBtnCancelar().addActionListener(this);
 		pasajerosPanel.getBtnNoEliminar().addActionListener(this);
 		pasajerosPanel.getBtnSiEliminar().addActionListener(this);
+		pasajerosPanel.getComboBoxFiltro().addActionListener(this);
 		
 		pasajerosPanel.getTabla().getSelectionModel().addListSelectionListener(this);
+		
+		pasajerosPanel.getTextFieldBuscar().addKeyListener(this);
 		
 	}
 
@@ -46,7 +52,6 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		if (e.getSource() == pasajerosPanel.getBtnAniadir()) {
 			aniadir();
 		} else if (e.getSource() == pasajerosPanel.getBtnModificar()) {
-			activarEditarFormulario(true);
 			modificar();
 		} else if (e.getSource() == pasajerosPanel.getBtnEliminar()) {
 			if (pasajerosPanel.getTabla().getSelectedRow() == -1) {
@@ -67,17 +72,22 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		} else if (e.getSource() == pasajerosPanel.getBtnSiEliminar()) {
 			eliminar();
 			pasajerosPanel.modoConfirmarEliminar(false);
+		} else if (e.getSource() == pasajerosPanel.getComboBoxFiltro()) {
+			filtrar();
 		}
 	}
 
 	private void aniadir() {
 		activarEditarFormulario(true);
+		vaciarFormulario();
+		pasajerosPanel.getTextFieldCodigo().setText(PasajerosGestor.getInstance().crearNuevoIdentificador());
 		pasajerosPanel.modoEdicion(true);
 	}
 
 	private void modificar() {
-		
+		activarEditarFormulario(true);
 		pasajerosPanel.modoEdicion(true);
+		
 	}
 
 	private void eliminar() {
@@ -95,15 +105,70 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 	}
 
 	private void guardar() {
-		pasajerosPanel.modoEdicion(false);
-	}
+		String comprobacion = comprobarFormulario();
+		if (!comprobacion.equals("")) {
+			pasajerosPanel.mostrarError(comprobacion);
+			return;
+		}
 
-	private void cancelar() {
+		String codigo = pasajerosPanel.getTextFieldCodigo().getText().trim();
+		String nombre = pasajerosPanel.getTextFieldNombre().getText().trim();
+		String apellidos = pasajerosPanel.getTextFieldApellidos().getText().trim();
+		String documento = pasajerosPanel.getTextFieldDocumento().getText().trim();
+		String pais = pasajerosPanel.getTextFieldPais().getText().trim();
+		String correo = pasajerosPanel.getTextFieldCorreo().getText().trim();
+		String tipo = pasajerosPanel.getComboBoxTipo().getSelectedItem().toString();
+
+		Pasajero pasajero = PasajerosGestor.getInstance().buscarPorCodPasajero(codigo);
+		String mensaje;
+		if (pasajero == null) {
+			PasajerosGestor.getInstance().insertarPasajero(codigo, nombre, apellidos, documento, pais, correo, tipo);
+			mensaje = "Pasajero añadido correctamente.";
+		} else {
+			PasajerosGestor.getInstance().modificarPasajero(pasajero, codigo, nombre, apellidos, documento, pais, correo, tipo);
+			mensaje = "Pasajero modificado correctamente.";
+		}
+
+		recargarPanel();
 		pasajerosPanel.modoEdicion(false);
+		pasajerosPanel.mostrarExito(mensaje);
 	}
 	
-	private void recargarPanel() {
-		cargarTabla();
+	private String comprobarFormulario() {
+		String codigo = pasajerosPanel.getTextFieldCodigo().getText().trim();
+		String nombre = pasajerosPanel.getTextFieldNombre().getText().trim();
+		String apellidos = pasajerosPanel.getTextFieldApellidos().getText().trim();
+		String documento = pasajerosPanel.getTextFieldDocumento().getText().trim();
+		String pais = pasajerosPanel.getTextFieldPais().getText().trim();
+		String correo = pasajerosPanel.getTextFieldCorreo().getText().trim();
+
+		if (nombre.isBlank() || apellidos.isBlank() || documento.isBlank() || pais.isBlank() || correo.isBlank()) {
+			return "Rellena todos los campos.";
+		}
+
+		Pasajero pasajeroActual = PasajerosGestor.getInstance().buscarPorCodPasajero(codigo);
+
+		if ((pasajeroActual == null || !documento.equals(pasajeroActual.getDocumentoIdentificativo()))
+				&& PasajerosGestor.getInstance().existeDNI(documento)) {
+			return "Ese documento ya esta en uso.";
+		}
+
+		if ((pasajeroActual == null || !correo.equals(pasajeroActual.getCorreo()))
+				&& PasajerosGestor.getInstance().existeCorreo(correo)) {
+			return "Ese correo ya esta en uso.";
+		}
+
+		return "";
+	}
+	
+	
+	private void cancelar() {
+		pasajerosPanel.modoEdicion(false);
+		vaciarFormulario();
+	}
+	
+	public void recargarPanel() {
+		cargarTabla(PasajerosGestor.getInstance().getPasajeros());
 		desactivarFormulario();
 		vaciarFormulario();
 		pasajerosPanel.getLblAdvertencia().setText("");
@@ -119,10 +184,12 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		pasajerosPanel.getComboBoxTipo().setEnabled(false);
 		
 	}
+	
+	
 
-	private void cargarTabla() {
+	private void cargarTabla(ArrayList<Pasajero> listaPasajeros) {
 		pasajerosPanel.getModeloTabla().setRowCount(0);
-		for (Pasajero pasajero : PasajerosGestor.getInstance().getPasajeros()) {
+		for (Pasajero pasajero : listaPasajeros) {
 			pasajerosPanel.getModeloTabla().addRow(new Object[] {pasajero.getCodPasajero(), pasajero.getNombre(), pasajero.getApellidos(), pasajero.getTipo()});
 		}
 	}
@@ -136,6 +203,7 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		pasajerosPanel.getTextFieldCorreo().setText("");
 		pasajerosPanel.getComboBoxTipo().setSelectedIndex(0);
 		pasajerosPanel.getTabla().clearSelection();
+		pasajerosPanel.habilitarBtnEliminarYModificar(false);
 	}
 	
 	private void rellenarFormulario(Pasajero pasajero) {
@@ -159,15 +227,41 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		if (e.getValueIsAdjusting()) {
-			return;
-		} else {
-			Pasajero pasajero = PasajerosGestor.getInstance().buscarPorCodPasajero(
-					String.valueOf(pasajerosPanel.getTabla().getValueAt(pasajerosPanel.getTabla().getSelectedRow(), 0))
-					);
-			rellenarFormulario(pasajero);
+		if (!e.getValueIsAdjusting()) {
+			int filaInt = pasajerosPanel.getTabla().getSelectedRow();
+			boolean seleccion = filaInt != -1;
+			if (seleccion) {
+				Pasajero pasajero = PasajerosGestor.getInstance().buscarPorCodPasajero(
+						String.valueOf(pasajerosPanel.getTabla().getValueAt(filaInt, 0))
+						);
+				rellenarFormulario(pasajero);
+			}
+			pasajerosPanel.habilitarBtnEliminarYModificar(seleccion);
 		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		filtrar();
+		
+	}
+	
+private void filtrar () {
+		String criterio = pasajerosPanel.getComboBoxFiltro().getSelectedItem().toString();
+		String texto = pasajerosPanel.getTextFieldBuscar().getText();
+		cargarTabla(PasajerosGestor.getInstance().filtrarPasajeros(criterio, texto));
 	}
 
 }
