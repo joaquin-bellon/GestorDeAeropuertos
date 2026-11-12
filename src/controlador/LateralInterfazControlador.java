@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import vista.LateralInterfazPanel;
-import vista.PasajerosPanel;
 
 public class LateralInterfazControlador implements ActionListener {
 	private PrincipalControlador principalControlador;
@@ -27,7 +26,6 @@ public class LateralInterfazControlador implements ActionListener {
 		lateralInterfazPanel.getTglbtnEquipajes().addActionListener(this);
 		lateralInterfazPanel.getTglbtnEmbarques().addActionListener(this);
 		lateralInterfazPanel.getTglbtnIncidencias().addActionListener(this);
-		lateralInterfazPanel.getTglbtnOperativa().addActionListener(this);
 		lateralInterfazPanel.getTglbtnInformes().addActionListener(this);
 		
 	}
@@ -57,13 +55,12 @@ public class LateralInterfazControlador implements ActionListener {
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getEquipajesPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnEmbarques()) {
+			principalControlador.getEmbarquesControlador().recargarPanel();
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getEmbarquesPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnIncidencias()) {
+			principalControlador.getIncidenciasControlador().recargarPanel();
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getIncidenciasPanel());
-		}
-		else if (e.getSource() == lateralInterfazPanel.getTglbtnOperativa()) {
-			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getOperativaPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnInformes()) {
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getCuadroDeMandosPanel());

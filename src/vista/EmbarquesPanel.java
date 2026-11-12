@@ -28,6 +28,8 @@ public class EmbarquesPanel extends PanelGenerico {
 				new String[] {"Fecha"},
 				new String[] {"Código", "Reserva", "Fecha y hora", "Puerta", "Estado"});
 
+		getTextFieldBuscar().putClientProperty("JTextField.placeholderText", "Desde la fecha (aaaa-mm-dd)");
+
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		lblCodigo.setBounds(20, 55, 105, 30);
@@ -57,6 +59,7 @@ public class EmbarquesPanel extends PanelGenerico {
 		textFieldFechaHora = new JTextField();
 		textFieldFechaHora.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		textFieldFechaHora.setBounds(125, 139, 175, 30);
+		textFieldFechaHora.putClientProperty("JTextField.placeholderText", "aaaa-mm-dd hh:mm");
 		getPanelFormulario().add(textFieldFechaHora);
 
 		lblPuerta = new JLabel("Puerta");

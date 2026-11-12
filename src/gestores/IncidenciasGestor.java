@@ -156,7 +156,7 @@ public class IncidenciasGestor {
 		}
 		return incidenciasVuelo;
 	}
-	private Incidencia buscarIncidenciaPorCodigo(String codIncidencia) {
+	public Incidencia buscarIncidenciaPorCodigo(String codIncidencia) {
 		Incidencia incidencia = null;
 		Iterator<Incidencia> iterator = incidencias.iterator();
 		while (iterator.hasNext()) {
@@ -264,31 +264,11 @@ public class IncidenciasGestor {
 			e.printStackTrace();
 		}
 	}
-	public void insertarIncidencia(Scanner sc) {
-		String [] datos = new String [8];
-		datos[0] = String.valueOf(Utilidades.pedirFecha(sc, "Introduce la fecha de la incidencia"));
-		datos[1] = crearNuevoIdentificador();
-		datos[2] = gestorVuelos.pedirVuelo(sc, "afectado").getCodigo();
-		datos[3] = escogerTipo(sc);
-
-		int num;
-		System.out.println("Introduce la duracion en minutos:");
-		do {
-			num = Utilidades.leerEntero(sc);
-			if (num < 0) {
-				System.err.println("La duracion de la incidencia no puede ser negativa.");
-			}
-		}while (num < 0);
-		datos[4] = String.valueOf(num);
-
-		datos[5] = pedirDescripcion(sc, "Inserte la descripcion:");
-
-		datos[6] = escogerPrioridad(sc);
-		datos[7] = escogerEstado(sc);
-		incidencias.add(new Incidencia (datos[0],datos[1],datos[2],datos[3],Integer.parseInt(datos[4]), datos[5], datos[6], datos[7]));
-		System.out.printf("Incidencia %s creada\n", datos[1]);
+	public void insertarIncidencia(String fecha, String codigo, String vuelo, String tipo, int duracion, String descripcion, String prioridad) {
+		incidencias.add(new Incidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad, "ABIERTA"));
 		volcarEnTxt();
 	}
+
 	private String escogerTipo(Scanner sc) {
 		System.out.println("Escoja un tipo: 1.RETRASO - 2.CANCELACION - 3.CAMBIO_PUERTA - 4.EQUIPAJE_PERDIDO - 5.AVERIA");
 		int opcion = Utilidades.leerOpcion(sc, 1, 5);
@@ -312,7 +292,7 @@ public class IncidenciasGestor {
 		}
 		return tipo;
 	}
-	private String crearNuevoIdentificador() {
+	public String crearNuevoIdentificador() {
 		int dato = 0;
 		for (Incidencia incidencia : incidencias) {
 			int aux = Integer.parseInt(incidencia.getCodigo().substring(3));
@@ -322,68 +302,76 @@ public class IncidenciasGestor {
 		}
 		return String.format("INC%03d", dato + 1);
 	}
-	public void actualizarIncidencia(Scanner sc) {
-		Incidencia incidencia = pedirIncidencia(sc, "a actualizar");
-
-		System.out.println("--------------------------------");
-		System.out.println(incidencia);
-		System.out.println("--------------------------------");
-		System.out.println("Escoge el dato a cambiar: 1.descripcion 2.duracion 3.Prioridad 4.Estado");
-		int opcion = Utilidades.leerOpcion(sc, 1, 4);
-
-		switch(opcion) {
-		case 1:
-			incidencia.setDescripcion(pedirDescripcion(sc, "Introduce la nueva descripcion"));
-			System.out.println("Descripcion cambiada correctamente");
-			break;
-		case 2:
-			int duracion;
-			System.out.println("Introduce la nueva duracion");
-			do {
-				duracion = Utilidades.leerEntero(sc);
-				if (duracion < 0) {
-					System.err.println("La duracion de la incidencia no puede ser negativa.");
-				}
-			}while (duracion < 0);
-			incidencia.setDuracion(duracion);
-			System.out.println("Duracion cambiada correctamente");
-			break;
-		case 3:
-			incidencia.setPrioridad(escogerPrioridad(sc));
-			System.out.println("Prioridad cambiada correctamente");
-			break;
-		case 4:
-			incidencia.setEstado(escogerEstado(sc));
-			System.out.println("Estado cambiado correctamente");
-			break;
- 		}
-
+	public String modificarIncidencia(Incidencia incidencia, String fecha, String vuelo, String tipo, int duracion, String descripcion, String prioridad, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un administrador puede modificar incidencias.";
+		}
+		incidencia.setFecha(fecha);
+		incidencia.setVuelo(vuelo);
+		incidencia.setTipo(tipo);
+		incidencia.setDuracion(duracion);
+		incidencia.setDescripcion(descripcion);
+		incidencia.setPrioridad(prioridad);
 		volcarEnTxt();
-	}
-	private String pedirDescripcion(Scanner sc, String mensaje) {
-		String descripcion;
-		System.out.println(mensaje);
-		do {
-			descripcion = sc.nextLine().trim();
-			if (descripcion.isEmpty()) {
-				System.err.println("La descripcion no puede estar vacia.");
-			}
-			else if (descripcion.contains("|")) {
-				System.err.println("La descripcion no puede contener el caracter |");
-				descripcion = "";
-			}
-		}while (descripcion.isEmpty());
-		return descripcion;
+		return "";
 	}
 
-	public void eliminarIncidencia (Scanner sc ) {
-		mostrarIncidencias();
-		Incidencia incidencia = pedirIncidencia(sc, "a eliminar");
+	public String eliminarIncidencia(String codigo, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un administrador puede eliminar incidencias.";
+		}
+		Incidencia incidencia = buscarIncidenciaPorCodigo(codigo);
+		if (incidencia == null) {
+			return "No existe ninguna incidencia con el codigo " + codigo + ".";
+		}
 		incidencias.remove(incidencia);
-		System.out.println("Incidencia eliminada correctamente.");
 		volcarEnTxt();
-
+		return "";
 	}
+
+	public String cerrarIncidencia(String codigo, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un administrador puede cerrar incidencias.";
+		}
+		Incidencia incidencia = buscarIncidenciaPorCodigo(codigo);
+		if (incidencia == null) {
+			return "No existe ninguna incidencia con el codigo " + codigo + ".";
+		}
+		if (incidencia.getEstado().equals("CERRADA")) {
+			return "La incidencia " + codigo + " ya esta cerrada.";
+		}
+		incidencia.setEstado("CERRADA");
+		volcarEnTxt();
+		return "";
+	}
+
+	public ArrayList<Incidencia> filtrarIncidencias(String criterio, String texto) {
+		ArrayList<Incidencia> arrayIncidencias = new ArrayList<Incidencia>();
+		texto = texto.toUpperCase();
+
+		for (Incidencia incidencia : incidencias) {
+			switch (criterio) {
+			case "Código":
+				if (incidencia.getCodigo().toUpperCase().contains(texto)) {
+					arrayIncidencias.add(incidencia);
+				}
+				break;
+			case "Vuelo":
+				if (incidencia.getVuelo().toUpperCase().contains(texto)) {
+					arrayIncidencias.add(incidencia);
+				}
+				break;
+			case "Tipo":
+				if (incidencia.getTipo().toUpperCase().contains(texto)) {
+					arrayIncidencias.add(incidencia);
+				}
+				break;
+			}
+		}
+
+		return arrayIncidencias;
+	}
+
 	public void filtrarPorPrioridad(Scanner sc) {
 		ArrayList <Incidencia> incidenciasAbiertasYUrgentes =devolverIncidenciasPrioritarias(devolverIncidenciasAbiertas());
 		if (incidenciasAbiertasYUrgentes.size() != 0) {
