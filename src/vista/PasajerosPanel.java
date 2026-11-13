@@ -28,6 +28,7 @@ public class PasajerosPanel extends PanelGenerico {
 	public PasajerosPanel() {
 		super("Pasajeros", "Consulta, añade, modifica y elimina pasajeros", "Datos del pasajero",
 				new String[] {"Código", "Nombre", "Apellidos"},
+				new String[] {"Código", "Nombre", "Apellidos", "Tipo"},
 				new String[] {"Código", "Nombre", "Apellidos", "Tipo"});
 
 		lblCodigo = new JLabel("Código");

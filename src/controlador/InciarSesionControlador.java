@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import gestores.UsuariosGestor;
 import modelo.Usuario;
 import temas.Tema;
-import utilidades.HiloErrores;
+import utilidades.HiloAvisos;
 import vista.IniciarSesionPanel;
 
 public class InciarSesionControlador implements ActionListener, MouseListener {
@@ -37,15 +37,15 @@ public class InciarSesionControlador implements ActionListener, MouseListener {
 			String contrasenia = new String (iniciarSesionPanel.getPasswordFieldContrasenia().getPassword());
 			
 			if (nombre.isBlank() || contrasenia.isBlank()) {
-				HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "Rellene todos los campos.");
+				HiloAvisos hiloErrores = new HiloAvisos(iniciarSesionPanel.getLblError(), "Rellene todos los campos.");
 				hiloErrores.start();
 			} else {
 				Usuario usuario = UsuariosGestor.getInstance().buscarUsuarioPorNombre(nombre);
 				if (usuario == null) {
-					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "Ese Usuario no existe.");
+					HiloAvisos hiloErrores = new HiloAvisos(iniciarSesionPanel.getLblError(), "Ese Usuario no existe.");
 					hiloErrores.start();
 				}else if (!usuario.getContrasenia().equals(contrasenia)) {
-					HiloErrores hiloErrores = new HiloErrores(iniciarSesionPanel.getLblError(), "La contraseña no es correcta.");
+					HiloAvisos hiloErrores = new HiloAvisos(iniciarSesionPanel.getLblError(), "La contraseña no es correcta.");
 					hiloErrores.start();
 				}
 				else {

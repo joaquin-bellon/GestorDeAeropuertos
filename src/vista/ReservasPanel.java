@@ -49,7 +49,8 @@ public class ReservasPanel extends PanelGenerico {
 	public ReservasPanel() {
 		super("Reservas", "Consulta, crea, modifica y cancela reservas", "Datos de la reserva",
 				new String[] {"Código", "Pasajero", "Vuelo"},
-				new String[] {"Código", "Pasajero", "Vuelo", "Asiento", "Clase", "Estado"});
+				new String[] {"Código", "Pasajero", "Vuelo", "Asiento", "Clase", "Estado"},
+				new String[] {"Código", "Pasajero", "Vuelo", "Fecha", "Precio"});
 
 		getBtnEliminar().setText("Cancelar");
 		getLblConfirmarEliminar().setText("¿Seguro que quieres cancelarla?");

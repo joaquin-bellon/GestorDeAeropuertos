@@ -310,64 +310,13 @@ public class EquipajesGestor {
 		return equipaje;
 	}
 
-	public void insertarEquipaje(Scanner sc) {
-		aniadirEquipajeAlArray(sc);
+	public void insertarEquipaje(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
+		aniadirEquipajeAlArray(codigo, codReserva, peso, tipo, estado, prioridad);
 		volcarEnCSV();
 	}
 
-	private void aniadirEquipajeAlArray(Scanner sc) {
-		String [] datos = new String [6];
-		System.out.println("Creación de un Equipaje");
-		System.out.println("------------------------------");
-		//Reserva
-		Reserva reserva;
-		do {
-			System.out.println("Código de la reserva:");
-			datos[1] = sc.nextLine().trim().toUpperCase();
-			reserva = gestorReservas.buscarPorCodigo(datos[1]);
-			if (reserva == null) {
-				System.err.println("Esa reserva no existe. Inténtelo de nuevo.");
-				datos[1] = null;
-			}
-			else if (reserva.getEstado().equals("CANCELADA")) {
-				System.err.println("Esa reserva está cancelada. Inténtelo de nuevo.");
-				datos[1] = null;
-			}
-		}while (datos[1] == null);
-		//Tipo
-			datos[3] = escogerTipo(sc);
-		//Peso
-			System.out.println("Inserte el peso del equipaje:");
-			double peso = pedirPeso(sc);
-			imprimirSiElPesoEsValido(datos[3],peso);
-			datos[2] = String.valueOf(peso);
-
-		//Estado
-		datos[4] = "REGISTRADO";
-		//Prioridad
-		datos[5] = escogerPrioridad(sc);
-
-		datos[0] = crearIdentificador();
-		equipajes.add(new Equipaje (datos[0],datos[1],Double.parseDouble(datos[2]),datos[3],datos[4],datos[5]));
-		System.out.println("Equipaje " + datos[0] + " creado correctamente.");
-	}
-
-
-
-	private double pedirPeso(Scanner sc) {
-		double peso = -1;
-		do {
-			try {
-				System.out.println("¿Cuál es el peso del equipaje en kg?");
-				peso = Double.parseDouble(sc.nextLine().trim());
-				if (peso <= 0) {
-					System.err.println("El peso tiene que ser mayor que 0.");
-				}
-			}catch (NumberFormatException e) {
-				System.err.println("Introduzca un número.");
-			}
-		}while (peso <= 0);
-		return peso;
+	private void aniadirEquipajeAlArray(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
+		equipajes.add(new Equipaje(codigo, codReserva, peso, tipo, estado, prioridad));
 	}
 
 	private String escogerTipo(Scanner sc) {
@@ -389,39 +338,15 @@ public class EquipajesGestor {
 		return tipo;
 	}
 
-	public void actualizarEquipaje(Scanner sc, ConfiguracionGestor gestorConfiguracion) {
-		Equipaje equipaje = pedirEquipaje(sc, "a actualizar");
-
-		System.out.println("--------------------------------");
-		System.out.println(equipaje);
-		System.out.println("--------------------------------");
-		System.out.println("Escoge el dato a cambiar: 1.Peso 2.Tipo 3.Estado 4.Prioridad");
-		int opcion;
-		opcion = Utilidades.leerOpcion(sc, 1, 4);
-		System.out.println("--------------------------------");
-
-		switch (opcion) {
-		case 1://Peso
-			double peso = -1;
-			peso = pedirPeso(sc);
-			imprimirSiElPesoEsValido(equipaje.getTipo(), peso);
-			equipaje.setPeso(peso);
-			break;
-		case 2://Tipo
-			equipaje.setTipo(escogerTipo(sc));
-			imprimirSiElPesoEsValido(equipaje.getTipo(), equipaje.getPeso());
-			break;
-		case 3://Estado
-			equipaje.setEstado(escogerEstado(sc));
-			break;
-		case 4://Prioridad
-			equipaje.setPrioridad(escogerPrioridad(sc));
-			break;
-		}
+	public void modificarEquipaje(Equipaje equipaje, double peso, String tipo, String estado, String prioridad) {
+		equipaje.setPeso(peso);
+		equipaje.setTipo(tipo);
+		equipaje.setEstado(estado);
+		equipaje.setPrioridad(prioridad);
 		volcarEnCSV();
 	}
 
-	private String crearIdentificador() {
+	public String crearIdentificador() {
 		int dato = 0;
 		for (Equipaje equipaje : equipajes) {
 			int aux = Integer.parseInt(equipaje.getCodEquipaje().substring(2));
@@ -432,21 +357,52 @@ public class EquipajesGestor {
 		return String.format("EQ%04d", dato + 1);
 	}
 
-	public void eliminarEquipaje(Scanner sc) {
-		mostrarEquipajes();
-		Equipaje equipaje = pedirEquipaje(sc, "a eliminar");
+	public boolean eliminarEquipaje(String codEquipaje) {
+		Equipaje equipaje = buscarPorCodigo(codEquipaje);
+		if (equipaje == null) {
+			return false;
+		}
 		equipajes.remove(equipaje);
-		System.out.println("Equipaje eliminado correctamente.");
 		volcarEnCSV();
+		return true;
 	}
 
-	private void imprimirSiElPesoEsValido(String tipo, double peso) {
-		JsonNode  regla= gestorConfiguracion.buscarTipoEquipaje(tipo);
-		double pesoMaximo = regla.get("pesoMaximo").asDouble();
-		if (peso > pesoMaximo) {
-			System.err.println("El peso maximo es " + pesoMaximo + " mientras que el peso de tu equipaje es " + peso +
-				"\nTe pasas por " + (peso-pesoMaximo) + " kilogramos.");
+	public double obtenerPesoMaximo(String tipo) {
+		JsonNode regla = gestorConfiguracion.buscarTipoEquipaje(tipo);
+		return regla.get("pesoMaximo").asDouble();
+	}
+
+	public ArrayList<Equipaje> filtrarEquipajes(String criterio, String texto) {
+		ArrayList<Equipaje> arrayEquipajes = new ArrayList<Equipaje>();
+		texto = texto.toUpperCase();
+
+		for (Equipaje equipaje : equipajes) {
+			Reserva reserva = gestorReservas.buscarPorCodigo(equipaje.getCodReserva());
+			switch (criterio) {
+			case "Código":
+				if (equipaje.getCodEquipaje().toUpperCase().contains(texto)) {
+					arrayEquipajes.add(equipaje);
+				}
+				break;
+			case "Reserva":
+				if (equipaje.getCodReserva().toUpperCase().contains(texto)) {
+					arrayEquipajes.add(equipaje);
+				}
+				break;
+			case "Pasajero":
+				if (reserva != null && reserva.getPasajero().toUpperCase().contains(texto)) {
+					arrayEquipajes.add(equipaje);
+				}
+				break;
+			case "Vuelo":
+				if (reserva != null && reserva.getVuelo().toUpperCase().contains(texto)) {
+					arrayEquipajes.add(equipaje);
+				}
+				break;
+			}
 		}
+
+		return arrayEquipajes;
 	}
 
 	private boolean pesoEsValido(String tipo, double peso) {

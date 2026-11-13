@@ -15,7 +15,6 @@ import vista.IncidenciasPanel;
 import vista.IniciarSesionPanel;
 import vista.InicioPanel;
 import vista.LateralInterfazPanel;
-import vista.OperativaPanel;
 import vista.PasajerosPanel;
 import vista.RegistrarsePanel;
 import vista.ReservasPanel;
@@ -34,7 +33,6 @@ public class PrincipalControlador {
 	private EquipajesControlador equipajesControlador;
 	private EmbarquesControlador embarquesControlador;
 	private IncidenciasControlador incidenciasControlador;
-	private OperativaControlador operativaControlador;
 	private CuadroDeMandosControlador cuadroDeMandosControlador;
 	private InicioControlador inicioControlador;
 	private LateralInterfazControlador lateralInterfazControlador;
@@ -71,7 +69,6 @@ public class PrincipalControlador {
 		frame.setEquipajesPanel(new EquipajesPanel());
 		frame.setEmbarquesPanel(new EmbarquesPanel());
 		frame.setIncidenciasPanel(new IncidenciasPanel());
-		frame.setOperativaPanel(new OperativaPanel());
 		frame.setCuadroDeMandosPanel(new CuadroDeMandosPanel());
 		frame.setConfiguracionPanel(new ConfiguracionPanel());
 		
@@ -85,7 +82,6 @@ public class PrincipalControlador {
 		anadirPanelOculto(frame.getEquipajesPanel());
 		anadirPanelOculto(frame.getEmbarquesPanel());
 		anadirPanelOculto(frame.getIncidenciasPanel());
-		anadirPanelOculto(frame.getOperativaPanel());
 		anadirPanelOculto(frame.getCuadroDeMandosPanel());
 		anadirPanelOculto(frame.getConfiguracionPanel());
 		
@@ -99,7 +95,6 @@ public class PrincipalControlador {
 		equipajesControlador = new EquipajesControlador(this);
 		embarquesControlador = new EmbarquesControlador(this);
 		incidenciasControlador = new IncidenciasControlador(this);
-		operativaControlador = new OperativaControlador(this);
 		cuadroDeMandosControlador = new CuadroDeMandosControlador(this);
 		inicioControlador = new InicioControlador(this);
 		lateralInterfazControlador = new LateralInterfazControlador(this);
@@ -122,7 +117,6 @@ public class PrincipalControlador {
 		frame.getContentPane().remove(frame.getEquipajesPanel());
 		frame.getContentPane().remove(frame.getEmbarquesPanel());
 		frame.getContentPane().remove(frame.getIncidenciasPanel());
-		frame.getContentPane().remove(frame.getOperativaPanel());
 		frame.getContentPane().remove(frame.getCuadroDeMandosPanel());
 		frame.getContentPane().remove(frame.getInicioPanel());
 		frame.getContentPane().remove(frame.getLateralInterfazPanel());
@@ -135,7 +129,6 @@ public class PrincipalControlador {
 		frame.setEquipajesPanel(null);
 		frame.setEmbarquesPanel(null);
 		frame.setIncidenciasPanel(null);
-		frame.setOperativaPanel(null);
 		frame.setCuadroDeMandosPanel(null);
 		frame.setInicioPanel(null);
 		frame.setLateralInterfazPanel(null);
@@ -148,7 +141,6 @@ public class PrincipalControlador {
 		equipajesControlador = null;
 		embarquesControlador = null;
 		incidenciasControlador = null;
-		operativaControlador = null;
 		cuadroDeMandosControlador = null;
 		inicioControlador = null;
 		lateralInterfazControlador = null;
@@ -279,14 +271,6 @@ public class PrincipalControlador {
 
 	public void setIncidenciasControlador(IncidenciasControlador incidenciasControlador) {
 		this.incidenciasControlador = incidenciasControlador;
-	}
-
-	public OperativaControlador getOperativaControlador() {
-		return operativaControlador;
-	}
-
-	public void setOperativaControlador(OperativaControlador operativaControlador) {
-		this.operativaControlador = operativaControlador;
 	}
 
 	public CuadroDeMandosControlador getCuadroDeMandosControlador() {

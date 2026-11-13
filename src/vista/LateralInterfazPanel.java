@@ -25,7 +25,6 @@ public class LateralInterfazPanel extends JPanel implements ImagenesConTema {
 	private JToggleButton tglbtnEquipajes;
 	private JToggleButton tglbtnEmbarques;
 	private JToggleButton tglbtnIncidencias;
-	private JToggleButton tglbtnOperativa;
 	private JToggleButton tglbtnInformes;
 	private JButton btnConfiguracion;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -77,15 +76,9 @@ public class LateralInterfazPanel extends JPanel implements ImagenesConTema {
 		darEstiloMenu(tglbtnIncidencias);
 		add(tglbtnIncidencias);
 
-		tglbtnOperativa = new JToggleButton("Operativa");
-		buttonGroup.add(tglbtnOperativa);
-		tglbtnOperativa.setBounds(12, 334, 196, 40);
-		darEstiloMenu(tglbtnOperativa);
-		add(tglbtnOperativa);
-
 		tglbtnInformes = new JToggleButton("Informes");
 		buttonGroup.add(tglbtnInformes);
-		tglbtnInformes.setBounds(12, 380, 196, 40);
+		tglbtnInformes.setBounds(12, 334, 196, 40);
 		darEstiloMenu(tglbtnInformes);
 		add(tglbtnInformes);
 
@@ -129,7 +122,6 @@ public class LateralInterfazPanel extends JPanel implements ImagenesConTema {
 		ponerIconoMenu(tglbtnEquipajes, "equipajes.png");
 		ponerIconoMenu(tglbtnEmbarques, "embarques.png");
 		ponerIconoMenu(tglbtnIncidencias, "incidencias.png");
-		ponerIconoMenu(tglbtnOperativa, "operativa.png");
 		ponerIconoMenu(tglbtnInformes, "informes.png");
 		btnConfiguracion.setIcon(new ImageIcon(UIManager.getString("Lateral.iconos") + "configuracion.png"));
 	}
@@ -164,10 +156,6 @@ public class LateralInterfazPanel extends JPanel implements ImagenesConTema {
 
 	public JToggleButton getTglbtnIncidencias() {
 		return tglbtnIncidencias;
-	}
-
-	public JToggleButton getTglbtnOperativa() {
-		return tglbtnOperativa;
 	}
 
 	public JToggleButton getTglbtnInformes() {

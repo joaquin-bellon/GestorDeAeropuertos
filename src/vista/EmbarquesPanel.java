@@ -26,7 +26,10 @@ public class EmbarquesPanel extends PanelGenerico {
 	public EmbarquesPanel() {
 		super("Embarques", "Consulta y gestiona los embarques", "Datos del embarque",
 				new String[] {"Fecha"},
-				new String[] {"Código", "Reserva", "Fecha y hora", "Puerta", "Estado"});
+				new String[] {"Código", "Reserva", "Fecha y hora", "Puerta", "Estado"},
+				new String [] {"Código", "Fecha", "Puerta", "Estado"});
+
+		getTextFieldBuscar().putClientProperty("JTextField.placeholderText", "Desde aaaa-mm-dd");
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -57,6 +60,7 @@ public class EmbarquesPanel extends PanelGenerico {
 		textFieldFechaHora = new JTextField();
 		textFieldFechaHora.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		textFieldFechaHora.setBounds(125, 139, 175, 30);
+		textFieldFechaHora.putClientProperty("JTextField.placeholderText", "aaaa-mm-dd hh:mm");
 		getPanelFormulario().add(textFieldFechaHora);
 
 		lblPuerta = new JLabel("Puerta");

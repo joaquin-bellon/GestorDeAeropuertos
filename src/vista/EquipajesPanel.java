@@ -27,10 +27,15 @@ public class EquipajesPanel extends PanelGenerico {
 	private JLabel lblPrioridad;
 	private JComboBox<String> comboBoxPrioridad;
 
+	private JLabel lblAvisoPeso;
+	private JLabel lblAvisoPesoRegistrado;
+	private JLabel lblAvisoPesoLimite;
+	private JLabel lblAvisoPesoDiferencia;
 	public EquipajesPanel() {
 		super("Equipajes", "Consulta, registra, modifica y da de baja equipajes", "Datos del equipaje",
 				new String[] {"Código", "Reserva", "Pasajero", "Vuelo"},
-				new String[] {"Código", "Reserva", "Pasajero", "Vuelo", "Peso", "Tipo"});
+				new String[] {"Código", "Reserva", "Pasajero", "Vuelo", "Peso", "Tipo"},
+				new String[] {"Código", "Reserva", "Peso", "Tipo"});
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -117,6 +122,28 @@ public class EquipajesPanel extends PanelGenerico {
 		comboBoxPrioridad.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxPrioridad.setBounds(125, 349, 175, 30);
 		getPanelFormulario().add(comboBoxPrioridad);
+
+		lblAvisoPeso = crearLabelAviso("Supera el límite de peso", 400, Font.BOLD);
+		lblAvisoPesoRegistrado = crearLabelAviso("", 422, Font.PLAIN);
+		lblAvisoPesoLimite = crearLabelAviso("", 442, Font.PLAIN);
+		lblAvisoPesoDiferencia = crearLabelAviso("", 462, Font.PLAIN);
+		mostrarAvisoPeso(false);
+	}
+
+	private JLabel crearLabelAviso(String texto, int y, int estilo) {
+		JLabel label = new JLabel(texto);
+		label.setFont(new Font("SansSerif", estilo, 13));
+		label.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
+		label.setBounds(20, y, 280, 20);
+		getPanelFormulario().add(label);
+		return label;
+	}
+
+	public void mostrarAvisoPeso(boolean mostrar) {
+		lblAvisoPeso.setVisible(mostrar);
+		lblAvisoPesoRegistrado.setVisible(mostrar);
+		lblAvisoPesoLimite.setVisible(mostrar);
+		lblAvisoPesoDiferencia.setVisible(mostrar);
 	}
 
 	public JTextField getTextFieldCodigo() {
@@ -149,6 +176,18 @@ public class EquipajesPanel extends PanelGenerico {
 
 	public JComboBox<String> getComboBoxPrioridad() {
 		return comboBoxPrioridad;
+	}
+
+	public JLabel getLblAvisoPesoRegistrado() {
+		return lblAvisoPesoRegistrado;
+	}
+
+	public JLabel getLblAvisoPesoLimite() {
+		return lblAvisoPesoLimite;
+	}
+
+	public JLabel getLblAvisoPesoDiferencia() {
+		return lblAvisoPesoDiferencia;
 	}
 
 }

@@ -2,10 +2,17 @@ package vista;
 
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class IncidenciasPanel extends PanelGenerico {
 
@@ -26,11 +33,23 @@ public class IncidenciasPanel extends PanelGenerico {
 	private JComboBox<String> comboBoxPrioridad;
 	private JLabel lblEstado;
 	private JTextField textFieldEstado;
+	private JButton btnCerrarIncidencia;
+	private JButton btnVerRelacionados;
+	private JPanel panelRelacionados;
+	private JLabel lblTituloRelacionados;
+	private JTabbedPane tabbedPaneRelacionados;
+	private DefaultTableModel modeloVuelo;
+	private DefaultTableModel modeloReservas;
+	private DefaultTableModel modeloPasajeros;
+	private DefaultTableModel modeloEquipajes;
+	private DefaultTableModel modeloEmbarques;
+	private JButton btnVolver;
 
 	public IncidenciasPanel() {
 		super("Incidencias", "Consulta, crea y gestiona incidencias", "Datos de la incidencia",
 				new String[] {"Código", "Vuelo", "Tipo"},
-				new String[] {"Código", "Fecha", "Vuelo", "Tipo", "Prioridad", "Estado"});
+				new String[] {"Código", "Fecha", "Vuelo", "Tipo", "Prioridad", "Estado"},
+				new String[] {"Código", "Fecha", "Prioridad", "Estado"});
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -115,6 +134,67 @@ public class IncidenciasPanel extends PanelGenerico {
 		textFieldEstado.setEditable(false);
 		textFieldEstado.setBounds(125, 349, 175, 30);
 		getPanelFormulario().add(textFieldEstado);
+
+		btnCerrarIncidencia = new JButton("Cerrar incidencia");
+		btnCerrarIncidencia.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		btnCerrarIncidencia.setBounds(20, 398, 280, 34);
+		btnCerrarIncidencia.putClientProperty("FlatLaf.style", "arc: 12");
+		getPanelFormulario().add(btnCerrarIncidencia);
+
+		btnVerRelacionados = new JButton("Ver datos relacionados");
+		btnVerRelacionados.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		btnVerRelacionados.setBounds(20, 442, 280, 34);
+		btnVerRelacionados.putClientProperty("FlatLaf.style", "arc: 12");
+		getPanelFormulario().add(btnVerRelacionados);
+
+		panelRelacionados = new JPanel();
+		panelRelacionados.setLayout(null);
+		panelRelacionados.setBorder(BorderFactory.createTitledBorder(""));
+		panelRelacionados.setBounds(640, 130, 320, 500);
+		panelRelacionados.setVisible(false);
+		add(panelRelacionados);
+
+		lblTituloRelacionados = new JLabel("Datos relacionados");
+		lblTituloRelacionados.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblTituloRelacionados.setBounds(20, 15, 280, 24);
+		panelRelacionados.add(lblTituloRelacionados);
+
+		tabbedPaneRelacionados = new JTabbedPane();
+		tabbedPaneRelacionados.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabbedPaneRelacionados.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		tabbedPaneRelacionados.setBounds(10, 45, 300, 395);
+		panelRelacionados.add(tabbedPaneRelacionados);
+
+		modeloVuelo = crearPestania("Vuelo", new String[] {"Dato", "Valor"});
+		modeloReservas = crearPestania("Reservas", new String[] {"Código", "Pasajero", "Asiento", "Estado"});
+		modeloPasajeros = crearPestania("Pasajeros", new String[] {"Código", "Nombre", "Apellidos"});
+		modeloEquipajes = crearPestania("Equipajes", new String[] {"Código", "Reserva", "Peso", "Estado"});
+		modeloEmbarques = crearPestania("Embarques", new String[] {"Código", "Reserva", "Estado"});
+
+		btnVolver = new JButton("Volver a la incidencia");
+		btnVolver.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		btnVolver.setBounds(20, 452, 280, 34);
+		btnVolver.putClientProperty("FlatLaf.style", "arc: 12");
+		panelRelacionados.add(btnVolver);
+	}
+
+	private DefaultTableModel crearPestania(String titulo, String[] columnas) {
+		DefaultTableModel modelo = new DefaultTableModel(new Object[][] {}, columnas);
+		JTable tabla = new JTable(modelo);
+		tabla.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		tabla.setRowHeight(24);
+	//	tabla.setDefaultEditor(Object.class, null);
+		tabla.setRowSelectionAllowed(false);
+		tabla.getTableHeader().setReorderingAllowed(false);
+		tabla.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+		tabbedPaneRelacionados.addTab(titulo, new JScrollPane(tabla));
+		return modelo;
+	}
+
+	public void mostrarRelacionados(boolean mostrar) {
+		getPanelFormulario().setVisible(!mostrar);
+		panelRelacionados.setVisible(mostrar);
+		tabbedPaneRelacionados.setSelectedIndex(0);
 	}
 
 	public JTextField getTextFieldCodigo() {
@@ -147,6 +227,42 @@ public class IncidenciasPanel extends PanelGenerico {
 
 	public JTextField getTextFieldEstado() {
 		return textFieldEstado;
+	}
+
+	public JButton getBtnCerrarIncidencia() {
+		return btnCerrarIncidencia;
+	}
+
+	public JButton getBtnVerRelacionados() {
+		return btnVerRelacionados;
+	}
+
+	public JButton getBtnVolver() {
+		return btnVolver;
+	}
+
+	public JLabel getLblTituloRelacionados() {
+		return lblTituloRelacionados;
+	}
+
+	public DefaultTableModel getModeloVuelo() {
+		return modeloVuelo;
+	}
+
+	public DefaultTableModel getModeloReservas() {
+		return modeloReservas;
+	}
+
+	public DefaultTableModel getModeloPasajeros() {
+		return modeloPasajeros;
+	}
+
+	public DefaultTableModel getModeloEquipajes() {
+		return modeloEquipajes;
+	}
+
+	public DefaultTableModel getModeloEmbarques() {
+		return modeloEmbarques;
 	}
 
 }
