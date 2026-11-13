@@ -2,10 +2,18 @@ package vista;
 
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class VuelosPanel extends PanelGenerico {
 
@@ -30,14 +38,35 @@ public class VuelosPanel extends PanelGenerico {
 	private JTextField textFieldPuerta;
 	private JLabel lblEstado;
 	private JComboBox<String> comboBoxEstado;
+	private JButton btnFicha;
+	private JPanel panelFicha;
+	private JLabel lblTituloFicha;
+	private JLabel lblOcupacion;
+	private JProgressBar progressBarOcupacion;
+	private JTabbedPane tabbedPaneFicha;
+	private DefaultTableModel modeloResumen;
+	private DefaultTableModel modeloReservas;
+	private DefaultTableModel modeloIncidencias;
+	private JButton btnVolver;
 
 	public VuelosPanel() {
 		super("Vuelos", "Consulta, añade y modifica vuelos", "Datos del vuelo",
 				new String[] {"Código", "Origen", "Destino", "Avión", "Terminal"},
-				new String[] {"Código", "Origen", "Destino", "Salida", "Avión", "Estado"});
+				new String[] {"Código", "Origen", "Destino", "Salida", "Avión", "Estado"},
+				new String[] {"Código", "Salida", "Destino", "Estado"});
 
 		remove(getBtnEliminar());
 		getBtnLimpiar().setLocation(324, 594);
+		getTabla().getColumnModel().getColumn(1).setPreferredWidth(60);
+		getTabla().getColumnModel().getColumn(2).setPreferredWidth(60);
+		getTabla().getColumnModel().getColumn(3).setPreferredWidth(125);
+		getTabla().getColumnModel().getColumn(5).setPreferredWidth(110);
+
+		btnFicha = new JButton("Ficha del vuelo");
+		btnFicha.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		btnFicha.setBounds(476, 594, 144, 36);
+		btnFicha.putClientProperty("FlatLaf.style", "arc: 12");
+		add(btnFicha);
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -140,6 +169,68 @@ public class VuelosPanel extends PanelGenerico {
 		comboBoxEstado.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxEstado.setBounds(125, 433, 175, 30);
 		getPanelFormulario().add(comboBoxEstado);
+
+		panelFicha = new JPanel();
+		panelFicha.setLayout(null);
+		panelFicha.setBorder(BorderFactory.createTitledBorder(""));
+		panelFicha.setBounds(640, 130, 320, 500);
+		panelFicha.setVisible(false);
+		add(panelFicha);
+
+		lblTituloFicha = new JLabel("Ficha del vuelo");
+		lblTituloFicha.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblTituloFicha.setBounds(20, 15, 280, 24);
+		panelFicha.add(lblTituloFicha);
+
+		lblOcupacion = new JLabel("Ocupación");
+		lblOcupacion.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblOcupacion.setBounds(20, 45, 280, 20);
+		panelFicha.add(lblOcupacion);
+
+		progressBarOcupacion = new JProgressBar(0, 100);
+		progressBarOcupacion.setStringPainted(true);
+		progressBarOcupacion.setBounds(20, 68, 280, 20);
+		panelFicha.add(progressBarOcupacion);
+
+		tabbedPaneFicha = new JTabbedPane();
+		tabbedPaneFicha.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		tabbedPaneFicha.setBounds(10, 100, 300, 340);
+		panelFicha.add(tabbedPaneFicha);
+
+		modeloResumen = crearPestania("Resumen", new String[] {"Dato", "Valor"});
+		modeloReservas = crearPestania("Reservas", new String[] {"Código", "Pasajero", "Asiento", "Clase"});
+		modeloIncidencias = crearPestania("Incidencias", new String[] {"Código", "Tipo", "Prioridad", "Estado"});
+
+		btnVolver = new JButton("Volver al vuelo");
+		btnVolver.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		btnVolver.setBounds(20, 452, 280, 34);
+		btnVolver.putClientProperty("FlatLaf.style", "arc: 12");
+		panelFicha.add(btnVolver);
+	}
+
+	private DefaultTableModel crearPestania(String titulo, String[] columnas) {
+		DefaultTableModel modelo = new DefaultTableModel(new Object[][] {}, columnas);
+		JTable tabla = new JTable(modelo);
+		tabla.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		tabla.setRowHeight(24);
+		tabla.setDefaultEditor(Object.class, null);
+		tabla.setRowSelectionAllowed(false);
+		tabla.getTableHeader().setReorderingAllowed(false);
+		tabla.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+		tabbedPaneFicha.addTab(titulo, new JScrollPane(tabla));
+		return modelo;
+	}
+
+	@Override
+	public void modoEdicion(boolean edicion) {
+		super.modoEdicion(edicion);
+		btnFicha.setVisible(!edicion);
+	}
+
+	public void mostrarFicha(boolean mostrar) {
+		getPanelFormulario().setVisible(!mostrar);
+		panelFicha.setVisible(mostrar);
+		tabbedPaneFicha.setSelectedIndex(0);
 	}
 
 	public JTextField getTextFieldCodigo() {
@@ -180,6 +271,38 @@ public class VuelosPanel extends PanelGenerico {
 
 	public JComboBox<String> getComboBoxEstado() {
 		return comboBoxEstado;
+	}
+
+	public JButton getBtnFicha() {
+		return btnFicha;
+	}
+
+	public JButton getBtnVolver() {
+		return btnVolver;
+	}
+
+	public JLabel getLblTituloFicha() {
+		return lblTituloFicha;
+	}
+
+	public JLabel getLblOcupacion() {
+		return lblOcupacion;
+	}
+
+	public JProgressBar getProgressBarOcupacion() {
+		return progressBarOcupacion;
+	}
+
+	public DefaultTableModel getModeloResumen() {
+		return modeloResumen;
+	}
+
+	public DefaultTableModel getModeloReservas() {
+		return modeloReservas;
+	}
+
+	public DefaultTableModel getModeloIncidencias() {
+		return modeloIncidencias;
 	}
 
 }

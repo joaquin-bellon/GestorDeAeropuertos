@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import gestores.UsuariosGestor;
 import modelo.Usuario;
 import temas.Tema;
-import utilidades.HiloErrores;
+import utilidades.HiloAvisos;
 import vista.RegistrarsePanel;
 
 public class RegistrarseControlador implements ActionListener, MouseListener {
@@ -38,19 +38,19 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 			String contraseniaRepetida = new String(registrarsePanel.getPasswordFieldRepetir().getPassword());
 			
 			if (nombre.isBlank() || contrasenia.isBlank() || contrasenia.isBlank()) {
-				HiloErrores hiloErrores = new HiloErrores(registrarsePanel.getLblError(), "Rellene todos los campos.");
+				HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), "Rellene todos los campos.");
 				hiloErrores.start();
 			}else {
 				Usuario usuario= UsuariosGestor.getInstance().buscarUsuarioPorNombre(nombre);
 				if (usuario != null) {
-					HiloErrores hiloErrores = new HiloErrores(registrarsePanel.getLblError(), "Ya existe un usuario con ese nombre.");
+					HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), "Ya existe un usuario con ese nombre.");
 					hiloErrores.start();
 				}else if (!contrasenia.equals(contraseniaRepetida)) {
-					HiloErrores hiloErrores = new HiloErrores(registrarsePanel.getLblError(), "Las contraseñas no coinciden.");
+					HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), "Las contraseñas no coinciden.");
 					hiloErrores.start();
 				}
 				else if (contrasenia.length() < 4) {
-					HiloErrores hiloErrores = new HiloErrores(registrarsePanel.getLblError(), "La contraseña debe tener al menos 4 caracteres.");
+					HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), "La contraseña debe tener al menos 4 caracteres.");
 					hiloErrores.start();
 				}
 				else {

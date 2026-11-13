@@ -331,188 +331,65 @@ public class VuelosGestor {
 	}
 
 
-	public void aniadirVuelo(Scanner sc) {
-		System.out.println("Creación de un Vuelo");
-		System.out.println("------------------------------");
-
-		//Aerolínea
-		String aerolinea;
-		do {
-			System.out.println("Código de aerolínea:");
-			aerolinea = sc.nextLine().trim().toUpperCase();
-			if (buscarEn("Aerolineas", "Aerolinea", "codigo", aerolinea) == null) {
-				System.err.println("Esa aerolínea no existe. Inténtelo de nuevo.");
-				aerolinea = null;
-			}
-		} while (aerolinea == null);
-
-		//Código de vuelo
-		String codigo;
-		do {
-			System.out.println("Código de vuelo (" + aerolinea + " + 4 dígitos, ej: " + aerolinea + "1234):");
-			codigo = sc.nextLine().trim().toUpperCase();
-			if (!codigo.matches(aerolinea + "\\d{4}")) {
-				System.err.println("Formato no válido.");
-				codigo = null;
-			} else if (buscarPorCodigo(codigo) != null) {
-				System.err.println("Ya existe un vuelo con ese código.");
-				codigo = null;
-			}
-		} while (codigo == null);
-
-		//Avión
-		String avion;
-		do {
-			System.out.println("Matrícula del avión:");
-			avion = sc.nextLine().trim().toUpperCase();
-			Element elAvion = buscarEn("Aviones", "Avion", "matricula", avion);
-			if (elAvion == null) {
-				System.err.println("Ese avión no existe.");
-				avion = null;
-			} else if (!elAvion.getAttribute("aerolinea").equals(aerolinea)) {
-				System.err.println("Ese avión no pertenece a " + aerolinea + ".");
-				avion = null;
-			}
-		} while (avion == null);
-
-		//Destino
-		String destino;
-		do {
-			System.out.println("Código de destino:");
-			destino = sc.nextLine().trim().toUpperCase();
-			if (destino.equals("MAD")) {
-				System.err.println("El destino no puede ser el propio origen.");
-				destino = null;
-			} else if (buscarEn("Destinos", "Destino", "codigo", destino) == null) {
-				System.err.println("Ese destino no existe.");
-				destino = null;
-			}
-		} while (destino == null);
-
-		//Terminal
-		String terminal;
-		do {
-			System.out.println("Terminal de salida:");
-			terminal = sc.nextLine().trim().toUpperCase();
-			Element elTerminal = buscarEn("Terminales", "Terminal", "codigo", terminal);
-			if (elTerminal == null || !elTerminal.getAttribute("estado").equals("OPERATIVA")) {
-				System.err.println("Terminal no válida o no operativa.");
-				terminal = null;
-			}
-		} while (terminal == null);
-
-		//Puerta
-		String puerta;
-		do {
-			System.out.println("Puerta de embarque:");
-			puerta = sc.nextLine().trim().toUpperCase();
-			Element elPuerta = buscarEn("Puertas", "Puerta", "codigo", puerta);
-			if (elPuerta == null) {
-				System.err.println("Esa puerta no existe.");
-				puerta = null;
-			} else if (!elPuerta.getAttribute("terminal").equals(terminal)) {
-				System.err.println("Esa puerta no pertenece a la terminal " + terminal + ".");
-				puerta = null;
-			} else if (!elPuerta.getAttribute("estado").equals("OPERATIVA")) {
-				System.err.println("Esa puerta no está operativa.");
-				puerta = null;
-			}
-		} while (puerta == null);
-
-		//Horario
-		LocalDateTime salida;
-		LocalDateTime llegada;
-		do {
-			salida = LocalDateTime.of(Utilidades.pedirFecha(sc, "Fecha de salida"), Utilidades.pedirHora(sc, "Hora de salida"));
-			llegada = LocalDateTime.of(Utilidades.pedirFecha(sc, "Fecha de llegada"), Utilidades.pedirHora(sc, "Hora de llegada"));
-			if (!llegada.isAfter(salida)) {
-				System.err.println("La llegada debe ser posterior a la salida. Vuelva a introducir el horario.");
-			}
-		} while (!llegada.isAfter(salida));
-
+	public String insertarVuelo(String codigo, String aerolinea, String avion, String terminal, String puerta, String destino,
+			LocalDateTime salida, LocalDateTime llegada, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un administrador puede añadir vuelos.";
+		}
 		vuelos.add(new Vuelo(codigo, aerolinea, avion, terminal, puerta, destino, salida, llegada));
-		System.out.println("Vuelo " + codigo + " creado correctamente.");
+		volcarEnXML();
+		return "";
 	}
 
-	public void actualizarVuelo(Scanner sc) {
-		Vuelo vuelo = pedirVuelo(sc, "a editar");
-
-		System.out.println("-----------------------------------------------------------------------------");
-		System.out.println("Dato a cambiar:\n"
-				+ "1.Terminal y Puerta - 2.Estado - 3.HoraSalida - 4.HoraLlegada");
-		System.out.println("-----------------------------------------------------------------------------");
-		System.out.println("Escoge:");
-		int num = -1;
-		num = Utilidades.leerOpcion(sc, 1, 4);
-
-		LocalTime hora;
-		switch (num) {
-
-		case 1: //Terminal y Puerta
-			String terminal;
-			do {
-				System.out.println("Introduce la nueva terminal:");
-				terminal = sc.nextLine().trim().toUpperCase();
-				if (buscarEn("Terminales", "Terminal", "codigo", terminal) == null) {
-					System.err.println("Esa terminal no existe. Inténtelo de nuevo");
-					terminal = null;
-				}
-			} while (terminal == null);
-
-			String puerta;
-			do {
-				System.out.println("Introduce el código de la nueva puerta");
-				puerta = sc.nextLine().trim().toUpperCase();
-				Element puertaNode = buscarEn("Puertas", "Puerta", "codigo", puerta);
-				if (puertaNode == null) {
-					System.err.println("Esa puerta no existe");
-					puerta = null;
-				} else if (!puertaNode.getAttribute("terminal").equals(terminal)) {
-					System.err.println("Esa puerta no pertenece a la terminal " + terminal);
-					puerta = null;
-				} else if (!puertaNode.getAttribute("estado").equals("OPERATIVA")) {
-					System.err.println("Esa puerta NO está Operativa.");
-					puerta = null;
-				}
-			} while (puerta == null);
-
-			vuelo.setTerminal(terminal);
-			vuelo.setPuerta(puerta);
-			System.out.println("Puerta cambiada correctamente");
-			break;
-
-		case 2: //Estado
-			System.out.print("Escoge entre los siguientes. ");
-			vuelo.setEstado(pedirEstadoVuelo(sc));
-			System.out.println("Estado cambiado correctamente");
-			break;
-
-		case 3: //HoraSalida
-			LocalDateTime nuevaSalida;
-			do {
-				hora = Utilidades.pedirHora(sc, "¿Cúal es la nueva hora?");
-				nuevaSalida = LocalDateTime.of(vuelo.getSalida().toLocalDate(), hora);
-				if (!vuelo.getLlegada().isAfter(nuevaSalida)) {
-					System.err.println("La salida tiene que ser anterior a la llegada");
-				}
-			} while (!vuelo.getLlegada().isAfter(nuevaSalida));
-			vuelo.setSalida(nuevaSalida);
-			System.out.println("La hora de salida se ha cambiado correctamente.");
-			break;
-
-		case 4: //HoraLlegada
-			LocalDateTime nuevaLlegada;
-			do {
-				hora = Utilidades.pedirHora(sc, "¿Cúal es la nueva hora?");
-				nuevaLlegada = LocalDateTime.of(vuelo.getLlegada().toLocalDate(), hora);
-				if (!nuevaLlegada.isAfter(vuelo.getSalida())) {
-					System.err.println("La llegada tiene que ser posterior a la salida");
-				}
-			} while (!nuevaLlegada.isAfter(vuelo.getSalida()));
-			vuelo.setLlegada(nuevaLlegada);
-			System.out.println("La hora de llegada se ha cambiado correctamente.");
-			break;
+	public String modificarVuelo(Vuelo vuelo, String terminal, String puerta, LocalDateTime salida, LocalDateTime llegada,
+			String estado, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un administrador puede modificar vuelos.";
 		}
+		vuelo.setTerminal(terminal);
+		vuelo.setPuerta(puerta);
+		vuelo.setSalida(salida);
+		vuelo.setLlegada(llegada);
+		vuelo.setEstado(estado);
+		volcarEnXML();
+		return "";
+	}
+
+	public ArrayList<Vuelo> filtrarVuelos(String criterio, String texto) {
+		ArrayList<Vuelo> arrayVuelos = new ArrayList<Vuelo>();
+		texto = texto.toUpperCase();
+
+		for (Vuelo vuelo : vuelos) {
+			switch (criterio) {
+			case "Código":
+				if (vuelo.getCodigo().toUpperCase().contains(texto)) {
+					arrayVuelos.add(vuelo);
+				}
+				break;
+			case "Origen":
+				if (vuelo.getOrigen().toUpperCase().contains(texto)) {
+					arrayVuelos.add(vuelo);
+				}
+				break;
+			case "Destino":
+				if (vuelo.getDestino().toUpperCase().contains(texto)) {
+					arrayVuelos.add(vuelo);
+				}
+				break;
+			case "Avión":
+				if (vuelo.getAvion().toUpperCase().contains(texto)) {
+					arrayVuelos.add(vuelo);
+				}
+				break;
+			case "Terminal":
+				if (vuelo.getTerminal().toUpperCase().contains(texto)) {
+					arrayVuelos.add(vuelo);
+				}
+				break;
+			}
+		}
+
+		return arrayVuelos;
 	}
 
 	public String pedirEstadoVuelo(Scanner sc) {

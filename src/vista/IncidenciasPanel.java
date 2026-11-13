@@ -48,7 +48,8 @@ public class IncidenciasPanel extends PanelGenerico {
 	public IncidenciasPanel() {
 		super("Incidencias", "Consulta, crea y gestiona incidencias", "Datos de la incidencia",
 				new String[] {"Código", "Vuelo", "Tipo"},
-				new String[] {"Código", "Fecha", "Vuelo", "Tipo", "Prioridad", "Estado"});
+				new String[] {"Código", "Fecha", "Vuelo", "Tipo", "Prioridad", "Estado"},
+				new String[] {"Código", "Fecha", "Prioridad", "Estado"});
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -182,7 +183,7 @@ public class IncidenciasPanel extends PanelGenerico {
 		JTable tabla = new JTable(modelo);
 		tabla.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		tabla.setRowHeight(24);
-		tabla.setDefaultEditor(Object.class, null);
+	//	tabla.setDefaultEditor(Object.class, null);
 		tabla.setRowSelectionAllowed(false);
 		tabla.getTableHeader().setReorderingAllowed(false);
 		tabla.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));

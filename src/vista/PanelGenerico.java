@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-import utilidades.HiloErrores;
+import utilidades.HiloAvisos;
 
 public class PanelGenerico extends JPanel {
 
@@ -24,6 +24,8 @@ public class PanelGenerico extends JPanel {
 	private JLabel lblBuscarPor;
 	private JComboBox<String> comboBoxFiltro;
 	private JTextField textFieldBuscar;
+	private JLabel lblOrdenarPor;
+	private JComboBox<String> comboBoxOrdenar;
 	private JScrollPane scrollPaneTabla;
 	private JTable tabla;
 	private DefaultTableModel modeloTabla;
@@ -40,7 +42,7 @@ public class PanelGenerico extends JPanel {
 	private JButton btnSiEliminar;
 	private JButton btnNoEliminar;
 
-	public PanelGenerico(String titulo, String subtitulo, String tituloFormulario, String[] filtros, String[] columnas) {
+	public PanelGenerico(String titulo, String subtitulo, String tituloFormulario, String[] filtros, String[] columnas, String[] ordenFiltros) {
 		setBounds(220, 110, 980, 653);
 		setLayout(null);
 
@@ -56,20 +58,31 @@ public class PanelGenerico extends JPanel {
 
 		lblBuscarPor = new JLabel("Buscar por");
 		lblBuscarPor.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblBuscarPor.setBounds(20, 85, 80, 30);
+		lblBuscarPor.setBounds(20, 85, 75, 30);
 		add(lblBuscarPor);
 
 		comboBoxFiltro = new JComboBox<String>();
 		comboBoxFiltro.setModel(new DefaultComboBoxModel<String>(filtros));
 		comboBoxFiltro.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		comboBoxFiltro.setBounds(100, 85, 130, 30);
+		comboBoxFiltro.setBounds(95, 85, 115, 30);
 		add(comboBoxFiltro);
 
 		textFieldBuscar = new JTextField();
 		textFieldBuscar.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		textFieldBuscar.setBounds(240, 85, 380, 30);
+		textFieldBuscar.setBounds(218, 85, 200, 30);
 		textFieldBuscar.putClientProperty("JTextField.placeholderText", "Escribe para filtrar...");
 		add(textFieldBuscar);
+
+		lblOrdenarPor = new JLabel("Ordenar por");
+		lblOrdenarPor.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblOrdenarPor.setBounds(428, 85, 80, 30);
+		add(lblOrdenarPor);
+
+		comboBoxOrdenar = new JComboBox<String>();
+		comboBoxOrdenar.setModel(new DefaultComboBoxModel<String>(ordenFiltros));
+		comboBoxOrdenar.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		comboBoxOrdenar.setBounds(514, 85, 106, 30);
+		add(comboBoxOrdenar);
 
 		modeloTabla = new DefaultTableModel(new Object[][] {}, columnas);
 		tabla = new JTable(modeloTabla);
@@ -145,6 +158,7 @@ public class PanelGenerico extends JPanel {
 		tabla.setEnabled(!edicion);
 		comboBoxFiltro.setEnabled(!edicion);
 		textFieldBuscar.setEnabled(!edicion);
+		comboBoxOrdenar.setEnabled(!edicion);
 		
 		
 	}
@@ -165,16 +179,17 @@ public class PanelGenerico extends JPanel {
 		tabla.setEnabled(!confirmando);
 		comboBoxFiltro.setEnabled(!confirmando);
 		textFieldBuscar.setEnabled(!confirmando);
+		comboBoxOrdenar.setEnabled(!confirmando);
 	}
 	
 	public void mostrarError(String texto) {
 		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
-		new HiloErrores(lblAdvertencia, texto).start();
+		new HiloAvisos(lblAdvertencia, texto).start();
 	}
 
 	public void mostrarExito(String texto) {
 		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Mensaje.exito");
-		new HiloErrores(lblAdvertencia, texto).start();
+		new HiloAvisos(lblAdvertencia, texto).start();
 	}
 
 	public JComboBox<String> getComboBoxFiltro() {
@@ -183,6 +198,10 @@ public class PanelGenerico extends JPanel {
 
 	public JTextField getTextFieldBuscar() {
 		return textFieldBuscar;
+	}
+
+	public JComboBox<String> getComboBoxOrdenar() {
+		return comboBoxOrdenar;
 	}
 
 	public JTable getTabla() {

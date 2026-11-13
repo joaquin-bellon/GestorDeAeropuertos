@@ -2,13 +2,13 @@ package utilidades;
 
 import javax.swing.JLabel;
 
-public class HiloErrores extends Thread {
+public class HiloAvisos extends Thread {
 	private JLabel label;
 	private String texto;
 	
 	
 	
-	public HiloErrores(JLabel label, String texto) {
+	public HiloAvisos(JLabel label, String texto) {
 		this.label = label;
 		this.texto = texto;
 	}

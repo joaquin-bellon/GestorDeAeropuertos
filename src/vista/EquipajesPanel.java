@@ -34,7 +34,8 @@ public class EquipajesPanel extends PanelGenerico {
 	public EquipajesPanel() {
 		super("Equipajes", "Consulta, registra, modifica y da de baja equipajes", "Datos del equipaje",
 				new String[] {"Código", "Reserva", "Pasajero", "Vuelo"},
-				new String[] {"Código", "Reserva", "Pasajero", "Vuelo", "Peso", "Tipo"});
+				new String[] {"Código", "Reserva", "Pasajero", "Vuelo", "Peso", "Tipo"},
+				new String[] {"Código", "Reserva", "Peso", "Tipo"});
 
 		lblCodigo = new JLabel("Código");
 		lblCodigo.setFont(new Font("SansSerif", Font.PLAIN, 14));
