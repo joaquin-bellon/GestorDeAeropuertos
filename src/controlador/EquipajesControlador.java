@@ -5,10 +5,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import comparadores.ComparadorEquipajes;
 import gestores.EquipajesGestor;
 import gestores.ReservasGestor;
 import modelo.Equipaje;
@@ -41,6 +43,7 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 		equipajesPanel.getBtnNoEliminar().addActionListener(this);
 		equipajesPanel.getBtnSiEliminar().addActionListener(this);
 		equipajesPanel.getComboBoxFiltro().addActionListener(this);
+		equipajesPanel.getComboBoxOrdenar().addActionListener(this);
 		equipajesPanel.getComboBoxTipo().addActionListener(this);
 
 		equipajesPanel.getTabla().getSelectionModel().addListSelectionListener(this);
@@ -75,6 +78,8 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 			eliminar();
 			equipajesPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == equipajesPanel.getComboBoxFiltro()) {
+			filtrar();
+		} else if (e.getSource() == equipajesPanel.getComboBoxOrdenar()) {
 			filtrar();
 		} else if (e.getSource() == equipajesPanel.getComboBoxTipo()) {
 			actualizarAvisoPeso();
@@ -237,8 +242,9 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 	}
 
 	private void cargarTabla(ArrayList<Equipaje> listaEquipajes) {
+		ArrayList<Equipaje> lista = devolverListaOrdenada(listaEquipajes);
 		equipajesPanel.getModeloTabla().setRowCount(0);
-		for (Equipaje equipaje : listaEquipajes) {
+		for (Equipaje equipaje : lista) {
 			Reserva reserva = ReservasGestor.getInstance().buscarPorCodigo(equipaje.getCodReserva());
 			String pasajero = "";
 			String vuelo = "";
@@ -248,6 +254,12 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 			}
 			equipajesPanel.getModeloTabla().addRow(new Object[] {equipaje.getCodEquipaje(), equipaje.getCodReserva(), pasajero, vuelo, equipaje.getPeso(), equipaje.getTipo()});
 		}
+	}
+
+	private ArrayList<Equipaje> devolverListaOrdenada(ArrayList<Equipaje> listaEquipajes) {
+		ArrayList<Equipaje> lista = new ArrayList<Equipaje>(listaEquipajes);
+		Collections.sort(lista, new ComparadorEquipajes(String.valueOf(equipajesPanel.getComboBoxOrdenar().getSelectedItem())));
+		return lista;
 	}
 
 	private void vaciarFormulario() {

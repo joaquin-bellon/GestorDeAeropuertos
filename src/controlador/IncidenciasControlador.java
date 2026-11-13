@@ -7,10 +7,12 @@ import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import comparadores.ComparadorIncidencias;
 import gestores.EmbarquesGestor;
 import gestores.EquipajesGestor;
 import gestores.IncidenciasGestor;
@@ -71,6 +73,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		incidenciasPanel.getBtnVerRelacionados().addActionListener(this);
 		incidenciasPanel.getBtnVolver().addActionListener(this);
 		incidenciasPanel.getComboBoxFiltro().addActionListener(this);
+		incidenciasPanel.getComboBoxOrdenar().addActionListener(this);
 
 		incidenciasPanel.getTabla().getSelectionModel().addListSelectionListener(this);
 
@@ -120,6 +123,8 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		} else if (e.getSource() == incidenciasPanel.getBtnVolver()) {
 			incidenciasPanel.mostrarRelacionados(false);
 		} else if (e.getSource() == incidenciasPanel.getComboBoxFiltro()) {
+			filtrar();
+		} else if (e.getSource() == incidenciasPanel.getComboBoxOrdenar()) {
 			filtrar();
 		}
 	}
@@ -330,10 +335,17 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 	}
 
 	private void cargarTabla(ArrayList<Incidencia> listaIncidencias) {
+		ArrayList<Incidencia> lista = devolverListaOrdenada(listaIncidencias);
 		incidenciasPanel.getModeloTabla().setRowCount(0);
-		for (Incidencia incidencia : listaIncidencias) {
+		for (Incidencia incidencia : lista) {
 			incidenciasPanel.getModeloTabla().addRow(new Object[] {incidencia.getCodigo(), incidencia.getFecha(), incidencia.getVuelo(), incidencia.getTipo(), incidencia.getPrioridad(), incidencia.getEstado()});
 		}
+	}
+
+	private ArrayList<Incidencia> devolverListaOrdenada(ArrayList<Incidencia> listaIncidencias) {
+		ArrayList<Incidencia> lista = new ArrayList<Incidencia>(listaIncidencias);
+		Collections.sort(lista, new ComparadorIncidencias(String.valueOf(incidenciasPanel.getComboBoxOrdenar().getSelectedItem())));
+		return lista;
 	}
 
 	private void vaciarFormulario() {
