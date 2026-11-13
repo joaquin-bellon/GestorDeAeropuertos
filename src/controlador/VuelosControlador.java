@@ -7,12 +7,14 @@ import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.w3c.dom.Element;
 
+import comparadores.ComparadorVuelos;
 import gestores.IncidenciasGestor;
 import gestores.ReservasGestor;
 import gestores.VuelosGestor;
@@ -62,6 +64,7 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		vuelosPanel.getBtnFicha().addActionListener(this);
 		vuelosPanel.getBtnVolver().addActionListener(this);
 		vuelosPanel.getComboBoxFiltro().addActionListener(this);
+		vuelosPanel.getComboBoxOrdenar().addActionListener(this);
 
 		vuelosPanel.getTabla().getSelectionModel().addListSelectionListener(this);
 
@@ -97,6 +100,8 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		} else if (e.getSource() == vuelosPanel.getBtnCancelar()) {
 			cancelar();
 		} else if (e.getSource() == vuelosPanel.getComboBoxFiltro()) {
+			filtrar();
+		} else if (e.getSource() == vuelosPanel.getComboBoxOrdenar()) {
 			filtrar();
 		}
 	}
@@ -314,10 +319,17 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 	}
 
 	private void cargarTabla(ArrayList<Vuelo> listaVuelos) {
+		ArrayList<Vuelo> lista = devolverListaOrdenada(listaVuelos);
 		vuelosPanel.getModeloTabla().setRowCount(0);
-		for (Vuelo vuelo : listaVuelos) {
+		for (Vuelo vuelo : lista) {
 			vuelosPanel.getModeloTabla().addRow(new Object[] {vuelo.getCodigo(), vuelo.getOrigen(), vuelo.getDestino(), vuelo.getSalida().toString().replace("T", " "), vuelo.getAvion(), vuelo.getEstado()});
 		}
+	}
+
+	private ArrayList<Vuelo> devolverListaOrdenada(ArrayList<Vuelo> listaVuelos) {
+		ArrayList<Vuelo> lista = new ArrayList<Vuelo>(listaVuelos);
+		Collections.sort(lista, new ComparadorVuelos(String.valueOf(vuelosPanel.getComboBoxOrdenar().getSelectedItem())));
+		return lista;
 	}
 
 	private void vaciarFormulario() {

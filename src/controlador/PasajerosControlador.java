@@ -5,10 +5,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import comparadores.ComparadorPasajeros;
 import gestores.PasajerosGestor;
 import modelo.Pasajero;
 import vista.PasajerosPanel;
@@ -40,6 +42,7 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 		pasajerosPanel.getBtnNoEliminar().addActionListener(this);
 		pasajerosPanel.getBtnSiEliminar().addActionListener(this);
 		pasajerosPanel.getComboBoxFiltro().addActionListener(this);
+		pasajerosPanel.getComboBoxOrdenar().addActionListener(this);
 		
 		pasajerosPanel.getTabla().getSelectionModel().addListSelectionListener(this);
 		
@@ -73,6 +76,8 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 			eliminar();
 			pasajerosPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == pasajerosPanel.getComboBoxFiltro()) {
+			filtrar();
+		} else if (e.getSource() == pasajerosPanel.getComboBoxOrdenar()) {
 			filtrar();
 		}
 	}
@@ -190,10 +195,17 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 	
 
 	private void cargarTabla(ArrayList<Pasajero> listaPasajeros) {
+		ArrayList<Pasajero> lista = devolverListaOrdenada(listaPasajeros);
 		pasajerosPanel.getModeloTabla().setRowCount(0);
-		for (Pasajero pasajero : listaPasajeros) {
+		for (Pasajero pasajero : lista) {
 			pasajerosPanel.getModeloTabla().addRow(new Object[] {pasajero.getCodPasajero(), pasajero.getNombre(), pasajero.getApellidos(), pasajero.getTipo()});
 		}
+	}
+
+	private ArrayList<Pasajero> devolverListaOrdenada(ArrayList<Pasajero> listaPasajeros) {
+		ArrayList<Pasajero> lista = new ArrayList<Pasajero>(listaPasajeros);
+		Collections.sort(lista, new ComparadorPasajeros(String.valueOf(pasajerosPanel.getComboBoxOrdenar().getSelectedItem())));
+		return lista;
 	}
 
 	private void vaciarFormulario() {

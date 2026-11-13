@@ -8,10 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import comparadores.ComparadorEmbarques;
 import gestores.EmbarquesGestor;
 import gestores.ReservasGestor;
 import gestores.VuelosGestor;
@@ -46,6 +48,7 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 		embarquesPanel.getBtnNoEliminar().addActionListener(this);
 		embarquesPanel.getBtnSiEliminar().addActionListener(this);
 		embarquesPanel.getComboBoxFiltro().addActionListener(this);
+		embarquesPanel.getComboBoxOrdenar().addActionListener(this);
 
 		embarquesPanel.getTabla().getSelectionModel().addListSelectionListener(this);
 
@@ -78,6 +81,8 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 			eliminar();
 			embarquesPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == embarquesPanel.getComboBoxFiltro()) {
+			filtrar();
+		} else if (e.getSource() == embarquesPanel.getComboBoxOrdenar()) {
 			filtrar();
 		}
 	}
@@ -248,10 +253,17 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 	}
 
 	private void cargarTabla(ArrayList<Embarque> listaEmbarques) {
+		ArrayList<Embarque> lista = devolverListaOrdenada(listaEmbarques);
 		embarquesPanel.getModeloTabla().setRowCount(0);
-		for (Embarque embarque : listaEmbarques) {
+		for (Embarque embarque : lista) {
 			embarquesPanel.getModeloTabla().addRow(new Object[] {embarque.getCodEmbarque(), embarque.getCodReserva(), embarque.getFechaHora().replace("T", " "), embarque.getPuerta(), embarque.getEstado()});
 		}
+	}
+
+	private ArrayList<Embarque> devolverListaOrdenada(ArrayList<Embarque> listaEmbarques) {
+		ArrayList<Embarque> lista = new ArrayList<Embarque>(listaEmbarques);
+		Collections.sort(lista, new ComparadorEmbarques(String.valueOf(embarquesPanel.getComboBoxOrdenar().getSelectedItem())));
+		return lista;
 	}
 
 	private void vaciarFormulario() {
