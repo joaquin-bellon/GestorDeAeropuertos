@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -71,138 +70,6 @@ public class EquipajesGestor {
 
 	}
 
-	public void mostrarEquipajes() {
-		for (Equipaje equipaje : equipajes) {
-			System.out.println(equipaje);
-		}
-		System.out.println("========================================");
-	}
-
-	public void buscarEquipajes(Scanner sc) {
-		int opcion;
-		System.out.println("--------------------------------");
-		System.out.println("Escoge un criterio de busqueda: 1.ID_Equipaje 2.Reserva 3.Estado 4.Tipo 5.Prioridad 6. Vuelo 7. Pasajero");
-		opcion = Utilidades.leerOpcion(sc, 1, 7);
-		System.out.println("--------------------------------");
-
-
-		switch (opcion) {
-		case 1:
-			System.out.println("Inserte el código del equipaje:");
-			Equipaje equipaje = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (equipaje != null) {
-				Reserva reserva = gestorReservas.buscarPorCodigo(equipaje.getCodReserva());
-				System.out.println(equipaje);
-				System.out.println("Pasajero Asociado:");
-				System.out.println(gestorPasajeros.buscarPorCodPasajero(reserva.getPasajero()));
-				System.out.println("Vuelo Asociado: ");
-				System.out.println(gestorVuelos.buscarPorCodigo(reserva.getVuelo()));
-			}
-			else {
-				System.out.println("No existe ese equipaje");
-			}
-			break;
-		case 2:
-			System.out.println("Inserte el codigo de la reserva:");
-			String codReserva = sc.nextLine().trim().toUpperCase();
-			ArrayList<Equipaje>equipajesPorReserva = buscarEquipajesPorReserva(codReserva);
-			if (equipajesPorReserva.size() != 0) {
-				for (Equipaje equipajePorReserva : equipajesPorReserva) {
-					System.out.println(equipajePorReserva);
-				}
-			}else {
-				System.out.println("No hay equipajes asociados a esa reserva.");
-			}
-			break;
-		case 3:
-			ArrayList<Equipaje> equipajesEstado = buscarPorEstado(sc);
-			if (equipajesEstado.size() != 0) {
-				for (Equipaje equipajeEstado : equipajesEstado) {
-					System.out.println(equipajeEstado);
-				}
-			}else {
-				System.out.println("No hay equipaje en ese estado.");
-			}
-			break;
-			
-		case 4:
-			String tipo = escogerTipo(sc);
-			ArrayList<Equipaje> equipajesTipo = buscarPorTipo(tipo);
-			if (equipajesTipo.size() != 0 ) {
-				for (Equipaje equipajeTipo : equipajesTipo) {
-					System.out.println(equipajeTipo);
-				}
-			}else {
-				System.out.println("No hay equipajes de ese tipo");
-			}
-			break;
-			
-		case 5:
-			String prioridad = escogerPrioridad(sc);
-			ArrayList<Equipaje> equipajesPrioridad = buscarPorPrioridad(prioridad);
-			if (equipajesPrioridad.size() != 0) {
-				for (Equipaje equipajePrioridad : equipajesPrioridad) {
-					System.out.println(equipajePrioridad);
-				}
-			}else {
-				System.out.println("No hay equipajes en ese nivel de prioridad.");
-			}
-			break;
-			
-		case 6:
-			System.out.println("Inserte el codigo del vuelo:");
-			String codVuelo = sc.nextLine().trim().toUpperCase();
-			if (gestorVuelos.buscarPorCodigo(codVuelo) == null) {
-				System.out.println("No existe ese vuelo.");
-			}
-			else {
-				ArrayList<Equipaje> equipajesVuelo = buscarEquipajesAsociadosAVuelo(codVuelo);
-				if (equipajesVuelo.size() != 0) {
-					for (Equipaje equipajeVuelo : equipajesVuelo) {
-						System.out.println(equipajeVuelo);
-					}
-				}
-				else {
-					System.out.println("No hay equipajes asociados a ese vuelo.");
-				}
-			}
-			break;
-		case 7:
-			System.out.println("Inserte el codigo del pasajero:");
-			String codPasajero = sc.nextLine().trim().toUpperCase();
-			if (!gestorPasajeros.existeCodPasajero(codPasajero)) {
-				System.out.println("No existe ese pasajero.");
-			}
-			else {
-				ArrayList<Equipaje> equipajesPasajero = new ArrayList<Equipaje>();
-				for (Reserva reservaPasajero : gestorReservas.buscarResevasPorPasajero(codPasajero)) {
-					equipajesPasajero.addAll(buscarEquipajesPorReserva(reservaPasajero.getIdReserva()));
-				}
-				if (equipajesPasajero.size() != 0) {
-					for (Equipaje equipajePasajero : equipajesPasajero) {
-						System.out.println(equipajePasajero);
-					}
-				}
-				else {
-					System.out.println("Ese pasajero no tiene equipajes asociados.");
-				}
-			}
-			break;
-		}
-
-	}
-
-
-	private ArrayList<Equipaje> buscarPorTipo(String tipo) {
-		ArrayList<Equipaje> equipajesTipo = new ArrayList<Equipaje>();
-		for (Equipaje equipaje : equipajes) {
-			if (equipaje.getTipo().equals(tipo)) {
-				equipajesTipo.add(equipaje);
-			}
-		}
-		return equipajesTipo;
-	}
-
 	public ArrayList<Equipaje> buscarEquipajesPorReserva( String codReserva) {
 		ArrayList<Equipaje> equipajesPorReserva = new ArrayList<Equipaje>();
 		for (Equipaje equipaje : equipajes) {
@@ -224,61 +91,6 @@ public class EquipajesGestor {
 		return equipajesPrioridad;
 	}
 
-	private String escogerPrioridad(Scanner sc) {
-		int opcion;
-		System.out.println("Escoja un nivel de prioridad: 1.NORMAL - 2.FRAGIL - 3.PRIORITARIO");
-		opcion = Utilidades.leerOpcion(sc, 1, 3);
-		String prioridad ="";
-		switch (opcion) {
-		case 1:
-			prioridad = "NORMAL";
-			break;
-		case 2:
-			prioridad = "FRAGIL";
-			break;
-		case 3:
-			prioridad = "PRIORITARIO";
-			break;
-		}
-		return prioridad;
-	}
-
-	public ArrayList<Equipaje> buscarPorEstado(Scanner sc) {
-		String estado = escogerEstado(sc);
-		ArrayList<Equipaje> equipajesEstado = new ArrayList<Equipaje>();
-		for (Equipaje equipaje : equipajes) {
-			if (equipaje.getEstado().equals(estado)) {
-				equipajesEstado.add(equipaje);
-			}
-		}
-		return equipajesEstado;
-	}
-
-	private String escogerEstado(Scanner sc) {
-		int opcion;
-		System.out.println("Escoja un estado: 1.REGISTRADO - 2.CARGADO - 3.EN_TRANSITO - 4.ENTREGADO - 5.PERDIDO");
-		opcion = Utilidades.leerOpcion(sc, 1, 5);
-		String estado ="";
-		switch (opcion) {
-		case 1:
-			estado = "REGISTRADO";
-			break;
-		case 2:
-			estado = "CARGADO";
-			break;
-		case 3:
-			estado = "EN_TRANSITO";
-			break;
-		case 4:
-			estado = "ENTREGADO";
-			break;
-		case 5:
-			estado = "PERDIDO";
-			break;
-		}
-		return estado;
-	}
-
 	public Equipaje buscarPorCodigo(String cod) {
 		Iterator<Equipaje> iterator = equipajes.iterator();
 		Equipaje equipaje = null;
@@ -298,18 +110,6 @@ public class EquipajesGestor {
 
 	}
 
-	public Equipaje pedirEquipaje(Scanner sc, String accion) {
-		Equipaje equipaje;
-		System.out.println("Introduce el código del equipaje " + accion + ":");
-		do {
-			equipaje = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (equipaje == null) {
-				System.err.println("No se ha encontrado el equipaje. Inténtelo de nuevo:");
-			}
-		} while (equipaje == null);
-		return equipaje;
-	}
-
 	public void insertarEquipaje(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
 		aniadirEquipajeAlArray(codigo, codReserva, peso, tipo, estado, prioridad);
 		volcarEnCSV();
@@ -317,25 +117,6 @@ public class EquipajesGestor {
 
 	private void aniadirEquipajeAlArray(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
 		equipajes.add(new Equipaje(codigo, codReserva, peso, tipo, estado, prioridad));
-	}
-
-	private String escogerTipo(Scanner sc) {
-		int opcion;
-		System.out.println("Escoja un tipo: 1.FACTURADO - 2.MANO - 3.ESPECIAL");
-		opcion = Utilidades.leerOpcion(sc, 1, 3);
-		String tipo = "";
-		switch (opcion) {
-		case 1:
-			tipo = "FACTURADO";
-			break;
-		case 2:
-			tipo = "MANO";
-			break;
-		case 3:
-			tipo = "ESPECIAL";
-			break;
-		}
-		return tipo;
 	}
 
 	public void modificarEquipaje(Equipaje equipaje, double peso, String tipo, String estado, String prioridad) {

@@ -4,24 +4,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import modelo.Equipaje;
 import modelo.Incidencia;
-import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
-import utilidades.Utilidades;
 
 public class InformesGestor {
 	private PasajerosGestor gestorPasajeros;
@@ -52,90 +46,6 @@ public class InformesGestor {
 		this.gestorEquipajes = EquipajesGestor.getInstance();
 		this.gestorIncidencias = IncidenciasGestor.getInstance();
 		this.gestorConfiguracion = ConfiguracionGestor.getInstance();
-	}
-
-	public void ControlGeneral(Scanner sc) {
-		System.out.println("========================================");
-		System.out.println("¿Quieres generar un informe con la informacion de la cantidad total de pasajeros, reservas, vuelos, equipajes, embarques e incidencias?");
-		System.out.println("Escoge: 1.Si - 2.Mostrar en consola");
-		int opcion = Utilidades.leerOpcion(sc, 1, 2);
-			if (opcion == 1) {
-				crearInformeTotal();
-			}
-			else {
-				imprimirCantidadTotal();
-			}
-		System.out.println("========================================");
-		System.out.println("¿Quieres generar un informe de las reservas?");
-		System.out.println("Escoge: 1.Si - 2.Mostrar en consola");
-		opcion = Utilidades.leerOpcion(sc, 1, 2);
-		if (opcion == 1) {
-			crearInformeReservas();
-		}
-		else {
-			imprimirReservas();
-		}
-		System.out.println("========================================");
-		
-		imprimirPorVuelos();
-		
-		imprimirAlertas();
-		
-		imprimirAvisosDePasajerosEnTierra(sc);
-	}
-
-	private void imprimirAvisosDePasajerosEnTierra(Scanner sc) {
-		boolean nadieEnTierra = true;
-		LocalDateTime fechaSimulacion = LocalDateTime.of(Utilidades.pedirFecha(sc, "Introduce la fecha para la simulacion"), Utilidades.pedirHora(sc, "Introduce la hora para la simulacion"));
-		ArrayList<Reserva> reservasConfirmadas = gestorReservas.obtenerReservasConfirmadas();
-		ArrayList<Reserva> reservasSinEmbarqueYConVuelo = gestorReservas.obtenerReservasSinEmbarqueYConVueloAsignado(reservasConfirmadas, gestorEmbarques);
-	
-		if (reservasSinEmbarqueYConVuelo.size() != 0) {
-			System.out.println("PASAJEROS EN TIERRA:");
-			for (Reserva reserva: reservasSinEmbarqueYConVuelo) {
-				LocalDateTime cierre = gestorVuelos.calcularCierreEmbarque(gestorVuelos.buscarPorCodigo(reserva.getVuelo()));
-				if (cierre != null && fechaSimulacion.isAfter(cierre) ) {
-					System.out.println("  Reserva: " + reserva.getIdReserva() + " | Pasajero: " + reserva.getPasajero() 
-					+ " | Vuelo: " + reserva.getVuelo() + " | HoraCierre: " + cierre.toLocalDate() + " " + cierre.toLocalTime());
-					nadieEnTierra = false;
-				}
-			}
-		}
-		if (nadieEnTierra) {
-			System.out.println("No hay ningun pasajero que se haya quedado en tierra.");
-		}
-	}
-
-	private void imprimirAlertas() {
-		System.out.println("========================================");
-		System.out.println("--ALERTAS--");
-		String vuelosString = "";
-		String equipajesSobrePesoString = "";
-		String equipajesPerdidosString = "";
-		String incidenciasPrioAltaString = "";
-		String incidenciasPrioCriticaString = "";
-		for (Vuelo vuelo : buscarVuelosEnSobreventa()) {
-			vuelosString += " " + vuelo.getCodigo();
-		}
-		for (Equipaje equipaje : buscarEquipajesPerdidos()) {
-			equipajesPerdidosString += " " + equipaje.getCodEquipaje();
-		}
-		for (Equipaje equipaje : buscarEquipajesConSobrepeso()) {
-			equipajesSobrePesoString += " " + equipaje.getCodEquipaje();
-		}
-		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("ALTA")) {
-			incidenciasPrioAltaString += " " + incidencia.getCodigo();
-		}
-		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("CRITICA")) {
-			incidenciasPrioCriticaString += " " + incidencia.getCodigo();
-		}
-
-		System.out.println("Vuelos en sobreventa:" + vuelosString);
-		System.out.println("Equipajes Perdidos:" + equipajesPerdidosString);
-		System.out.println("Equipajes con SobrePeso:" + equipajesSobrePesoString);
-		System.out.println("Incidencias Abiertas de Prioridad Alta:" + incidenciasPrioAltaString);
-		System.out.println("Incidencias Abiertas de Prioridad Critica:" + incidenciasPrioCriticaString);
-		System.out.println("========================================");
 	}
 
 	public ArrayList<Vuelo> buscarVuelosEnSobreventa() {
@@ -172,31 +82,6 @@ public class InformesGestor {
 		return equipajes;
 	}
 
-	private void imprimirPorVuelos() {
-		System.out.println("========================================");
-		System.out.println("VUELOS POR ESTADO OPERATIVO");
-		for (String estado : ESTADOS_VUELO) {
-			ArrayList<Vuelo> vuelosEstado = gestorVuelos.buscarVuelosPorEstado(estado);
-
-			System.out.println("========================================");
-			System.out.println(estado + ": " + vuelosEstado.size() + " vuelos");
-			if (vuelosEstado.size() != 0) {
-				String codigos = "";
-				for (Vuelo vuelo : vuelosEstado) {
-					codigos += " " + vuelo.getCodigo();
-				}
-				LinkedHashMap<String, Integer> prioridades = contarIncidenciasAbiertasPorPrioridad(vuelosEstado);
-				System.out.println("   Vuelos:" + codigos);
-				System.out.println("   Reservas confirmadas: " + contarReservasConfirmadas(vuelosEstado));
-				System.out.println("   Incidencias abiertas por prioridad:");
-				for (String nivel : prioridades.keySet()) {
-					System.out.println("      " + nivel + ": " + prioridades.get(nivel));
-				}
-			}
-		}
-		System.out.println("========================================");
-	}
-
 	public LinkedHashMap<String, Integer> contarVuelosPorEstado() {
 		LinkedHashMap<String, Integer> vuelosPorEstado = new LinkedHashMap<String, Integer>();
 		for (String estado : ESTADOS_VUELO) {
@@ -225,56 +110,6 @@ public class InformesGestor {
 			}
 		}
 		return prioridades;
-	}
-
-	private void crearInformeReservas() {
-		new File("informes").mkdir();
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("informes/desgloseReservas.csv")))) {
-			writer.write(generarStringParaReservas());
-			System.out.println("Informe de las reservas creado en informes/desgloseReservas.csv.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-
-	}
-
-	private void imprimirReservas() {
-		String[] tiposVuelo = {"NACIONAL", "INTERNACIONAL"};
-		String[] criterios = {"ESTADO", "CLASE", "CANAL"};
-		System.out.println("========================================");
-		System.out.println("DESGLOSE DE RESERVAS");
-		for (String tipo : tiposVuelo) {
-			ArrayList<Reserva> reservasTipo = gestorReservas.buscarReservasPorNacionalOInternacional(tipo);
-			System.out.println("========================================");
-			System.out.println("Vuelos " + tipo + ": " + reservasTipo.size() + " reservas");
-			for (String criterio : criterios) {
-				System.out.println("----------------------------------------");
-				System.out.println("Por " + criterio.toLowerCase() + ":");
-				HashMap<String, Integer> cantidades = contarReservasPor(reservasTipo, criterio);
-				for (Map.Entry<String, Integer> k : cantidades.entrySet()) {
-					System.out.println("   " + k.getKey() + ": " + k.getValue());
-				}
-			}
-		}
-		
-	}
-
-	private String generarStringParaReservas() {
-		String[] tiposVuelo = {"NACIONAL", "INTERNACIONAL"};
-		String[] criterios = {"ESTADO", "CLASE", "CANAL"};
-		String texto = "";
-		for (String tipo : tiposVuelo) {
-			ArrayList<Reserva> reservasTipo = gestorReservas.buscarReservasPorNacionalOInternacional(tipo);
-			texto += tipo + ",TOTAL,RESERVAS," + reservasTipo.size() + "\n";
-			for (String criterio : criterios) {
-				HashMap<String, Integer> cantidades = contarReservasPor(reservasTipo, criterio);
-				for (Map.Entry<String, Integer> k : cantidades.entrySet()) {
-					texto += tipo + "," + criterio + "," + k.getKey() + "," + k.getValue() + "\n";
-				}
-			}
-		}
-		return texto;
 	}
 	
 	private HashMap<String, Double> sumarImportesPor(ArrayList<Reserva> reservas, String criterio) {
@@ -321,29 +156,6 @@ public class InformesGestor {
 			}
 		}
 		return cantidades;
-	}
-
-	private void imprimirCantidadTotal() {
-		String texto = generarStringParaCantidadTotal();
-		texto = texto.replace(",", "\n");
-		System.out.println(texto);
-		
-	}
-
-	private void crearInformeTotal() {
-		new File("informes").mkdir();
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("informes/total.csv")))) {
-			writer.write(generarStringParaCantidadTotal());
-			System.out.println("Informe de la cantidad total de objetos creados en informes/total.csv.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
-	private String generarStringParaCantidadTotal() {
-		return "pasajeros: "+ gestorPasajeros.getPasajeros().size() + ",reservas: " + gestorReservas.getReservas().size() + ",vuelos: " + gestorVuelos.getVuelos().size()
-		+ ",equipajes: " + gestorEquipajes.getEquipajes().size() + ",embarques: " + gestorEmbarques.getEmbarques().size() + ",incidencias: " + gestorIncidencias.getIncidencias().size();
 	}
 
 	public void vuelosEmbarquesYReservas() {
@@ -484,164 +296,6 @@ public class InformesGestor {
 			System.out.println("Ningun vuelo tiene sobreventa.");
 		}
 		System.out.println("Vuelo con mas plazas libres: " + vueloMasLibres.getCodigo() + " (" + masPlazasLibres + " plazas)");
-		System.out.println("====================================");
-	}
-
-
-	public void pasajerosYReservas(Scanner sc) {
-		imprimirPasajerosConMasReservas();
-		imprimirPasajerosConReservasCanceladas();
-		imprimirPasajerosConReservasConfirmadasEnVueloCancelado();
-		imprimirPasajerosVipYMenorPorVuelo();
-		imprimirReservasPendientesYNoEmbarcadas();
-		imprimirReservasPendientesProximasACierre(sc);
-		imprimirPorcentajeCancelacionEnVueloYCanal();
-		
-		
-	}
-
-	private void imprimirPorcentajeCancelacionEnVueloYCanal() {
-		System.out.println("====================================");
-		System.out.println("Porcentajes Cancelacion Por Vuelo:");
-		ArrayList<Vuelo> vuelos = gestorVuelos.getVuelos();
-		for (Vuelo vuelo : vuelos) {
-			System.out.println("-----------------------------------");
-			String vueloString = vuelo.getCodigo();
-			int reservasVuelo = gestorReservas.buscarResevasPorVuelo(vueloString).size();
-			int reservasCanceladasVuelo = gestorReservas.buscarResevaCanceladasPorVuelo(vueloString).size();
-			System.out.println("Vuelo: " + vueloString);
-			System.out.println("Tasa Cancelacion: " + reservasCanceladasVuelo + " / " + reservasVuelo +
-					" (" + String.format("%.1f%%)", (reservasCanceladasVuelo*100.0 /reservasVuelo)));
-			System.out.println("-----------------------------------");
-		}
-		System.out.println("====================================");
-		System.out.println("====================================");
-		System.out.println("Porcentajes Cancelacion Por Canal:");
-		String [] canales = {"WEB",
-                "APP",
-                "TAQUILLA",
-                "AGENCIA"
-                };
-		for(String canal : canales) {
-			int reservasCanal = gestorReservas.obtenerReservasPorCanal(canal).size();
-			int reservasCanceladasCanal = gestorReservas.obtenerReservasCanceladasPorCanal(canal).size();
-			System.out.println("Canal: " + canal);
-			System.out.println("Tasa Cancelacion: " + reservasCanceladasCanal + " / " + reservasCanal +
-					" (" + String.format("%.1f%%)", (reservasCanceladasCanal * 100.0 /reservasCanal)));
-			System.out.println("-----------------------------------");
-		}
-		
-	}
-
-	private void imprimirReservasPendientesProximasACierre(Scanner sc) {
-
-		int margenMinutos = 10;
-		boolean ningunaProxima = true;
-		System.out.println("====================================");
-		LocalDateTime fechaSimulacion = LocalDateTime.of(Utilidades.pedirFecha(sc, "Introduce la fecha para la simulacion"), Utilidades.pedirHora(sc, "Introduce la hora para la simulacion"));
-		ArrayList<Reserva> reservasConfirmadas = gestorReservas.obtenerReservasConfirmadas();
-		ArrayList<Reserva> reservasSinEmbarqueYConVuelo = gestorReservas.obtenerReservasSinEmbarqueYConVueloAsignado(reservasConfirmadas, gestorEmbarques);
-		System.out.println("RESERVAS PENDIENTES PROXIMAS AL CIERRE (" + margenMinutos + " min o menos):");
-		for (Reserva reserva : reservasSinEmbarqueYConVuelo) {
-			LocalDateTime cierre = gestorVuelos.calcularCierreEmbarque(gestorVuelos.buscarPorCodigo(reserva.getVuelo()));
-			if (cierre != null) {
-				long minutosRestantes = ChronoUnit.MINUTES.between(fechaSimulacion, cierre);
-				if (minutosRestantes >= 0 && minutosRestantes <= margenMinutos) {
-					System.out.println("  Reserva: " + reserva.getIdReserva() + " | Pasajero: " + reserva.getPasajero()
-					+ " | Vuelo: " + reserva.getVuelo() + " | HoraCierre: " + cierre.toLocalDate() + " " + cierre.toLocalTime()
-					+ " | Quedan: " + minutosRestantes + " min");
-					ningunaProxima = false;
-				}
-			}
-		}
-		if (ningunaProxima) {
-			System.out.println("No hay reservas pendientes proximas al cierre de la ventana.");
-		}
-		System.out.println("====================================");
-	}
-
-	private void imprimirReservasPendientesYNoEmbarcadas() {
-		ArrayList<Reserva> reservas = gestorReservas.obtenerReservasConfirmadas();
-		System.out.println("====================================");
-		ArrayList<Reserva> reservasPendientes = gestorReservas.filtrarReservasVueloPorEstado(reservas, "PENDIENTE", gestorEmbarques);
-		System.out.println("Reservas Confirmadas Pendientes de Embarque:");
-		for (Reserva reserva : reservasPendientes) {
-			System.out.println("   IdReserva: " + reserva.getIdReserva() + " | Pasajero: " + reserva.getPasajero() + " | Vuelo: " + reserva.getVuelo());
-		}
-		System.out.println("------------------------------------");
-		System.out.println("Reservas Confirmadas Embarcando:");
-		ArrayList<Reserva> reservasEmbarcando = gestorReservas.filtrarReservasVueloPorEstado(reservas, "EMBARCANDO", gestorEmbarques);
-		for (Reserva reserva : reservasEmbarcando) {
-			System.out.println("   IdReserva: " + reserva.getIdReserva() + " | Pasajero: " + reserva.getPasajero() + " | Vuelo: " + reserva.getVuelo());
-		}
-		System.out.println("------------------------------------");
-		System.out.println("Reservas Confirmadas No Embarcadas:");
-		ArrayList<Reserva> reservasNoEmbarcadas = gestorReservas.filtrarReservasVueloPorEstado(reservas, "NO_EMBARCADO", gestorEmbarques);
-		for (Reserva reserva : reservasNoEmbarcadas) {
-			System.out.println("   IdReserva: " + reserva.getIdReserva() + " | Pasajero: " + reserva.getPasajero() + " | Vuelo: " + reserva.getVuelo());
-		}
-		System.out.println("====================================");
-	}
-
-	private void imprimirPasajerosVipYMenorPorVuelo() {
-		System.out.println("====================================");
-		System.out.println("--Numero pasajeros VIPs Y menores por Vuelo--");
-		ArrayList<Vuelo> vuelos = gestorVuelos.getVuelos();
-		for (Vuelo vuelo : vuelos) {
-			System.out.println("-----------------------------");
-			System.out.println("Vuelo: " + vuelo.getCodigo());
-			System.out.println("  Cantidad VIPs: " + gestorPasajeros.obtenerPasajerosConfirmadosPorTipoDelVuelo(vuelo, "VIP", gestorReservas).size());
-			System.out.println("  Cantidad Menores: " + gestorPasajeros.obtenerPasajerosConfirmadosPorTipoDelVuelo(vuelo, "MENOR", gestorReservas).size());
-			
-		}
-		System.out.println("====================================");
-		
-	}
-
-	private void imprimirPasajerosConReservasConfirmadasEnVueloCancelado() {
-		System.out.println("====================================");
-		HashSet<Pasajero> pasajerosConReservaConfirmadaEnVueloCancelado = 
-				gestorPasajeros.obtenerPasajerosConReservaConfirmadaEnVueloCancelado(gestorVuelos, gestorReservas);
-		String texto = "";
-		Iterator<Pasajero> iterator = pasajerosConReservaConfirmadaEnVueloCancelado.iterator();
-		while (iterator.hasNext()) {
-			Pasajero pasajero = iterator.next();
-			texto += " " + pasajero.getCodPasajero();
-		}
-		System.out.println("Pasajeros con Reservas Confirmadas en vuelo cancelado:" + texto );
-		System.out.println("====================================");
-		
-	}
-
-	private void imprimirPasajerosConMasReservas() {
-		System.out.println("====================================");
-		HashMap<Pasajero, ArrayList<Reserva>> pasajerosYReservas = gestorPasajeros.ObtenerPasajerosConSusReservas(gestorReservas);
-		HashSet<Integer> numReservasDePasajerosHashSet = new HashSet<Integer>();
-				for (Map.Entry<Pasajero, ArrayList<Reserva>> k : pasajerosYReservas.entrySet()) {
-					numReservasDePasajerosHashSet.add(k.getValue().size());
-				}
-		ArrayList<Integer> numReservasDePasajeros = new ArrayList<Integer>(numReservasDePasajerosHashSet);
-				Collections.sort(numReservasDePasajeros);
-				Collections.reverse(numReservasDePasajeros);
-				System.out.println("Pasajeros con mas reservas:");
-				for (Map.Entry<Pasajero, ArrayList<Reserva>> k : pasajerosYReservas.entrySet()) {
-					if (numReservasDePasajeros.getFirst() == k.getValue().size()) {
-						System.out.println("   " + k.getKey().getCodPasajero() + " | Numero Reservas: " + k.getValue().size());
-					}
-				}
-		System.out.println("====================================");
-	}
-	
-	private void imprimirPasajerosConReservasCanceladas() {
-		System.out.println("====================================");
-		HashSet<Pasajero> pasajerosConReservasCanceladas = gestorPasajeros.obtenerPasajerosConReservaCancelada(gestorReservas);
-		String texto = "";
-		Iterator<Pasajero> iterator = pasajerosConReservasCanceladas.iterator();
-		while (iterator.hasNext()) {
-			Pasajero pasajero = iterator.next();
-			texto += " " + pasajero.getCodPasajero();
-		}
-		System.out.println("Pasajeros con Reservas Canceladas:" + texto );
 		System.out.println("====================================");
 	}
 

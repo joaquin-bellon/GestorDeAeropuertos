@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Scanner;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -221,112 +220,6 @@ public class PasajerosGestor {
 			}
 		}
 		return existe;
-	}
-
-	public Pasajero pedirPasajero(Scanner sc, String accion) {
-		Pasajero pasajero;
-		System.out.println("Introduce el código del pasajero " + accion + ":");
-		do {
-			pasajero = buscarPorCodPasajero(sc.nextLine().trim().toUpperCase());
-			if (pasajero == null) {
-				System.err.println("Este código no es válido. Inténtelo de nuevo:");
-			}
-		} while (pasajero == null);
-		return pasajero;
-	}
-
-	private Pasajero escogerPasajero(Scanner sc, String accion) {
-		System.out.println("---------------------------------------");
-		System.out.println("Pasajeros:");
-		return pedirPasajero(sc, "a " + accion);
-	}
-
-	public void actualizarPasajero(Scanner sc) {
-		Pasajero pasajero = escogerPasajero(sc, "actualizar");
-		System.out.println("---------------------------------");
-		System.out.println("""
-				1. Nombre
-				2. Apellidos
-				3. Documento Identificativo
-				4. Pais
-				5. correo electronico
-				6. Tipo
-				¿Que dato quieres editar?:""");
-		int opcion = Utilidades.leerOpcion(sc, 1, 6);
-		switch (opcion - 1) {
-
-		case 0:// Nombre
-			System.out.println("Introduce el nuevo nombre:");
-			pasajero.setNombre(sc.nextLine().trim());
-			System.out.println("Nombre cambiado con éxito");
-			break;
-
-		case 1:// Apellidos
-			System.out.println("Introduce los nuevos apellidos:");
-			pasajero.setApellidos(sc.nextLine().trim());
-			System.out.println("Apellidos cambiados con éxito");
-			break;
-
-		case 2:// Documento Identificativo
-			System.out.println("Introduce el nuevo documento identificativo:");
-			boolean documentoExistente = false;
-			String documento;
-			System.out.println("Documento identificativo:");
-			do {
-				documento = sc.nextLine().trim();
-				documentoExistente = existeDNI(documento);
-				if (documentoExistente) {
-					System.err.println("Este Documento identificativo ya está en uso.Inténtelo con otro:");
-				}
-			} while (documentoExistente);
-			pasajero.setDocumentoIdentificativo(documento);
-			System.out.println("Documento Identificativo cambiado con éxito");
-			break;
-
-		case 3:// Pais
-			System.out.println("Introduce el nuevo país:");
-			pasajero.setPais(sc.nextLine().trim());
-			System.out.println("País cambiada con éxito");
-			break;
-
-		case 4:// Correo
-			System.out.println("Introduce el nuevo correo electrónico:");
-			boolean correoExistente = false;
-			String correo = "";
-			correoExistente = false;
-			do {
-				correo = sc.nextLine().trim();
-				correoExistente = existeCorreo(correo);
-				if (correoExistente) {
-					System.err.println("Este correo ya está en uso. Inténtelo de nuevo:");
-				}
-			} while (correoExistente);
-			pasajero.setCorreo(correo);
-			System.out.println("Correo electrónico cambiado con éxito");
-			break;
-
-		case 5:// Tipo
-			String tipo = "";
-			System.out.println("Escoja el nuevo tipo: 1.ADULTO - 2.VIP - 3.MENOR");
-			int num = Utilidades.leerOpcion(sc, 1, 3);
-			switch (num) {
-			case 1:
-				tipo = "ADULTO";
-				break;
-			case 2:
-				tipo = "VIP";
-				break;
-			case 3:
-				tipo = "MENOR";
-				break;
-			}
-
-			pasajero.setTipo(tipo);
-			System.out.println("Tipo actualizado correctamente");
-
-			break;
-		}
-		volcarEnCSV();
 	}
 
 	public ArrayList<Pasajero> filtrarPorPais(String pais) {
