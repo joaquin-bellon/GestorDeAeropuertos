@@ -23,6 +23,7 @@ import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class ReservasGestor {
 
@@ -107,7 +108,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> buscarResevaConfirmadasPorVuelo(String vuelo) {
 		ArrayList<Reserva> reservasVuelo = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				reservasVuelo.add(reserva);
 			}
 		}
@@ -119,7 +120,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> buscarResevaCanceladasPorVuelo(String vuelo) {
 		ArrayList<Reserva> reservasVuelo = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals("CANCELADA")) {
+			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 				reservasVuelo.add(reserva);
 			}
 		}
@@ -162,7 +163,7 @@ public class ReservasGestor {
 
 
 	private void aniadirReservaAlArray(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
-		reservas.add(new Reserva(codigo, pasajero, vuelo, asiento, clase, precio, "EUR", "CONFIRMADA", fecha, canal));
+		reservas.add(new Reserva(codigo, pasajero, vuelo, asiento, clase, precio, Constantes.MONEDA, Constantes.RESERVA_CONFIRMADA, fecha, canal));
 	}
 
 
@@ -203,10 +204,10 @@ public class ReservasGestor {
 		if (reserva == null) {
 			return "No existe ninguna reserva con el codigo " + codReserva + ".";
 		}
-		if (reserva.getEstado().equals("CANCELADA")) {
+		if (reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 			return "La reserva " + codReserva + " ya esta cancelada.";
 		}
-		reserva.setEstado("CANCELADA");
+		reserva.setEstado(Constantes.RESERVA_CANCELADA);
 		if (!volcarEnCSV()) {
 			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
 		}
@@ -292,7 +293,7 @@ public class ReservasGestor {
 	public boolean comprobarAsiento(String vuelo, String asiento) {
 		boolean ocupado = false;
 		for (Reserva reserva : reservas) {
-			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				if (reserva.getAsiento().equals(asiento)) {
 					ocupado = true;
 				}
@@ -310,7 +311,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> obtenerReservasConfirmadas () {
 		ArrayList<Reserva> reservasConfirmadas = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				reservasConfirmadas.add(reserva);
 			}
 		}
@@ -320,7 +321,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> obtenerReservasCanceladas () {
 		ArrayList<Reserva> reservasCanceladas = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getEstado().equals("CANCELADA")) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 				reservasCanceladas.add(reserva);
 			}
 		}
@@ -343,7 +344,7 @@ public class ReservasGestor {
 			try {
 				estadoDelEmbarque= gestorEmbarques.buscarPorReserva(reserva.getIdReserva()).getEstado();
 			}catch(NullPointerException e) {
-				estadoDelEmbarque = "PENDIENTE";
+				estadoDelEmbarque = Constantes.EMBARQUE_PENDIENTE;
 			}
 
 			if (estadoDelEmbarque.equals(estado)) {
@@ -358,7 +359,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> obtenerReservasSinEmbarqueYConVueloAsignado (ArrayList<Reserva> arrayReservas, EmbarquesGestor gestorEmbarques) {
 		ArrayList<Reserva> reservasSinEmbarqueYConVuelo = new ArrayList<Reserva>();
 		for (Reserva reserva : arrayReservas) {
-			if (gestorEmbarques.buscarPorReserva(reserva.getIdReserva()) == null && !gestorVuelos.buscarPorCodigo(reserva.getVuelo()).getEstado().equals("CANCELADO")) {
+			if (gestorEmbarques.buscarPorReserva(reserva.getIdReserva()) == null && !gestorVuelos.buscarPorCodigo(reserva.getVuelo()).getEstado().equals(Constantes.VUELO_CANCELADO)) {
 				reservasSinEmbarqueYConVuelo.add(reserva);
 			}
 		}

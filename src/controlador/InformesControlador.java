@@ -20,6 +20,7 @@ import modelo.Equipaje;
 import modelo.Incidencia;
 import modelo.Vuelo;
 import vista.InformesPanel;
+import utilidades.Constantes;
 
 public class InformesControlador implements ActionListener{
 	private PrincipalControlador principalControlador;
@@ -40,7 +41,7 @@ public class InformesControlador implements ActionListener{
 	}
 
 	private void modoAdmin() {
-		if (rolUsuario.equals("USER")) {
+		if (rolUsuario.equals(Constantes.ROL_USER)) {
 			informesPanel.getBtnExportarCsv().setVisible(false);
 			informesPanel.getComboBoxInforme().setVisible(false);
 		}
@@ -124,10 +125,10 @@ public class InformesControlador implements ActionListener{
 		for (Equipaje equipaje : gestorInformes.buscarEquipajesConSobrepeso()) {
 			modeloAlertas.addRow(new Object[] {"Exceso de peso", equipaje.getCodEquipaje() + ": " + equipaje.getTipo() + ", " + equipaje.getPeso() + " kg"});
 		}
-		for (Incidencia incidencia : gestorInformes.buscarIncidenciasAbiertasPorPrioridad("CRITICA")) {
+		for (Incidencia incidencia : gestorInformes.buscarIncidenciasAbiertasPorPrioridad(Constantes.PRIORIDAD_CRITICA)) {
 			modeloAlertas.addRow(new Object[] {"Incidencia CRITICA", incidencia.getCodigo() + " en " + incidencia.getVuelo()});
 		}
-		for (Incidencia incidencia : gestorInformes.buscarIncidenciasAbiertasPorPrioridad("ALTA")) {
+		for (Incidencia incidencia : gestorInformes.buscarIncidenciasAbiertasPorPrioridad(Constantes.PRIORIDAD_ALTA)) {
 			modeloAlertas.addRow(new Object[] {"Incidencia ALTA", incidencia.getCodigo() + " en " + incidencia.getVuelo()});
 		}
 	}

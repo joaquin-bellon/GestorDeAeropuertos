@@ -6,6 +6,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import utilidades.Constantes;
 
 public class PasajerosPanel extends PanelGenerico {
 
@@ -98,7 +99,7 @@ public class PasajerosPanel extends PanelGenerico {
 		getPanelFormulario().add(lblTipo);
 
 		comboBoxTipo = new JComboBox<String>();
-		comboBoxTipo.setModel(new DefaultComboBoxModel<String>(new String[] {"ADULTO", "VIP", "MENOR"}));
+		comboBoxTipo.setModel(new DefaultComboBoxModel<String>(Constantes.TIPOS_PASAJERO));
 		comboBoxTipo.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxTipo.setBounds(125, 307, 175, 30);
 		getPanelFormulario().add(comboBoxTipo);

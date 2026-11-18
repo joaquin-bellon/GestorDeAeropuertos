@@ -16,6 +16,7 @@ import modelo.Equipaje;
 import modelo.Incidencia;
 import modelo.Reserva;
 import modelo.Vuelo;
+import utilidades.Constantes;
 
 public class InformesGestor {
 	private PasajerosGestor gestorPasajeros;
@@ -26,8 +27,6 @@ public class InformesGestor {
 	private IncidenciasGestor gestorIncidencias;
 	private ConfiguracionGestor gestorConfiguracion;
 
-	public static final String[] ESTADOS_VUELO = {"PROGRAMADO", "RETRASADO", "CANCELADO", "EMBARCANDO", "CERRADO"};
-	public static final String[] NIVELES_PRIORIDAD = {"BAJA", "MEDIA", "ALTA", "CRITICA"};
 
 	private static InformesGestor instancia;
 
@@ -84,7 +83,7 @@ public class InformesGestor {
 
 	public LinkedHashMap<String, Integer> contarVuelosPorEstado() {
 		LinkedHashMap<String, Integer> vuelosPorEstado = new LinkedHashMap<String, Integer>();
-		for (String estado : ESTADOS_VUELO) {
+		for (String estado : Constantes.ESTADOS_VUELO) {
 			vuelosPorEstado.put(estado, gestorVuelos.buscarVuelosPorEstado(estado).size());
 		}
 		return vuelosPorEstado;
@@ -100,7 +99,7 @@ public class InformesGestor {
 
 	public LinkedHashMap<String, Integer> contarIncidenciasAbiertasPorPrioridad(ArrayList<Vuelo> vuelos) {
 		LinkedHashMap<String, Integer> prioridades = new LinkedHashMap<String, Integer>();
-		for (String nivel : NIVELES_PRIORIDAD) {
+		for (String nivel : Constantes.PRIORIDADES_INCIDENCIA) {
 			prioridades.put(nivel, 0);
 		}
 		for (Vuelo vuelo : vuelos) {
@@ -213,10 +212,10 @@ public class InformesGestor {
 	private void imprimirVuelosRetrasados() {
 		System.out.println("====================================");
 		System.out.println("--Vuelos Retrasados--");
-		ArrayList<Vuelo> vuelosRetrasados = gestorVuelos.buscarVuelosPorEstado("RETRASADO");
+		ArrayList<Vuelo> vuelosRetrasados = gestorVuelos.buscarVuelosPorEstado(Constantes.VUELO_RETRASADO);
 		String vuelosRetrasadosString = "";
 		double totalRetraso = 0;
-		ArrayList<Incidencia> incidenciasConRetraso = gestorIncidencias.buscarPorTipo("RETRASO");
+		ArrayList<Incidencia> incidenciasConRetraso = gestorIncidencias.buscarPorTipo(Constantes.TIPO_INCIDENCIA_RETRASO);
 		for (Vuelo vuelo : vuelosRetrasados) {
 			vuelosRetrasadosString += " " + vuelo.getCodigo();
 		}
@@ -240,12 +239,12 @@ public class InformesGestor {
 		System.out.println("====================================");
 		System.out.println("--DESGLOSE DE RESERVAS POR ESTADO DEL EMBARQUE--");
 		ArrayList<Reserva> reservas = gestorReservas.obtenerReservasConfirmadas();
-		int numReservasEmbarcadas = gestorReservas.filtrarReservasVueloPorEstado(reservas, "EMBARCADO", gestorEmbarques).size();
-		int numReservasEmbarcando = gestorReservas.filtrarReservasVueloPorEstado(reservas, "EMBARCANDO", gestorEmbarques).size();
+		int numReservasEmbarcadas = gestorReservas.filtrarReservasVueloPorEstado(reservas, Constantes.EMBARQUE_EMBARCADO, gestorEmbarques).size();
+		int numReservasEmbarcando = gestorReservas.filtrarReservasVueloPorEstado(reservas, Constantes.EMBARQUE_EMBARCANDO, gestorEmbarques).size();
 		System.out.println("Reservas Embarcadas: " + numReservasEmbarcadas);
 		System.out.println("Reservas Embarcando: " + numReservasEmbarcando);
-		System.out.println("Reservas No_Embarcadas: " + gestorReservas.filtrarReservasVueloPorEstado(reservas, "NO_EMBARCADO", gestorEmbarques).size());
-		System.out.println("Reservas Pendientes: " + gestorReservas.filtrarReservasVueloPorEstado(reservas, "PENDIENTE",gestorEmbarques).size());
+		System.out.println("Reservas No_Embarcadas: " + gestorReservas.filtrarReservasVueloPorEstado(reservas, Constantes.EMBARQUE_NO_EMBARCADO, gestorEmbarques).size());
+		System.out.println("Reservas Pendientes: " + gestorReservas.filtrarReservasVueloPorEstado(reservas, Constantes.EMBARQUE_PENDIENTE,gestorEmbarques).size());
 		System.out.println("Porcentaje De Embarque: " + (numReservasEmbarcadas+numReservasEmbarcando) + " / " + reservas.size() 
 		+ " (" + String.format("%.1f%%", ((numReservasEmbarcadas+numReservasEmbarcando) * 100.0 / reservas.size())) + ")");
 	}
@@ -301,7 +300,7 @@ public class InformesGestor {
 
 	public LinkedHashMap<String, Integer> obtenerLinkedHashMapIncidenciasAbieretasPorPrioridad() {
 		LinkedHashMap<String, Integer> incidenciasAbiertasPorPrioridad = new LinkedHashMap<String, Integer>();
-		for (String prioridad : IncidenciasGestor.getNIVELES_PRIORIDAD()) {
+		for (String prioridad : Constantes.PRIORIDADES_INCIDENCIA) {
 			incidenciasAbiertasPorPrioridad.put(prioridad, buscarIncidenciasAbiertasPorPrioridad(prioridad).size());
 		}
 		return incidenciasAbiertasPorPrioridad;
@@ -359,10 +358,10 @@ public class InformesGestor {
 		for (Equipaje equipaje : buscarEquipajesConSobrepeso()) {
 			texto += "Exceso de peso," + equipaje.getCodEquipaje() + ",\"" + equipaje.getTipo() + ", " + equipaje.getPeso() + " kg\"\n";
 		}
-		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("CRITICA")) {
+		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad(Constantes.PRIORIDAD_CRITICA)) {
 			texto += "Incidencia CRITICA," + incidencia.getCodigo() + ",\"Vuelo " + incidencia.getVuelo() + "\"\n";
 		}
-		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("ALTA")) {
+		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad(Constantes.PRIORIDAD_ALTA)) {
 			texto += "Incidencia ALTA," + incidencia.getCodigo() + ",\"Vuelo " + incidencia.getVuelo() + "\"\n";
 		}
 		return escribirInforme("informes/alertas.csv", texto);

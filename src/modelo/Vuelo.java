@@ -2,6 +2,7 @@ package modelo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import utilidades.Constantes;
 
 public class Vuelo {
 	private String codigo;
@@ -34,8 +35,8 @@ public class Vuelo {
 		this.codigo = codigo;
 		this.aerolinea = aerolinea;
 		this.avion = avion;
-		this.estado = "PROGRAMADO";
-		this.origen = "MAD";
+		this.estado = Constantes.VUELO_PROGRAMADO;
+		this.origen = Constantes.AEROPUERTO_ORIGEN;
 		this.terminal = terminal;
 		this.puerta = puerta;
 		this.destino = destino;

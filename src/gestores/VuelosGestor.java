@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import modelo.Servicio;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class VuelosGestor {
 	private Document doc;
@@ -222,7 +223,7 @@ public class VuelosGestor {
 
 	public String insertarVuelo(String codigo, String aerolinea, String avion, String terminal, String puerta, String destino,
 			LocalDateTime salida, LocalDateTime llegada, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un administrador puede añadir vuelos.";
 		}
 		vuelos.add(new Vuelo(codigo, aerolinea, avion, terminal, puerta, destino, salida, llegada));
@@ -234,7 +235,7 @@ public class VuelosGestor {
 
 	public String modificarVuelo(Vuelo vuelo, String terminal, String puerta, LocalDateTime salida, LocalDateTime llegada,
 			String estado, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un administrador puede modificar vuelos.";
 		}
 		vuelo.setTerminal(terminal);
@@ -369,7 +370,7 @@ public class VuelosGestor {
 	public ArrayList<Vuelo> obtenerVuelosActivos() {
 		ArrayList<Vuelo> vuelosActivos = new ArrayList<Vuelo>();
 		for (Vuelo vuelo : vuelos) {
-			if (!vuelo.getEstado().equals("CANCELADO") && !vuelo.getEstado().equals("CERRADO")) {
+			if (!vuelo.getEstado().equals(Constantes.VUELO_CANCELADO) && !vuelo.getEstado().equals(Constantes.VUELO_CERRADO)) {
 				vuelosActivos.add(vuelo);
 			}
 		}

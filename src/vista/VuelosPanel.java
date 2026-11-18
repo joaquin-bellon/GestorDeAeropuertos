@@ -14,6 +14,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import utilidades.Constantes;
 
 public class VuelosPanel extends PanelGenerico {
 
@@ -165,7 +166,7 @@ public class VuelosPanel extends PanelGenerico {
 		getPanelFormulario().add(lblEstado);
 
 		comboBoxEstado = new JComboBox<String>();
-		comboBoxEstado.setModel(new DefaultComboBoxModel<String>(new String[] {"PROGRAMADO", "RETRASADO", "CANCELADO", "EMBARCANDO", "CERRADO"}));
+		comboBoxEstado.setModel(new DefaultComboBoxModel<String>(Constantes.ESTADOS_VUELO));
 		comboBoxEstado.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxEstado.setBounds(125, 433, 175, 30);
 		getPanelFormulario().add(comboBoxEstado);

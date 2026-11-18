@@ -26,6 +26,7 @@ import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
 import vista.IncidenciasPanel;
+import utilidades.Constantes;
 
 public class IncidenciasControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -47,7 +48,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 	}
 
 	private boolean esAdmin() {
-		return rolUsuario.equals("ADMIN");
+		return rolUsuario.equals(Constantes.ROL_ADMIN);
 	}
 
 	private void aplicarPermisos() {
@@ -134,7 +135,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		cambiarEditarFormulario(true);
 		incidenciasPanel.getTextFieldCodigo().setText(IncidenciasGestor.getInstance().crearNuevoIdentificador());
 		incidenciasPanel.getTextFieldFecha().setText(String.valueOf(LocalDate.now()));
-		incidenciasPanel.getTextFieldEstado().setText("ABIERTA");
+		incidenciasPanel.getTextFieldEstado().setText(Constantes.INCIDENCIA_ABIERTA);
 		incidenciasPanel.modoEdicion(true);
 	}
 
@@ -260,7 +261,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		int confirmadas = 0;
 		for (Reserva reserva : reservas) {
 			incidenciasPanel.getModeloReservas().addRow(new Object[] {reserva.getIdReserva(), reserva.getPasajero(), reserva.getAsiento(), reserva.getEstado()});
-			if (reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				confirmadas++;
 			}
 
@@ -329,7 +330,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		boolean seleccion = incidencia != null;
 		incidenciasPanel.habilitarBtnEliminarYModificar(seleccion);
 		incidenciasPanel.getBtnVerRelacionados().setEnabled(seleccion);
-		incidenciasPanel.getBtnCerrarIncidencia().setEnabled(seleccion && incidencia.getEstado().equals("ABIERTA"));
+		incidenciasPanel.getBtnCerrarIncidencia().setEnabled(seleccion && incidencia.getEstado().equals(Constantes.INCIDENCIA_ABIERTA));
 	}
 
 	private void desactivarFormulario() {

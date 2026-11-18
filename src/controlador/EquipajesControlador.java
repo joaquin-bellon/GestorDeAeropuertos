@@ -16,6 +16,7 @@ import gestores.ReservasGestor;
 import modelo.Equipaje;
 import modelo.Reserva;
 import vista.EquipajesPanel;
+import utilidades.Constantes;
 
 public class EquipajesControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -90,7 +91,7 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 		vaciarFormulario();
 		cambiarEditarFormulario(true, true);
 		equipajesPanel.getTextFieldCodigo().setText(EquipajesGestor.getInstance().crearIdentificador());
-		equipajesPanel.getComboBoxEstado().setSelectedItem("REGISTRADO");
+		equipajesPanel.getComboBoxEstado().setSelectedItem(Constantes.EQUIPAJE_REGISTRADO);
 		equipajesPanel.modoEdicion(true);
 	}
 
@@ -160,7 +161,7 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 			return "No existe la reserva " + codReserva + ".";
 		}
 		boolean aniadiendo = EquipajesGestor.getInstance().buscarPorCodigo(equipajesPanel.getTextFieldCodigo().getText().trim()) == null;
-		if (aniadiendo && reserva.getEstado().equals("CANCELADA")) {
+		if (aniadiendo && reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 			return "La reserva " + codReserva + " esta cancelada.";
 		}
 

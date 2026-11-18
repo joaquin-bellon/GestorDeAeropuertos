@@ -10,6 +10,7 @@ import modelo.Usuario;
 import temas.Tema;
 import utilidades.HiloAvisos;
 import vista.RegistrarsePanel;
+import utilidades.Constantes;
 
 public class RegistrarseControlador implements ActionListener, MouseListener {
 	private PrincipalControlador principalControlador;
@@ -54,7 +55,7 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 					hiloErrores.start();
 				}
 				else {
-					Usuario usuarioCreado = new Usuario(nombre,contrasenia,"USER");
+					Usuario usuarioCreado = new Usuario(nombre,contrasenia,Constantes.ROL_USER);
 					String resultado = UsuariosGestor.getInstance().añadirUsuario(usuarioCreado);
 					if (resultado.equals("")) {
 						principalControlador.crearPanelesYControladores(usuarioCreado);

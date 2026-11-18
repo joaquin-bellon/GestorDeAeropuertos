@@ -12,9 +12,9 @@ import java.util.Iterator;
 import modelo.Incidencia;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class IncidenciasGestor {
-	private static String [] NIVELES_PRIORIDAD = {"BAJA", "MEDIA", "ALTA", "CRITICA"};
 	
 	private ArrayList<Incidencia> incidencias;
 	private VuelosGestor gestorVuelos;
@@ -112,7 +112,7 @@ public class IncidenciasGestor {
 	public ArrayList<Incidencia> buscarEnArrayAbiertas(ArrayList<Incidencia> arrayIncidencias) {
 		ArrayList<Incidencia> incidenciasEstado = new ArrayList<Incidencia>();
 		for (Incidencia incidencia : arrayIncidencias) {
-			if (incidencia.getEstado().equals("ABIERTA")) {
+			if (incidencia.getEstado().equals(Constantes.INCIDENCIA_ABIERTA)) {
 				incidenciasEstado.add(incidencia);
 			}
 		}
@@ -131,7 +131,7 @@ public class IncidenciasGestor {
 		return true;
 	}
 	public String insertarIncidencia(String fecha, String codigo, String vuelo, String tipo, int duracion, String descripcion, String prioridad) {
-		incidencias.add(new Incidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad, "ABIERTA"));
+		incidencias.add(new Incidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad, Constantes.INCIDENCIA_ABIERTA));
 		if (!volcarEnTxt()) {
 			return Utilidades.errorGuardar(Utilidades.RUTA_INCIDENCIAS);
 		}
@@ -148,7 +148,7 @@ public class IncidenciasGestor {
 		return String.format("INC%03d", dato + 1);
 	}
 	public String modificarIncidencia(Incidencia incidencia, String fecha, String vuelo, String tipo, int duracion, String descripcion, String prioridad, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un administrador puede modificar incidencias.";
 		}
 		incidencia.setFecha(fecha);
@@ -164,7 +164,7 @@ public class IncidenciasGestor {
 	}
 
 	public String eliminarIncidencia(String codigo, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un administrador puede eliminar incidencias.";
 		}
 		Incidencia incidencia = buscarIncidenciaPorCodigo(codigo);
@@ -179,17 +179,17 @@ public class IncidenciasGestor {
 	}
 
 	public String cerrarIncidencia(String codigo, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un administrador puede cerrar incidencias.";
 		}
 		Incidencia incidencia = buscarIncidenciaPorCodigo(codigo);
 		if (incidencia == null) {
 			return "No existe ninguna incidencia con el codigo " + codigo + ".";
 		}
-		if (incidencia.getEstado().equals("CERRADA")) {
+		if (incidencia.getEstado().equals(Constantes.INCIDENCIA_CERRADA)) {
 			return "La incidencia " + codigo + " ya esta cerrada.";
 		}
-		incidencia.setEstado("CERRADA");
+		incidencia.setEstado(Constantes.INCIDENCIA_CERRADA);
 		if (!volcarEnTxt()) {
 			return Utilidades.errorGuardar(Utilidades.RUTA_INCIDENCIAS);
 		}
@@ -226,7 +226,7 @@ public class IncidenciasGestor {
 	public ArrayList<Incidencia> devolverIncidenciasPrioritarias (ArrayList<Incidencia> arrayIncidencias) {
 		ArrayList<Incidencia> incidenciasADevolver = new ArrayList<Incidencia>();
 		for (Incidencia incidencia : arrayIncidencias) {
-			if (incidencia.getPrioridad().equals("ALTA") || incidencia.getPrioridad().equals("CRITICA")) {
+			if (incidencia.getPrioridad().equals(Constantes.PRIORIDAD_ALTA) || incidencia.getPrioridad().equals(Constantes.PRIORIDAD_CRITICA)) {
 				incidenciasADevolver.add(incidencia);
 			}
 		}
@@ -248,9 +248,6 @@ public class IncidenciasGestor {
 		return incidenciasTipo;
 	}
 
-	public static String[] getNIVELES_PRIORIDAD() {
-		return NIVELES_PRIORIDAD;
-	}
 
 	
 	

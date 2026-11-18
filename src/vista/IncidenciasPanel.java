@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import utilidades.Constantes;
 
 public class IncidenciasPanel extends PanelGenerico {
 
@@ -88,7 +89,7 @@ public class IncidenciasPanel extends PanelGenerico {
 		getPanelFormulario().add(lblTipo);
 
 		comboBoxTipo = new JComboBox<String>();
-		comboBoxTipo.setModel(new DefaultComboBoxModel<String>(new String[] {"RETRASO", "CANCELACION", "CAMBIO_PUERTA", "EQUIPAJE_PERDIDO", "AVERIA"}));
+		comboBoxTipo.setModel(new DefaultComboBoxModel<String>(Constantes.TIPOS_INCIDENCIA));
 		comboBoxTipo.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxTipo.setBounds(125, 181, 175, 30);
 		getPanelFormulario().add(comboBoxTipo);
@@ -119,7 +120,7 @@ public class IncidenciasPanel extends PanelGenerico {
 		getPanelFormulario().add(lblPrioridad);
 
 		comboBoxPrioridad = new JComboBox<String>();
-		comboBoxPrioridad.setModel(new DefaultComboBoxModel<String>(new String[] {"BAJA", "MEDIA", "ALTA", "CRITICA"}));
+		comboBoxPrioridad.setModel(new DefaultComboBoxModel<String>(Constantes.PRIORIDADES_INCIDENCIA));
 		comboBoxPrioridad.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxPrioridad.setBounds(125, 307, 175, 30);
 		getPanelFormulario().add(comboBoxPrioridad);

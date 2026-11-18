@@ -23,6 +23,7 @@ import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class PasajerosGestor {
 	private ArrayList<Pasajero> pasajeros;
@@ -276,7 +277,7 @@ public class PasajerosGestor {
 	public HashSet<Pasajero> obtenerPasajerosConReservaConfirmadaEnVueloCancelado(VuelosGestor gestorVuelos,
 			ReservasGestor gestorReservas) {
 		HashSet<Pasajero> pasajerosConReservaConfirmadaEnVueloCancelado = new HashSet<Pasajero>();
-		ArrayList<Vuelo> vuelosCancelados = gestorVuelos.buscarVuelosPorEstado("CANCELADO");
+		ArrayList<Vuelo> vuelosCancelados = gestorVuelos.buscarVuelosPorEstado(Constantes.VUELO_CANCELADO);
 		for (Vuelo vueloCancelado : vuelosCancelados) {
 			ArrayList<Reserva> reservasConfirmadasDelVuelo = gestorReservas
 					.buscarResevaConfirmadasPorVuelo(vueloCancelado.getCodigo());

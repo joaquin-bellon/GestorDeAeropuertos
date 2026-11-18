@@ -12,6 +12,7 @@ import comparadores.ComparadorUsuario;
 import gestores.UsuariosGestor;
 import modelo.Usuario;
 import vista.ConfiguracionPanel;
+import utilidades.Constantes;
 
 public class ConfiguracionControlador implements ActionListener, ListSelectionListener {
 	private PrincipalControlador principalControlador;
@@ -110,11 +111,11 @@ public class ConfiguracionControlador implements ActionListener, ListSelectionLi
 		String nuevoRol;
 		String error;
 		if (UsuariosGestor.getInstance().buscarUsuarioPorNombre(nombre).isAdmin()) {
-			nuevoRol = "USER";
+			nuevoRol = Constantes.ROL_USER;
 			error = UsuariosGestor.getInstance().quitarAdmin(nombre, principalControlador.getUsuario().getUsuario(), rolUsuario);
 		}
 		else {
-			nuevoRol = "ADMIN";
+			nuevoRol = Constantes.ROL_ADMIN;
 			error = UsuariosGestor.getInstance().hacerAdmin(nombre, rolUsuario);
 		}
 		if (error.isEmpty()) {

@@ -20,6 +20,7 @@ import modelo.Equipaje;
 import modelo.Pasajero;
 import modelo.Usuario;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class UsuariosGestor {
 	private ArrayList<Usuario> usuarios;
@@ -81,7 +82,7 @@ public class UsuariosGestor {
 	}
 	
 	public String hacerAdmin(String nombre, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un ADMIN puede cambiar roles.";
 		}
 		Usuario usuario = buscarUsuarioPorNombre(nombre);
@@ -91,7 +92,7 @@ public class UsuariosGestor {
 		if (usuario.isAdmin()) {
 			return nombre + " ya es ADMIN.";
 		}
-		usuario.setRol("ADMIN");
+		usuario.setRol(Constantes.ROL_ADMIN);
 		if (!volcarEnCSV()) {
 			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
 		}
@@ -99,7 +100,7 @@ public class UsuariosGestor {
 	}
 
 	public String quitarAdmin(String nombre, String usuarioSesion, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
 			return "Solo un ADMIN puede cambiar roles.";
 		}
 		if (nombre.equals(usuarioSesion)) {
@@ -112,7 +113,7 @@ public class UsuariosGestor {
 		if (!usuario.isAdmin()) {
 			return nombre + " ya es USER.";
 		}
-		usuario.setRol("USER");
+		usuario.setRol(Constantes.ROL_USER);
 		if (!volcarEnCSV()) {
 			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
 		}

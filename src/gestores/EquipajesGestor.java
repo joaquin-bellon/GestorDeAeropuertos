@@ -21,6 +21,7 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import modelo.Equipaje;
 import modelo.Reserva;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class EquipajesGestor {
 	private ReservasGestor gestorReservas;
@@ -258,7 +259,7 @@ public class EquipajesGestor {
 	public ArrayList<Equipaje> filtrarArrayEquipajesPorPerdidos(ArrayList<Equipaje> equipajesDelVuelo) {
 		ArrayList<Equipaje> equipajesPerdidos = new ArrayList<Equipaje>();
 		for (Equipaje equipaje : equipajesDelVuelo) {
-			if (equipaje.getEstado().equals("PERDIDO") ) {
+			if (equipaje.getEstado().equals(Constantes.EQUIPAJE_PERDIDO) ) {
 				equipajesPerdidos.add(equipaje);
 			}
 		}

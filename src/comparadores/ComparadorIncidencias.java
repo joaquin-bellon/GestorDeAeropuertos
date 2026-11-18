@@ -3,6 +3,7 @@ package comparadores;
 import java.util.Comparator;
 
 import modelo.Incidencia;
+import utilidades.Constantes;
 
 public class ComparadorIncidencias implements Comparator<Incidencia> {
 	private String criterio;
@@ -27,13 +28,13 @@ public class ComparadorIncidencias implements Comparator<Incidencia> {
 
 	private int valorPrioridad(String prioridad) {
 		switch (prioridad) {
-		case "CRITICA":
+		case Constantes.PRIORIDAD_CRITICA:
 			return 4;
-		case "ALTA":
+		case Constantes.PRIORIDAD_ALTA:
 			return 3;
-		case "MEDIA":
+		case Constantes.PRIORIDAD_MEDIA:
 			return 2;
-		case "BAJA":
+		case Constantes.PRIORIDAD_BAJA:
 			return 1;
 		default:
 			return 0;

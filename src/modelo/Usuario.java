@@ -1,6 +1,7 @@
 package modelo;
 
 import com.opencsv.bean.CsvBindByPosition;
+import utilidades.Constantes;
 
 public class Usuario {
 @CsvBindByPosition (position = 0)
@@ -39,7 +40,7 @@ public void setRol(String rol) {
 }
 
 public boolean isAdmin() {
-	if(this.rol.equals("ADMIN")) {
+	if(this.rol.equals(Constantes.ROL_ADMIN)) {
 		return true;
 	}
 	else {

@@ -21,6 +21,7 @@ import modelo.Embarque;
 import modelo.Reserva;
 import modelo.Vuelo;
 import vista.EmbarquesPanel;
+import utilidades.Constantes;
 
 public class EmbarquesControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -190,11 +191,11 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 			return "La puerta del vuelo " + vuelo.getCodigo() + " es " + vuelo.getPuerta() + ".";
 		}
 
-		if (!estado.equals("NO_EMBARCADO")) {
-			if (reserva.getEstado().equals("CANCELADA")) {
+		if (!estado.equals(Constantes.EMBARQUE_NO_EMBARCADO)) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 				return "No se puede embarcar: reserva cancelada.";
 			}
-			if (vuelo.getEstado().equals("CANCELADO")) {
+			if (vuelo.getEstado().equals(Constantes.VUELO_CANCELADO)) {
 				return "No se puede embarcar: vuelo cancelado.";
 			}
 		}
