@@ -82,6 +82,12 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 			eliminar();
 			embarquesPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == embarquesPanel.getComboBoxFiltro()) {
+			if (embarquesPanel.getComboBoxFiltro().getSelectedItem().equals(Constantes.EMBARQUE_FECHADESDE)) {
+				embarquesPanel.getTextFieldBuscar().putClientProperty("JTextField.placeholderText", "Desde aaaa-mm-dd");
+			}
+			else {
+				embarquesPanel.getTextFieldBuscar().putClientProperty("JTextField.placeholderText", "Hasta aaaa-mm-dd");
+			}
 			filtrar();
 		} else if (e.getSource() == embarquesPanel.getComboBoxOrdenar()) {
 			filtrar();
@@ -331,6 +337,7 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 	}
 
 	private void filtrar() {
+		String filtro = String.valueOf(embarquesPanel.getComboBoxFiltro().getSelectedItem());
 		String texto = embarquesPanel.getTextFieldBuscar().getText().trim();
 		if (texto.isEmpty()) {
 			cargarTabla(EmbarquesGestor.getInstance().getEmbarques());
@@ -338,7 +345,14 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 		}
 		try {
 			LocalDate fecha = LocalDate.parse(texto);
-			cargarTabla(EmbarquesGestor.getInstance().filtrarPorFecha(fecha));
+			if(filtro.equals(Constantes.EMBARQUE_FECHADESDE)) {
+				cargarTabla(EmbarquesGestor.getInstance().filtrarDesdeFecha(fecha));
+			}else {
+				cargarTabla(EmbarquesGestor.getInstance().filtrarHastaFecha(fecha));
+			}
+			
+			
+			
 		} catch (DateTimeParseException e) {
 		}
 	}

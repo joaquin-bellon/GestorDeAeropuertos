@@ -21,6 +21,7 @@ import modelo.Incidencia;
 import modelo.Vuelo;
 import vista.InformesPanel;
 import utilidades.Constantes;
+import utilidades.Utilidades;
 
 public class InformesControlador implements ActionListener{
 	private PrincipalControlador principalControlador;
@@ -36,12 +37,12 @@ public class InformesControlador implements ActionListener{
 		implementarListeners();
 		recargarPanel();
 		
-		modoAdmin();
+		aplicarPermisos();
 		
 	}
 
-	private void modoAdmin() {
-		if (rolUsuario.equals(Constantes.ROL_USER)) {
+	private void aplicarPermisos() {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			informesPanel.getBtnExportarCsv().setVisible(false);
 			informesPanel.getComboBoxInforme().setVisible(false);
 		}

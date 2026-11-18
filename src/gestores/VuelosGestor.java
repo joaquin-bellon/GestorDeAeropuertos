@@ -223,7 +223,7 @@ public class VuelosGestor {
 
 	public String insertarVuelo(String codigo, String aerolinea, String avion, String terminal, String puerta, String destino,
 			LocalDateTime salida, LocalDateTime llegada, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede añadir vuelos.";
 		}
 		vuelos.add(new Vuelo(codigo, aerolinea, avion, terminal, puerta, destino, salida, llegada));
@@ -235,7 +235,7 @@ public class VuelosGestor {
 
 	public String modificarVuelo(Vuelo vuelo, String terminal, String puerta, LocalDateTime salida, LocalDateTime llegada,
 			String estado, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede modificar vuelos.";
 		}
 		vuelo.setTerminal(terminal);

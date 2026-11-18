@@ -19,6 +19,10 @@ public class Utilidades {
 	
 	public static final String RUTA_USUARIOS = "archivos/usuarios.csv";
 
+	public static boolean esAdmin(String rol) {
+		return rol.equals(Constantes.ROL_ADMIN);
+	}
+
 	public static String errorGuardar(String ruta) {
 		return "No se han podido guardar los cambios en " + ruta + ".";
 	}

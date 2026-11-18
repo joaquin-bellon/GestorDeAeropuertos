@@ -27,6 +27,8 @@ public class Constantes {
 	public static final String[] TIPOS_EQUIPAJE = {"FACTURADO", "MANO", "ESPECIAL"};
 	public static final String[] PRIORIDADES_EQUIPAJE = {"NORMAL", "PRIORITARIO", "FRAGIL"};
 
+	public static final String EMBARQUE_FECHADESDE = "Fecha (Desde)";
+	public static final String EMBARQUE_FECHAHASTA = "Fecha (Hasta)";
 	public static final String EMBARQUE_PENDIENTE = "PENDIENTE";
 	public static final String EMBARQUE_EMBARCANDO = "EMBARCANDO";
 	public static final String EMBARQUE_EMBARCADO = "EMBARCADO";

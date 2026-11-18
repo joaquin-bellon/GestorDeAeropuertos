@@ -148,7 +148,7 @@ public class IncidenciasGestor {
 		return String.format("INC%03d", dato + 1);
 	}
 	public String modificarIncidencia(Incidencia incidencia, String fecha, String vuelo, String tipo, int duracion, String descripcion, String prioridad, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede modificar incidencias.";
 		}
 		incidencia.setFecha(fecha);
@@ -164,7 +164,7 @@ public class IncidenciasGestor {
 	}
 
 	public String eliminarIncidencia(String codigo, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede eliminar incidencias.";
 		}
 		Incidencia incidencia = buscarIncidenciaPorCodigo(codigo);
@@ -179,7 +179,7 @@ public class IncidenciasGestor {
 	}
 
 	public String cerrarIncidencia(String codigo, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede cerrar incidencias.";
 		}
 		Incidencia incidencia = buscarIncidenciaPorCodigo(codigo);

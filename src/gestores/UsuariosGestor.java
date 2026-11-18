@@ -82,7 +82,7 @@ public class UsuariosGestor {
 	}
 	
 	public String hacerAdmin(String nombre, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un ADMIN puede cambiar roles.";
 		}
 		Usuario usuario = buscarUsuarioPorNombre(nombre);
@@ -100,7 +100,7 @@ public class UsuariosGestor {
 	}
 
 	public String quitarAdmin(String nombre, String usuarioSesion, String rolUsuario) {
-		if (!rolUsuario.equals(Constantes.ROL_ADMIN)) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un ADMIN puede cambiar roles.";
 		}
 		if (nombre.equals(usuarioSesion)) {

@@ -180,11 +180,22 @@ public class EmbarquesGestor {
 		return "";
 	}
 
-	public ArrayList<Embarque> filtrarPorFecha(LocalDate fecha) {
+	public ArrayList<Embarque> filtrarDesdeFecha(LocalDate fecha) {
 		ArrayList<Embarque> embarquesFiltrados = new ArrayList<Embarque>();
 		for (Embarque embarque : embarques) {
 			LocalDate fechaEmbarque = LocalDateTime.parse(embarque.getFechaHora()).toLocalDate();
 			if (!fechaEmbarque.isBefore(fecha)) {
+				embarquesFiltrados.add(embarque);
+			}
+		}
+		return embarquesFiltrados;
+	}
+	
+	public ArrayList<Embarque> filtrarHastaFecha(LocalDate fecha) {
+		ArrayList<Embarque> embarquesFiltrados = new ArrayList<Embarque>();
+		for (Embarque embarque : embarques) {
+			LocalDate fechaEmbarque = LocalDateTime.parse(embarque.getFechaHora()).toLocalDate();
+			if (!fechaEmbarque.isAfter(fecha)) {
 				embarquesFiltrados.add(embarque);
 			}
 		}

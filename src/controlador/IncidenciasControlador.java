@@ -27,6 +27,7 @@ import modelo.Reserva;
 import modelo.Vuelo;
 import vista.IncidenciasPanel;
 import utilidades.Constantes;
+import utilidades.Utilidades;
 
 public class IncidenciasControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -47,12 +48,8 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		habilitarBotonesSeleccion(null);
 	}
 
-	private boolean esAdmin() {
-		return rolUsuario.equals(Constantes.ROL_ADMIN);
-	}
-
 	private void aplicarPermisos() {
-		if (!esAdmin()) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			incidenciasPanel.remove(incidenciasPanel.getBtnModificar());
 			incidenciasPanel.remove(incidenciasPanel.getBtnEliminar());
 			incidenciasPanel.getPanelFormulario().remove(incidenciasPanel.getBtnCerrarIncidencia());
@@ -86,13 +83,13 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		if (e.getSource() == incidenciasPanel.getBtnAniadir()) {
 			aniadir();
 		} else if (e.getSource() == incidenciasPanel.getBtnModificar()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				incidenciasPanel.mostrarError("Solo un administrador puede modificar.");
 				return;
 			}
 			modificar();
 		} else if (e.getSource() == incidenciasPanel.getBtnEliminar()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				incidenciasPanel.mostrarError("Solo un administrador puede eliminar.");
 				return;
 			}
@@ -114,7 +111,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 			eliminar();
 			incidenciasPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == incidenciasPanel.getBtnCerrarIncidencia()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				incidenciasPanel.mostrarError("Solo un administrador puede cerrarla.");
 				return;
 			}

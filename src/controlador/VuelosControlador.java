@@ -23,6 +23,7 @@ import modelo.Reserva;
 import modelo.Vuelo;
 import vista.VuelosPanel;
 import utilidades.Constantes;
+import utilidades.Utilidades;
 
 public class VuelosControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -43,12 +44,8 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		habilitarBotonesSeleccion(false);
 	}
 
-	private boolean esAdmin() {
-		return rolUsuario.equals(Constantes.ROL_ADMIN);
-	}
-
 	private void aplicarPermisos() {
-		if (!esAdmin()) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			vuelosPanel.remove(vuelosPanel.getBtnAniadir());
 			vuelosPanel.remove(vuelosPanel.getBtnModificar());
 			vuelosPanel.remove(vuelosPanel.getBtnFicha());
@@ -75,19 +72,19 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == vuelosPanel.getBtnAniadir()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				vuelosPanel.mostrarError("Solo un administrador puede añadir.");
 				return;
 			}
 			aniadir();
 		} else if (e.getSource() == vuelosPanel.getBtnModificar()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				vuelosPanel.mostrarError("Solo un administrador puede modificar.");
 				return;
 			}
 			modificar();
 		} else if (e.getSource() == vuelosPanel.getBtnFicha()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				vuelosPanel.mostrarError("Solo un administrador puede ver la ficha.");
 				return;
 			}
