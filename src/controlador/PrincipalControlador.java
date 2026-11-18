@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import modelo.Usuario;
 import vista.AppFrame;
 import vista.ConfiguracionPanel;
-import vista.CuadroDeMandosPanel;
+import vista.InformesPanel;
 import vista.EmbarquesPanel;
 import vista.EquipajesPanel;
 import vista.ImagenesConTema;
@@ -33,7 +33,7 @@ public class PrincipalControlador {
 	private EquipajesControlador equipajesControlador;
 	private EmbarquesControlador embarquesControlador;
 	private IncidenciasControlador incidenciasControlador;
-	private CuadroDeMandosControlador cuadroDeMandosControlador;
+	private InformesControlador informesControlador;
 	private InicioControlador inicioControlador;
 	private LateralInterfazControlador lateralInterfazControlador;
 	private SuperiorInterfazControlador superiorInterfazControlador;
@@ -69,7 +69,7 @@ public class PrincipalControlador {
 		frame.setEquipajesPanel(new EquipajesPanel());
 		frame.setEmbarquesPanel(new EmbarquesPanel());
 		frame.setIncidenciasPanel(new IncidenciasPanel());
-		frame.setCuadroDeMandosPanel(new CuadroDeMandosPanel());
+		frame.setInformesPanel(new InformesPanel());
 		frame.setConfiguracionPanel(new ConfiguracionPanel());
 		
 		frame.setInicioPanel(new InicioPanel(usuario.getUsuario()));
@@ -82,7 +82,7 @@ public class PrincipalControlador {
 		anadirPanelOculto(frame.getEquipajesPanel());
 		anadirPanelOculto(frame.getEmbarquesPanel());
 		anadirPanelOculto(frame.getIncidenciasPanel());
-		anadirPanelOculto(frame.getCuadroDeMandosPanel());
+		anadirPanelOculto(frame.getInformesPanel());
 		anadirPanelOculto(frame.getConfiguracionPanel());
 		
 		anadirPanelVisible(frame.getInicioPanel());
@@ -95,7 +95,7 @@ public class PrincipalControlador {
 		equipajesControlador = new EquipajesControlador(this);
 		embarquesControlador = new EmbarquesControlador(this);
 		incidenciasControlador = new IncidenciasControlador(this);
-		cuadroDeMandosControlador = new CuadroDeMandosControlador(this);
+		informesControlador = new InformesControlador(this);
 		inicioControlador = new InicioControlador(this);
 		lateralInterfazControlador = new LateralInterfazControlador(this);
 		superiorInterfazControlador = new SuperiorInterfazControlador(this);
@@ -103,14 +103,14 @@ public class PrincipalControlador {
 		
 		listPanelesConImagenesConTema.add(frame.getSuperiorInterfazPanel());
 		listPanelesConImagenesConTema.add(frame.getLateralInterfazPanel());
-		listPanelesConImagenesConTema.add(frame.getCuadroDeMandosPanel());
+		listPanelesConImagenesConTema.add(frame.getInformesPanel());
 		
 	}
 	
 	public void cerrarSesion() {
 		listPanelesConImagenesConTema.remove(frame.getSuperiorInterfazPanel());
 		listPanelesConImagenesConTema.remove(frame.getLateralInterfazPanel());
-		listPanelesConImagenesConTema.remove(frame.getCuadroDeMandosPanel());
+		listPanelesConImagenesConTema.remove(frame.getInformesPanel());
 		
 		frame.getContentPane().remove(frame.getPasajerosPanel());
 		frame.getContentPane().remove(frame.getVuelosPanel());
@@ -118,7 +118,7 @@ public class PrincipalControlador {
 		frame.getContentPane().remove(frame.getEquipajesPanel());
 		frame.getContentPane().remove(frame.getEmbarquesPanel());
 		frame.getContentPane().remove(frame.getIncidenciasPanel());
-		frame.getContentPane().remove(frame.getCuadroDeMandosPanel());
+		frame.getContentPane().remove(frame.getInformesPanel());
 		frame.getContentPane().remove(frame.getInicioPanel());
 		frame.getContentPane().remove(frame.getLateralInterfazPanel());
 		frame.getContentPane().remove(frame.getSuperiorInterfazPanel());
@@ -130,7 +130,7 @@ public class PrincipalControlador {
 		frame.setEquipajesPanel(null);
 		frame.setEmbarquesPanel(null);
 		frame.setIncidenciasPanel(null);
-		frame.setCuadroDeMandosPanel(null);
+		frame.setInformesPanel(null);
 		frame.setInicioPanel(null);
 		frame.setLateralInterfazPanel(null);
 		frame.setSuperiorInterfazPanel(null);
@@ -142,7 +142,7 @@ public class PrincipalControlador {
 		equipajesControlador = null;
 		embarquesControlador = null;
 		incidenciasControlador = null;
-		cuadroDeMandosControlador = null;
+		informesControlador = null;
 		inicioControlador = null;
 		lateralInterfazControlador = null;
 		superiorInterfazControlador = null;
@@ -274,12 +274,12 @@ public class PrincipalControlador {
 		this.incidenciasControlador = incidenciasControlador;
 	}
 
-	public CuadroDeMandosControlador getCuadroDeMandosControlador() {
-		return cuadroDeMandosControlador;
+	public InformesControlador getInformesControlador() {
+		return informesControlador;
 	}
 
-	public void setCuadroDeMandosControlador(CuadroDeMandosControlador cuadroDeMandosControlador) {
-		this.cuadroDeMandosControlador = cuadroDeMandosControlador;
+	public void setInformesControlador(InformesControlador informesControlador) {
+		this.informesControlador = informesControlador;
 	}
 
 	public void setListPanelesConImagenesConTema(ArrayList<ImagenesConTema> listPanelesConImagenesConTema) {

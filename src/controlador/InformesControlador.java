@@ -19,17 +19,17 @@ import gestores.VuelosGestor;
 import modelo.Equipaje;
 import modelo.Incidencia;
 import modelo.Vuelo;
-import vista.CuadroDeMandosPanel;
+import vista.InformesPanel;
 
-public class CuadroDeMandosControlador implements ActionListener{
+public class InformesControlador implements ActionListener{
 	private PrincipalControlador principalControlador;
-	private CuadroDeMandosPanel cuadroDeMandosPanel;
+	private InformesPanel informesPanel;
 	private String rolUsuario;
 
-	public CuadroDeMandosControlador(PrincipalControlador principalControlador) {
+	public InformesControlador(PrincipalControlador principalControlador) {
 		super();
 		this.principalControlador = principalControlador;
-		this.cuadroDeMandosPanel = principalControlador.getFrame().getCuadroDeMandosPanel();
+		this.informesPanel = principalControlador.getFrame().getInformesPanel();
 		rolUsuario = principalControlador.getUsuario().getRol();
 		
 		implementarListeners();
@@ -41,8 +41,8 @@ public class CuadroDeMandosControlador implements ActionListener{
 
 	private void modoAdmin() {
 		if (rolUsuario.equals("USER")) {
-			cuadroDeMandosPanel.getBtnExportarCsv().setVisible(false);
-			cuadroDeMandosPanel.getComboBoxInforme().setVisible(false);
+			informesPanel.getBtnExportarCsv().setVisible(false);
+			informesPanel.getComboBoxInforme().setVisible(false);
 		}
 		
 	}
@@ -56,11 +56,11 @@ public class CuadroDeMandosControlador implements ActionListener{
 
 	private void rellenarGraficos() {
 		LinkedHashMap<String, Integer> numVuelosPorEstado = InformesGestor.getInstance().contarVuelosPorEstado();
-		cuadroDeMandosPanel.mostrarVuelosPorEstado(new ArrayList<String>(numVuelosPorEstado.keySet()),
+		informesPanel.mostrarVuelosPorEstado(new ArrayList<String>(numVuelosPorEstado.keySet()),
 				new ArrayList<Integer> (numVuelosPorEstado.values()));
 		
 		LinkedHashMap<String, Integer> incidenciasAbiertasPorPrioridad = InformesGestor.getInstance().obtenerLinkedHashMapIncidenciasAbieretasPorPrioridad();
-		cuadroDeMandosPanel.mostrarIncidenciasPorPrioridad(new ArrayList<String>(incidenciasAbiertasPorPrioridad.keySet()),
+		informesPanel.mostrarIncidenciasPorPrioridad(new ArrayList<String>(incidenciasAbiertasPorPrioridad.keySet()),
 				new ArrayList<Integer>(incidenciasAbiertasPorPrioridad.values()));
 		
 		HashMap<String, ArrayList<Integer>> vuelosOcupacion = InformesGestor.getInstance().obtenerOcupacionDeLosVuelos();  
@@ -72,12 +72,12 @@ public class CuadroDeMandosControlador implements ActionListener{
 			reservasVuelos.add(k.getValue().getLast());
 		}
 		
-		cuadroDeMandosPanel.mostrarOcupacion(vuelos, reservasVuelos, libresVuelos);
+		informesPanel.mostrarOcupacion(vuelos, reservasVuelos, libresVuelos);
 		
 	}
 
 	private void rellenarVuelos() {
-		DefaultTableModel modeloOcupacion = cuadroDeMandosPanel.getModeloOcupacion();
+		DefaultTableModel modeloOcupacion = informesPanel.getModeloOcupacion();
 		VuelosGestor vuelosGestor =VuelosGestor.getInstance(); 
 		
 		modeloOcupacion.setRowCount(0);
@@ -93,24 +93,24 @@ public class CuadroDeMandosControlador implements ActionListener{
 	}
 
 	private void implementarListeners() {
-		cuadroDeMandosPanel.getBtnExportarCsv().addActionListener(this);
+		informesPanel.getBtnExportarCsv().addActionListener(this);
 		
 	}
 
 	private void rellenarTarjetas() {
-		cuadroDeMandosPanel.getLblTotalPasajeros().setText(String.valueOf(PasajerosGestor.getInstance().getPasajeros().size()));
-		cuadroDeMandosPanel.getLblTotalVuelos().setText(String.valueOf(VuelosGestor.getInstance().getVuelos().size()));
-		cuadroDeMandosPanel.getLblTotalReservas().setText(String.valueOf(ReservasGestor.getInstance().getReservas().size()));
-		cuadroDeMandosPanel.getLblTotalEquipajes().setText(String.valueOf(EquipajesGestor.getInstance().getEquipajes().size()));
-		cuadroDeMandosPanel.getLblTotalEmbarques().setText(String.valueOf(EmbarquesGestor.getInstance().getEmbarques().size()));
-		cuadroDeMandosPanel.getLblTotalIncidencias().setText(String.valueOf(IncidenciasGestor.getInstance().getIncidencias().size()));
+		informesPanel.getLblTotalPasajeros().setText(String.valueOf(PasajerosGestor.getInstance().getPasajeros().size()));
+		informesPanel.getLblTotalVuelos().setText(String.valueOf(VuelosGestor.getInstance().getVuelos().size()));
+		informesPanel.getLblTotalReservas().setText(String.valueOf(ReservasGestor.getInstance().getReservas().size()));
+		informesPanel.getLblTotalEquipajes().setText(String.valueOf(EquipajesGestor.getInstance().getEquipajes().size()));
+		informesPanel.getLblTotalEmbarques().setText(String.valueOf(EmbarquesGestor.getInstance().getEmbarques().size()));
+		informesPanel.getLblTotalIncidencias().setText(String.valueOf(IncidenciasGestor.getInstance().getIncidencias().size()));
 		
 		
 	}
 	
 	private void rellenarAlertas() {
 		InformesGestor gestorInformes = InformesGestor.getInstance();
-		DefaultTableModel modeloAlertas = cuadroDeMandosPanel.getModeloAlertas();
+		DefaultTableModel modeloAlertas = informesPanel.getModeloAlertas();
 		modeloAlertas.setRowCount(0);
 
 		for (Vuelo vuelo : gestorInformes.buscarVuelosEnSobreventa()) {
@@ -133,7 +133,7 @@ public class CuadroDeMandosControlador implements ActionListener{
 	}
 
 	private void exportarCsv() {
-		String informe = (String) cuadroDeMandosPanel.getComboBoxInforme().getSelectedItem();
+		String informe = (String) informesPanel.getComboBoxInforme().getSelectedItem();
 		String error;
 		String ruta;
 		if (informe.equals("Totales")) {
@@ -150,10 +150,10 @@ public class CuadroDeMandosControlador implements ActionListener{
 		}
 
 		if (error.isEmpty()) {
-			cuadroDeMandosPanel.mostrarExito("Informe exportado en " + ruta);
+			informesPanel.mostrarExito("Informe exportado en " + ruta);
 		}
 		else {
-			cuadroDeMandosPanel.mostrarError(error);
+			informesPanel.mostrarError(error);
 		}
 	}
 
@@ -165,12 +165,12 @@ public class CuadroDeMandosControlador implements ActionListener{
 		this.principalControlador = principalControlador;
 	}
 
-	public CuadroDeMandosPanel getCuadroDeMandosPanel() {
-		return cuadroDeMandosPanel;
+	public InformesPanel getInformesPanel() {
+		return informesPanel;
 	}
 
-	public void setCuadroDeMandosPanel(CuadroDeMandosPanel cuadroDeMandosPanel) {
-		this.cuadroDeMandosPanel = cuadroDeMandosPanel;
+	public void setInformesPanel(InformesPanel informesPanel) {
+		this.informesPanel = informesPanel;
 	}
 
 	public String getRolUsuario() {
@@ -183,7 +183,7 @@ public class CuadroDeMandosControlador implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == cuadroDeMandosPanel.getBtnExportarCsv()) {
+		if (e.getSource() == informesPanel.getBtnExportarCsv()) {
 			exportarCsv();
 		}
 		

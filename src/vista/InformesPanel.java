@@ -25,7 +25,7 @@ import org.knowm.xchart.style.Styler;
 
 import utilidades.HiloAvisos;
 
-public class CuadroDeMandosPanel extends JPanel implements ImagenesConTema {
+public class InformesPanel extends JPanel implements ImagenesConTema {
 
 	private static final long serialVersionUID = 1L;
 	private static final Color[] COLORES = {new Color(31, 111, 178), new Color(67, 160, 71), new Color(239, 108, 0),
@@ -54,7 +54,7 @@ public class CuadroDeMandosPanel extends JPanel implements ImagenesConTema {
 	private XChartPanel<CategoryChart> panelGraficoOcupacion;
 	private ArrayList<String> seriesPrioridades = new ArrayList<String>();
 
-	public CuadroDeMandosPanel() {
+	public InformesPanel() {
 		setBounds(220, 110, 980, 653);
 		setLayout(null);
 

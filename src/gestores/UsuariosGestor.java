@@ -77,6 +77,22 @@ public class UsuariosGestor {
 		volcarEnCSV();
 	}
 	
+	public String hacerAdmin(String nombre, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un ADMIN puede cambiar roles.";
+		}
+		Usuario usuario = buscarUsuarioPorNombre(nombre);
+		if (usuario == null) {
+			return "El usuario " + nombre + " no existe.";
+		}
+		if (usuario.isAdmin()) {
+			return nombre + " ya es ADMIN.";
+		}
+		usuario.setRol("ADMIN");
+		volcarEnCSV();
+		return "";
+	}
+
 	public void volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_USUARIOS)))) {
 			StatefulBeanToCsv<Usuario> beantoCsv = new StatefulBeanToCsvBuilder<Usuario>(writer).withOrderedResults(true).withApplyQuotesToAll(false).build();
