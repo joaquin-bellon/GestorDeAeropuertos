@@ -19,6 +19,8 @@ import modelo.Vuelo;
 import utilidades.Utilidades;
 
 public class IncidenciasGestor {
+	private static String [] NIVELES_PRIORIDAD = {"BAJA", "MEDIA", "ALTA", "CRITICA"};
+	
 	private ArrayList<Incidencia> incidencias;
 	private VuelosGestor gestorVuelos;
 	private ReservasGestor gestorReservas;
@@ -469,6 +471,11 @@ public class IncidenciasGestor {
 		}
 		return incidenciasTipo;
 	}
+
+	public static String[] getNIVELES_PRIORIDAD() {
+		return NIVELES_PRIORIDAD;
+	}
+
 	
 	
 	

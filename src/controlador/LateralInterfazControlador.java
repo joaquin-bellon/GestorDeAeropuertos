@@ -64,6 +64,7 @@ public class LateralInterfazControlador implements ActionListener {
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getIncidenciasPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnInformes()) {
+			principalControlador.getCuadroDeMandosControlador().recargarPanel();
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getCuadroDeMandosPanel());
 		}
 	}

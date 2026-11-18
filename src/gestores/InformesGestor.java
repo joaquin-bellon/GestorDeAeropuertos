@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -29,6 +31,9 @@ public class InformesGestor {
 	private EquipajesGestor gestorEquipajes;
 	private IncidenciasGestor gestorIncidencias;
 	private ConfiguracionGestor gestorConfiguracion;
+
+	public static final String[] ESTADOS_VUELO = {"PROGRAMADO", "RETRASADO", "CANCELADO", "EMBARCANDO", "CERRADO"};
+	public static final String[] NIVELES_PRIORIDAD = {"BAJA", "MEDIA", "ALTA", "CRITICA"};
 
 	private static InformesGestor instancia;
 
@@ -109,34 +114,22 @@ public class InformesGestor {
 		String equipajesPerdidosString = "";
 		String incidenciasPrioAltaString = "";
 		String incidenciasPrioCriticaString = "";
-		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
-			ArrayList<Reserva> reservasDelVuelo = gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo());
-			int tamanio = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
-			if(tamanio < reservasDelVuelo.size()) {
-				vuelosString += " " + vuelo.getCodigo();
-			}
-			for (Reserva reserva : reservasDelVuelo) {
-				ArrayList<Equipaje> equipajesDeReserva = gestorEquipajes.buscarEquipajesPorReserva(reserva.getIdReserva());
-				ArrayList<Equipaje> equipajesSobrepesoDeReserva = gestorEquipajes.filtrarArrayEquipajesPorExcesoDePeso(equipajesDeReserva);
-				for(Equipaje equipaje : equipajesSobrepesoDeReserva) {
-					equipajesSobrePesoString += " " + equipaje.getCodEquipaje(); 
-				}
-				ArrayList<Equipaje> equipajesPerdidosDeReserva = gestorEquipajes.filtrarArrayEquipajesPorPerdidos(equipajesDeReserva);
-				for (Equipaje equipaje : equipajesPerdidosDeReserva) {
-					equipajesPerdidosString += " " + equipaje.getCodEquipaje();
-				}
-			}
+		for (Vuelo vuelo : buscarVuelosEnSobreventa()) {
+			vuelosString += " " + vuelo.getCodigo();
 		}
-		
-		ArrayList<Incidencia> incidenciasPrioridadAlta = gestorIncidencias.buscarEnArrayAbiertas(gestorIncidencias.buscarPorPrioridad("ALTA")); 
-		for (Incidencia incidencia : incidenciasPrioridadAlta) {
+		for (Equipaje equipaje : buscarEquipajesPerdidos()) {
+			equipajesPerdidosString += " " + equipaje.getCodEquipaje();
+		}
+		for (Equipaje equipaje : buscarEquipajesConSobrepeso()) {
+			equipajesSobrePesoString += " " + equipaje.getCodEquipaje();
+		}
+		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("ALTA")) {
 			incidenciasPrioAltaString += " " + incidencia.getCodigo();
 		}
-		ArrayList<Incidencia> incidenciasPrioridadCritica = gestorIncidencias.buscarEnArrayAbiertas(gestorIncidencias.buscarPorPrioridad("CRITICA"));
-		for (Incidencia incidencia : incidenciasPrioridadCritica) {
+		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("CRITICA")) {
 			incidenciasPrioCriticaString += " " + incidencia.getCodigo();
 		}
-		
+
 		System.out.println("Vuelos en sobreventa:" + vuelosString);
 		System.out.println("Equipajes Perdidos:" + equipajesPerdidosString);
 		System.out.println("Equipajes con SobrePeso:" + equipajesSobrePesoString);
@@ -145,51 +138,93 @@ public class InformesGestor {
 		System.out.println("========================================");
 	}
 
+	public ArrayList<Vuelo> buscarVuelosEnSobreventa() {
+		ArrayList<Vuelo> vuelosEnSobreventa = new ArrayList<Vuelo>();
+		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
+			ArrayList<Reserva> reservasDelVuelo = gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo());
+			int tamanio = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
+			if (tamanio < reservasDelVuelo.size()) {
+				vuelosEnSobreventa.add(vuelo);
+			}
+		}
+		return vuelosEnSobreventa;
+	}
+
+	public ArrayList<Equipaje> buscarEquipajesPerdidos() {
+		return gestorEquipajes.filtrarArrayEquipajesPorPerdidos(buscarEquipajesDeReservasConfirmadas());
+	}
+
+	public ArrayList<Equipaje> buscarEquipajesConSobrepeso() {
+		return gestorEquipajes.filtrarArrayEquipajesPorExcesoDePeso(buscarEquipajesDeReservasConfirmadas());
+	}
+
+	public ArrayList<Incidencia> buscarIncidenciasAbiertasPorPrioridad(String prioridad) {
+		return gestorIncidencias.buscarEnArrayAbiertas(gestorIncidencias.buscarPorPrioridad(prioridad));
+	}
+
+	private ArrayList<Equipaje> buscarEquipajesDeReservasConfirmadas() {
+		ArrayList<Equipaje> equipajes = new ArrayList<Equipaje>();
+		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
+			for (Reserva reserva : gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo())) {
+				equipajes.addAll(gestorEquipajes.buscarEquipajesPorReserva(reserva.getIdReserva()));
+			}
+		}
+		return equipajes;
+	}
+
 	private void imprimirPorVuelos() {
-		String [] estados = { "PROGRAMADO",
-                "RETRASADO",
-                "CANCELADO",
-                "EMBARCANDO",
-          		"CERRADO"};
-		String [] nivelesPrioridad = {"BAJA", "MEDIA", "ALTA", "CRITICA"};
-		HashMap<String, Integer> HashMapEstados = new HashMap<String, Integer>();
 		System.out.println("========================================");
 		System.out.println("VUELOS POR ESTADO OPERATIVO");
-		for (String estado : estados) {
-			HashMap<String, Integer> prioridades = new HashMap<String, Integer>();
-			prioridades.put("BAJA", 0);
-			prioridades.put("MEDIA", 0);
-			prioridades.put("ALTA", 0);
-			prioridades.put("CRITICA", 0);
-
-
-			int totalReservas = 0;
+		for (String estado : ESTADOS_VUELO) {
 			ArrayList<Vuelo> vuelosEstado = gestorVuelos.buscarVuelosPorEstado(estado);
-			HashMapEstados.put(estado, vuelosEstado.size());
-			for (Vuelo vuelo : vuelosEstado) {
-				totalReservas+=gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo()).size();
-				ArrayList<Incidencia> incidenciasAbiertasDelVuelo = gestorIncidencias.buscarEnArrayAbiertas(gestorIncidencias.buscarIncidenciaPorVuelo(vuelo.getCodigo()));
-				for (Incidencia incidencia : incidenciasAbiertasDelVuelo) {
-					prioridades.put(incidencia.getPrioridad(), prioridades.get(incidencia.getPrioridad())+1);
-				}
-			}
 
 			System.out.println("========================================");
-			System.out.println(estado + ": " + HashMapEstados.get(estado) + " vuelos");
+			System.out.println(estado + ": " + vuelosEstado.size() + " vuelos");
 			if (vuelosEstado.size() != 0) {
 				String codigos = "";
 				for (Vuelo vuelo : vuelosEstado) {
 					codigos += " " + vuelo.getCodigo();
 				}
+				LinkedHashMap<String, Integer> prioridades = contarIncidenciasAbiertasPorPrioridad(vuelosEstado);
 				System.out.println("   Vuelos:" + codigos);
-				System.out.println("   Reservas confirmadas: " + totalReservas);
+				System.out.println("   Reservas confirmadas: " + contarReservasConfirmadas(vuelosEstado));
 				System.out.println("   Incidencias abiertas por prioridad:");
-				for (String nivel : nivelesPrioridad) {
+				for (String nivel : prioridades.keySet()) {
 					System.out.println("      " + nivel + ": " + prioridades.get(nivel));
 				}
 			}
 		}
 		System.out.println("========================================");
+	}
+
+	public LinkedHashMap<String, Integer> contarVuelosPorEstado() {
+		LinkedHashMap<String, Integer> vuelosPorEstado = new LinkedHashMap<String, Integer>();
+		for (String estado : ESTADOS_VUELO) {
+			vuelosPorEstado.put(estado, gestorVuelos.buscarVuelosPorEstado(estado).size());
+		}
+		return vuelosPorEstado;
+	}
+
+	public int contarReservasConfirmadas(ArrayList<Vuelo> vuelos) {
+		int totalReservas = 0;
+		for (Vuelo vuelo : vuelos) {
+			totalReservas += gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo()).size();
+		}
+		return totalReservas;
+	}
+
+	public LinkedHashMap<String, Integer> contarIncidenciasAbiertasPorPrioridad(ArrayList<Vuelo> vuelos) {
+		LinkedHashMap<String, Integer> prioridades = new LinkedHashMap<String, Integer>();
+		for (String nivel : NIVELES_PRIORIDAD) {
+			prioridades.put(nivel, 0);
+		}
+		for (Vuelo vuelo : vuelos) {
+			ArrayList<Incidencia> incidenciasAbiertasDelVuelo = gestorIncidencias.buscarEnArrayAbiertas(gestorIncidencias.buscarIncidenciaPorVuelo(vuelo.getCodigo()));
+			for (Incidencia incidencia : incidenciasAbiertasDelVuelo) {
+				prioridades.put(incidencia.getPrioridad(), prioridades.get(incidencia.getPrioridad()) + 1);
+			}
+		}
+		return prioridades;
 	}
 
 	private void crearInformeReservas() {
@@ -608,6 +643,31 @@ public class InformesGestor {
 		}
 		System.out.println("Pasajeros con Reservas Canceladas:" + texto );
 		System.out.println("====================================");
+	}
+
+	public LinkedHashMap<String, Integer> obtenerLinkedHashMapIncidenciasAbieretasPorPrioridad() {
+		LinkedHashMap<String, Integer> incidenciasAbiertasPorPrioridad = new LinkedHashMap<String, Integer>();
+		for (String prioridad : IncidenciasGestor.getNIVELES_PRIORIDAD()) {
+			incidenciasAbiertasPorPrioridad.put(prioridad, buscarIncidenciasAbiertasPorPrioridad(prioridad).size());
+		}
+		return incidenciasAbiertasPorPrioridad;
+	}
+	
+	public LinkedHashMap<String, ArrayList<Integer>> obtenerOcupacionDeLosVuelos () {
+		LinkedHashMap<String, ArrayList<Integer>> vuelosOcupacion = new LinkedHashMap<String, ArrayList<Integer>>();
+		
+		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
+			int tamanioVuelo = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
+			int numeroReservas = gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo()).size();
+			int plazasLibres = tamanioVuelo - numeroReservas;
+			vuelosOcupacion.put(vuelo.getCodigo(), new ArrayList<Integer>(List.of(plazasLibres,numeroReservas)));
+			
+		}
+		
+		
+		
+		return vuelosOcupacion;
+		
 	}
 
 }

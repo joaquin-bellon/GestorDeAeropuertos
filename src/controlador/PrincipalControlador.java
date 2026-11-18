@@ -312,6 +312,16 @@ public class PrincipalControlador {
 	public void setSuperiorInterfazControlador(SuperiorInterfazControlador superiorInterfazControlador) {
 		this.superiorInterfazControlador = superiorInterfazControlador;
 	}
+
+	public ConfiguracionControlador getConfiguracionControlador() {
+		return configuracionControlador;
+	}
+
+	public void setConfiguracionControlador(ConfiguracionControlador configuracionControlador) {
+		this.configuracionControlador = configuracionControlador;
+	}
+	
+	
 	
 	
 

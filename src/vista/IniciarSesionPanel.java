@@ -40,17 +40,21 @@ public class IniciarSesionPanel extends JPanel implements ImagenesConTema {
 		btnTema = new JButton("");
 		btnTema.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnTema.setBounds(1100, 30, 40, 40);
+		btnTema.setToolTipText("Cambiar Tema");
 		btnTema.putClientProperty("FlatLaf.style", "arc: 999");
 		
 		lblError = new JLabel("");
 		lblError.setFont(new Font("SansSerif", Font.BOLD, 12));
 		lblError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblError.setBounds(478, 485, 244, 12);
+		lblError.setForeground(UIManager.getColor("Login.errorColor"));
+		lblError.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
 		add(lblError);
 		
 		lblRegistrarse = new JLabel("<html><u>Registrarse</u></html>");
 		lblRegistrarse.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		lblRegistrarse.setBounds(620, 583, 79, 25);
+		lblRegistrarse.putClientProperty("FlatLaf.style", "foreground: $Login.enlace");
 		add(lblRegistrarse);
 		
 		lblNoTienesCuenta = new JLabel("¿No tienes cuenta?");
@@ -102,8 +106,6 @@ public class IniciarSesionPanel extends JPanel implements ImagenesConTema {
 	public void actualizarImagenes () {
 		btnTema.setIcon(new ImageIcon(UIManager.getString("Login.btnTema")));
 		Utilidades.insertarImagen(UIManager.getString("Login.fondo"), lblFondo);
-		lblRegistrarse.setForeground(UIManager.getColor("Login.enlace"));
-		lblError.setForeground(UIManager.getColor("Login.errorColor"));
 	}
 	public JLabel getLblFondo() {
 		return lblFondo;

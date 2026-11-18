@@ -42,6 +42,7 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		btnTema = new JButton("");
 		btnTema.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnTema.setBounds(1100, 35, 40, 40);
+		btnTema.setToolTipText("Cambiar Tema");
 		btnTema.putClientProperty("FlatLaf.style", "arc: 999");
 		
 		lblError = new JLabel("");
@@ -49,6 +50,7 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		lblError.setForeground((Color) null);
 		lblError.setFont(new Font("SansSerif", Font.BOLD, 12));
 		lblError.setBounds(477, 498, 244, 12);
+		lblError.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
 		add(lblError);
 		
 		lblRepetirContrasenia = new JLabel("Repetir Contraseña");
@@ -65,6 +67,7 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 		lblIniciarSesion = new JLabel("<html><u>Iniciar Sesion</u></html>");
 		lblIniciarSesion.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		lblIniciarSesion.setBounds(620, 582, 91, 25);
+		lblIniciarSesion.putClientProperty("FlatLaf.style", "foreground: $Login.enlace");
 		add(lblIniciarSesion);
 		
 		lblNoTienesCuenta = new JLabel("¿Ya tienes cuenta?");
@@ -116,8 +119,6 @@ public class RegistrarsePanel extends JPanel implements ImagenesConTema {
 	public void actualizarImagenes () {
 		btnTema.setIcon(new ImageIcon(UIManager.getString("Login.btnTema")));
 		Utilidades.insertarImagen(UIManager.getString("Login.fondo"), lblFondo);
-		lblIniciarSesion.setForeground(UIManager.getColor("Login.enlace"));
-		lblError.setForeground(UIManager.getColor("Login.errorColor"));
 	}
 	public JLabel getLblFondo() {
 		return lblFondo;

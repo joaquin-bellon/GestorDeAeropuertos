@@ -57,12 +57,14 @@ public class SuperiorInterfazPanel extends JPanel implements ImagenesConTema {
 		btnTema = new JButton("");
 		btnTema.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnTema.setBounds(1100, 30, 40, 40);
+		btnTema.setToolTipText("Cambiar Tema");
 		btnTema.putClientProperty("FlatLaf.style", "arc: 999");
 		add(btnTema);
 		
 		btnSalir = new JButton("");
 		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSalir.setBounds(1050, 30, 40, 40);
+		btnSalir.setToolTipText("Cerrar Sesión");
 		btnSalir.putClientProperty("FlatLaf.style", "arc: 999");
 		add(btnSalir);
 		
