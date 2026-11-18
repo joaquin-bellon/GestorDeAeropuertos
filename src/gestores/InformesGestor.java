@@ -670,4 +670,58 @@ public class InformesGestor {
 		
 	}
 
+	public String exportarTotales() {
+		String texto = "";
+		texto += "Pasajeros," + gestorPasajeros.getPasajeros().size() + "\n";
+		texto += "Vuelos," + gestorVuelos.getVuelos().size() + "\n";
+		texto += "Reservas," + gestorReservas.getReservas().size() + "\n";
+		texto += "Equipajes," + gestorEquipajes.getEquipajes().size() + "\n";
+		texto += "Embarques," + gestorEmbarques.getEmbarques().size() + "\n";
+		texto += "Incidencias," + gestorIncidencias.getIncidencias().size() + "\n";
+		return escribirInforme("informes/totales.csv", texto);
+	}
+
+	public String exportarOcupacion() {
+		String texto = "";
+		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
+			int capacidad = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
+			int reservas = gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo()).size();
+			int porcentaje = reservas * 100 / capacidad;
+			texto += vuelo.getCodigo() + "," + capacidad + "," + reservas + "," + (capacidad - reservas) + "," + porcentaje + "%\n";
+		}
+		return escribirInforme("informes/ocupacion_vuelos.csv", texto);
+	}
+
+	public String exportarAlertas() {
+		String texto = "";
+		for (Vuelo vuelo : buscarVuelosEnSobreventa()) {
+			int capacidad = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
+			int reservas = gestorReservas.buscarResevaConfirmadasPorVuelo(vuelo.getCodigo()).size();
+			texto += "Sobreventa," + vuelo.getCodigo() + ",\"" + reservas + " reservas de " + capacidad + "\"\n";
+		}
+		for (Equipaje equipaje : buscarEquipajesPerdidos()) {
+			texto += "Equipaje perdido," + equipaje.getCodEquipaje() + ",\"Reserva " + equipaje.getCodReserva() + "\"\n";
+		}
+		for (Equipaje equipaje : buscarEquipajesConSobrepeso()) {
+			texto += "Exceso de peso," + equipaje.getCodEquipaje() + ",\"" + equipaje.getTipo() + ", " + equipaje.getPeso() + " kg\"\n";
+		}
+		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("CRITICA")) {
+			texto += "Incidencia CRITICA," + incidencia.getCodigo() + ",\"Vuelo " + incidencia.getVuelo() + "\"\n";
+		}
+		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad("ALTA")) {
+			texto += "Incidencia ALTA," + incidencia.getCodigo() + ",\"Vuelo " + incidencia.getVuelo() + "\"\n";
+		}
+		return escribirInforme("informes/alertas.csv", texto);
+	}
+
+	private String escribirInforme(String ruta, String texto) {
+		new File("informes").mkdir();
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ruta)))) {
+			writer.write(texto);
+			return "";
+		} catch (IOException e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+	}
+
 }

@@ -30,9 +30,20 @@ public class CuadroDeMandosControlador implements ActionListener{
 		super();
 		this.principalControlador = principalControlador;
 		this.cuadroDeMandosPanel = principalControlador.getFrame().getCuadroDeMandosPanel();
+		rolUsuario = principalControlador.getUsuario().getRol();
 		
 		implementarListeners();
 		recargarPanel();
+		
+		modoAdmin();
+		
+	}
+
+	private void modoAdmin() {
+		if (rolUsuario.equals("USER")) {
+			cuadroDeMandosPanel.getBtnExportarCsv().setVisible(false);
+			cuadroDeMandosPanel.getComboBoxInforme().setVisible(false);
+		}
 		
 	}
 
@@ -68,6 +79,9 @@ public class CuadroDeMandosControlador implements ActionListener{
 	private void rellenarVuelos() {
 		DefaultTableModel modeloOcupacion = cuadroDeMandosPanel.getModeloOcupacion();
 		VuelosGestor vuelosGestor =VuelosGestor.getInstance(); 
+		
+		modeloOcupacion.setRowCount(0);
+		
 		for (Vuelo vuelo : vuelosGestor.getVuelos()) {
 			int tamaño = vuelosGestor.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
 			int numReservas = ReservasGestor.getInstance().buscarResevaConfirmadasPorVuelo(vuelo.getCodigo()).size();
@@ -118,6 +132,31 @@ public class CuadroDeMandosControlador implements ActionListener{
 		}
 	}
 
+	private void exportarCsv() {
+		String informe = (String) cuadroDeMandosPanel.getComboBoxInforme().getSelectedItem();
+		String error;
+		String ruta;
+		if (informe.equals("Totales")) {
+			error = InformesGestor.getInstance().exportarTotales();
+			ruta = "informes/totales.csv";
+		}
+		else if (informe.equals("Ocupación de vuelos")) {
+			error = InformesGestor.getInstance().exportarOcupacion();
+			ruta = "informes/ocupacion_vuelos.csv";
+		}
+		else {
+			error = InformesGestor.getInstance().exportarAlertas();
+			ruta = "informes/alertas.csv";
+		}
+
+		if (error.isEmpty()) {
+			cuadroDeMandosPanel.mostrarExito("Informe exportado en " + ruta);
+		}
+		else {
+			cuadroDeMandosPanel.mostrarError(error);
+		}
+	}
+
 	public PrincipalControlador getPrincipalControlador() {
 		return principalControlador;
 	}
@@ -145,7 +184,7 @@ public class CuadroDeMandosControlador implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == cuadroDeMandosPanel.getBtnExportarCsv()) {
-			
+			exportarCsv();
 		}
 		
 	}

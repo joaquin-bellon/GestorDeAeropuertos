@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,6 +23,8 @@ import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.PieStyler.LabelType;
 import org.knowm.xchart.style.Styler;
 
+import utilidades.HiloAvisos;
+
 public class CuadroDeMandosPanel extends JPanel implements ImagenesConTema {
 
 	private static final long serialVersionUID = 1L;
@@ -32,6 +35,7 @@ public class CuadroDeMandosPanel extends JPanel implements ImagenesConTema {
 	private JLabel lblSubtitulo;
 	private JComboBox<String> comboBoxInforme;
 	private JButton btnExportarCsv;
+	private JLabel lblAdvertencia;
 	private JLabel lblTotalPasajeros;
 	private JLabel lblTotalVuelos;
 	private JLabel lblTotalReservas;
@@ -75,6 +79,13 @@ public class CuadroDeMandosPanel extends JPanel implements ImagenesConTema {
 		btnExportarCsv.setBounds(790, 22, 170, 32);
 		btnExportarCsv.putClientProperty("FlatLaf.style", "arc: 12");
 		add(btnExportarCsv);
+
+		lblAdvertencia = new JLabel("");
+		lblAdvertencia.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		lblAdvertencia.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
+		lblAdvertencia.setBounds(500, 55, 460, 22);
+		add(lblAdvertencia);
 
 		lblTotalPasajeros = crearTarjeta("Pasajeros", 0);
 		lblTotalVuelos = crearTarjeta("Vuelos", 1);
@@ -244,6 +255,16 @@ public class CuadroDeMandosPanel extends JPanel implements ImagenesConTema {
 
 	public JComboBox<String> getComboBoxInforme() {
 		return comboBoxInforme;
+	}
+
+	public void mostrarError(String texto) {
+		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Login.errorColor");
+		new HiloAvisos(lblAdvertencia, texto).start();
+	}
+
+	public void mostrarExito(String texto) {
+		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Mensaje.exito");
+		new HiloAvisos(lblAdvertencia, texto).start();
 	}
 
 	public JButton getBtnExportarCsv() {

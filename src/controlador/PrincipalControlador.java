@@ -103,13 +103,14 @@ public class PrincipalControlador {
 		
 		listPanelesConImagenesConTema.add(frame.getSuperiorInterfazPanel());
 		listPanelesConImagenesConTema.add(frame.getLateralInterfazPanel());
+		listPanelesConImagenesConTema.add(frame.getCuadroDeMandosPanel());
 		
 	}
 	
 	public void cerrarSesion() {
 		listPanelesConImagenesConTema.remove(frame.getSuperiorInterfazPanel());
 		listPanelesConImagenesConTema.remove(frame.getLateralInterfazPanel());
-		
+		listPanelesConImagenesConTema.remove(frame.getCuadroDeMandosPanel());
 		
 		frame.getContentPane().remove(frame.getPasajerosPanel());
 		frame.getContentPane().remove(frame.getVuelosPanel());
