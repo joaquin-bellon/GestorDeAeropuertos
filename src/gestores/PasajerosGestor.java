@@ -53,15 +53,15 @@ public class PasajerosGestor {
 		return pasajeros;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_PASAJEROS)))) {
 			StatefulBeanToCsv<Pasajero> beantoCsv = new StatefulBeanToCsvBuilder<Pasajero>(writer)
 					.withOrderedResults(true).withApplyQuotesToAll(false).build();
 			beantoCsv.write(pasajeros);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 	}
 
 	public ArrayList<Pasajero> filtrarPasajeros(String criterio, String texto) {
@@ -91,13 +91,16 @@ public class PasajerosGestor {
 		return arrayPasajeros;
 	}
 
-	public void insertarPasajero(String codigo, String nombre, String apellidos, String documento, String pais,
+	public String insertarPasajero(String codigo, String nombre, String apellidos, String documento, String pais,
 			String correo, String tipo) {
 		pasajeros.add(new Pasajero(codigo, nombre, apellidos, documento, pais, correo, tipo));
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_PASAJEROS);
+		}
+		return "";
 	}
 
-	public void modificarPasajero(Pasajero pasajero, String codigo, String nombre, String apellidos, String documento,
+	public String modificarPasajero(Pasajero pasajero, String codigo, String nombre, String apellidos, String documento,
 			String pais, String correo, String tipo) {
 		pasajero.setCodPasajero(codigo);
 		pasajero.setNombre(nombre);
@@ -106,13 +109,16 @@ public class PasajerosGestor {
 		pasajero.setPais(pais);
 		pasajero.setCorreo(correo);
 		pasajero.setTipo(tipo);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_PASAJEROS);
+		}
+		return "";
 	}
 
-	public boolean eliminarPasajero(String codPasajero) {
+	public String eliminarPasajero(String codPasajero) {
 		Pasajero pasajero = buscarPorCodPasajero(codPasajero);
 		if (pasajero == null) {
-			return false;
+			return "No existe ningun pasajero con el codigo " + codPasajero + ".";
 		}
 
 		ReservasGestor gestorReservas = ReservasGestor.getInstance();
@@ -139,18 +145,22 @@ public class PasajerosGestor {
 			gestorReservas.getReservas().remove(reserva);
 		}
 
-		if (reservaEliminada) {
-			gestorReservas.volcarEnCSV();
-		}
-		if (equipajeEliminado) {
-			gestorEquipajes.volcarEnCSV();
-		}
-		if (embarqueEliminado) {
-			gestorEmbarques.volcarEnCSV();
-		}
 		pasajeros.remove(pasajero);
-		volcarEnCSV();
-		return true;
+
+		String error = "";
+		if (reservaEliminada && !gestorReservas.volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
+		if (equipajeEliminado && !gestorEquipajes.volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_EQUIPAJES);
+		}
+		if (embarqueEliminado && !gestorEmbarques.volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		if (!volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_PASAJEROS);
+		}
+		return error;
 	}
 
 	public String crearNuevoIdentificador() {

@@ -119,19 +119,23 @@ public class IncidenciasGestor {
 		return incidenciasEstado;
 	}
 
-	public void volcarEnTxt () {
+	public boolean volcarEnTxt () {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File (Utilidades.RUTA_INCIDENCIAS)))) {
 			for (Incidencia incidencia : incidencias) {
 				writer.write(incidencia.formatoTxt());
 				writer.newLine();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
-	public void insertarIncidencia(String fecha, String codigo, String vuelo, String tipo, int duracion, String descripcion, String prioridad) {
+	public String insertarIncidencia(String fecha, String codigo, String vuelo, String tipo, int duracion, String descripcion, String prioridad) {
 		incidencias.add(new Incidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad, "ABIERTA"));
-		volcarEnTxt();
+		if (!volcarEnTxt()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_INCIDENCIAS);
+		}
+		return "";
 	}
 	public String crearNuevoIdentificador() {
 		int dato = 0;
@@ -153,7 +157,9 @@ public class IncidenciasGestor {
 		incidencia.setDuracion(duracion);
 		incidencia.setDescripcion(descripcion);
 		incidencia.setPrioridad(prioridad);
-		volcarEnTxt();
+		if (!volcarEnTxt()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_INCIDENCIAS);
+		}
 		return "";
 	}
 
@@ -166,7 +172,9 @@ public class IncidenciasGestor {
 			return "No existe ninguna incidencia con el codigo " + codigo + ".";
 		}
 		incidencias.remove(incidencia);
-		volcarEnTxt();
+		if (!volcarEnTxt()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_INCIDENCIAS);
+		}
 		return "";
 	}
 
@@ -182,7 +190,9 @@ public class IncidenciasGestor {
 			return "La incidencia " + codigo + " ya esta cerrada.";
 		}
 		incidencia.setEstado("CERRADA");
-		volcarEnTxt();
+		if (!volcarEnTxt()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_INCIDENCIAS);
+		}
 		return "";
 	}
 

@@ -57,14 +57,15 @@ public class EmbarquesGestor {
 		return embarques;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_EMBARQUES)))) {
 			StatefulBeanToCsv<Embarque> beantoCsv = new StatefulBeanToCsvBuilder<Embarque>(writer).withOrderedResults(true)
 					.withApplyQuotesToAll(false).build();
 			beantoCsv.write(embarques);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 	public void imprimirEmbarque(Embarque embarque) {
@@ -124,9 +125,12 @@ public class EmbarquesGestor {
 		return embarquesEstado;
 	}
 
-	public void insertarEmbarque(String codigo, String codReserva, String fechaHora, String puerta, String estado, String observaciones) {
+	public String insertarEmbarque(String codigo, String codReserva, String fechaHora, String puerta, String estado, String observaciones) {
 		aniadirEmbarqueAlArray(codigo, codReserva, fechaHora, puerta, estado, observaciones);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		return "";
 	}
 
 	private void aniadirEmbarqueAlArray(String codigo, String codReserva, String fechaHora, String puerta, String estado, String observaciones) {
@@ -153,22 +157,27 @@ public class EmbarquesGestor {
 		return String.format("E%04d", dato + 1);
 	}
 
-	public void modificarEmbarque(Embarque embarque, String fechaHora, String puerta, String estado, String observaciones) {
+	public String modificarEmbarque(Embarque embarque, String fechaHora, String puerta, String estado, String observaciones) {
 		embarque.setFechaHora(fechaHora);
 		embarque.setPuerta(puerta);
 		embarque.setEstado(estado);
 		embarque.setObservaciones(observaciones);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		return "";
 	}
 
-	public boolean eliminarEmbarque(String codEmbarque) {
+	public String eliminarEmbarque(String codEmbarque) {
 		Embarque embarque = buscarPorCodigo(codEmbarque);
 		if (embarque == null) {
-			return false;
+			return "No existe ningun embarque con el codigo " + codEmbarque + ".";
 		}
 		embarques.remove(embarque);
-		volcarEnCSV();
-		return true;
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		return "";
 	}
 
 	public ArrayList<Embarque> filtrarPorFecha(LocalDate fecha) {

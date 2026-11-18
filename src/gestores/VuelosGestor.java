@@ -165,7 +165,7 @@ public class VuelosGestor {
 		return elementoVuelo;
 	}
 
-	public void volcarEnXML() {
+	public boolean volcarEnXML() {
 		NodeList hijos = nodoVuelos.getChildNodes();
 		for (int i = hijos.getLength() - 1; i >= 0; i--) {
 			nodoVuelos.removeChild(hijos.item(i));
@@ -179,8 +179,9 @@ public class VuelosGestor {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.transform(new DOMSource(doc), new StreamResult(new File(Utilidades.RUTA_AEROPUERTO)));
 		} catch (TransformerException e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 	public Vuelo buscarPorCodigo(String codVuelo) {
@@ -225,7 +226,9 @@ public class VuelosGestor {
 			return "Solo un administrador puede añadir vuelos.";
 		}
 		vuelos.add(new Vuelo(codigo, aerolinea, avion, terminal, puerta, destino, salida, llegada));
-		volcarEnXML();
+		if (!volcarEnXML()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_AEROPUERTO);
+		}
 		return "";
 	}
 
@@ -239,7 +242,9 @@ public class VuelosGestor {
 		vuelo.setSalida(salida);
 		vuelo.setLlegada(llegada);
 		vuelo.setEstado(estado);
-		volcarEnXML();
+		if (!volcarEnXML()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_AEROPUERTO);
+		}
 		return "";
 	}
 

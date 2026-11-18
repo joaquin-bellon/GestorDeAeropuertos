@@ -37,7 +37,7 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 			String contrasenia = new String(registrarsePanel.getPasswordFieldContrasenia().getPassword());
 			String contraseniaRepetida = new String(registrarsePanel.getPasswordFieldRepetir().getPassword());
 			
-			if (nombre.isBlank() || contrasenia.isBlank() || contrasenia.isBlank()) {
+			if (nombre.isBlank() || contrasenia.isBlank() || contraseniaRepetida.isBlank()) {
 				HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), "Rellene todos los campos.");
 				hiloErrores.start();
 			}else {
@@ -55,9 +55,15 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 				}
 				else {
 					Usuario usuarioCreado = new Usuario(nombre,contrasenia,"USER");
-					UsuariosGestor.getInstance().añadirUsuario(usuarioCreado);
-					principalControlador.crearPanelesYControladores(usuarioCreado);
-					registrarsePanel.setVisible(false);
+					String resultado = UsuariosGestor.getInstance().añadirUsuario(usuarioCreado);
+					if (resultado.equals("")) {
+						principalControlador.crearPanelesYControladores(usuarioCreado);
+						registrarsePanel.setVisible(false);
+					}
+					else {
+						HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), resultado);
+						hiloErrores.start();
+					}
 				}
 			}
 			

@@ -72,9 +72,12 @@ public class UsuariosGestor {
 		}
 		return usuario;
 	}
-	public void añadirUsuario(Usuario usuario) {
+	public String añadirUsuario(Usuario usuario) {
 		usuarios.add(usuario);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
+		}
+		return "";
 	}
 	
 	public String hacerAdmin(String nombre, String rolUsuario) {
@@ -89,7 +92,9 @@ public class UsuariosGestor {
 			return nombre + " ya es ADMIN.";
 		}
 		usuario.setRol("ADMIN");
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
+		}
 		return "";
 	}
 
@@ -108,18 +113,20 @@ public class UsuariosGestor {
 			return nombre + " ya es USER.";
 		}
 		usuario.setRol("USER");
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
+		}
 		return "";
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_USUARIOS)))) {
 			StatefulBeanToCsv<Usuario> beantoCsv = new StatefulBeanToCsvBuilder<Usuario>(writer).withOrderedResults(true).withApplyQuotesToAll(false).build();
 			beantoCsv.write(usuarios);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 	}
 	
 	public static void setInstancia(UsuariosGestor instancia) {

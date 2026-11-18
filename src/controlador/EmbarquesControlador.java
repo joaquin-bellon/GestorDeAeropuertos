@@ -101,13 +101,13 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 
 	private void eliminar() {
 		String codEmbarque = String.valueOf(embarquesPanel.getTabla().getValueAt(embarquesPanel.getTabla().getSelectedRow(), 0));
-		boolean eliminado = EmbarquesGestor.getInstance().eliminarEmbarque(codEmbarque);
-		if (eliminado) {
+		String resultado = EmbarquesGestor.getInstance().eliminarEmbarque(codEmbarque);
+		if (resultado.equals("")) {
 			recargarPanel();
 			embarquesPanel.mostrarExito("Se ha eliminado el embarque " + codEmbarque + ".");
 		}
 		else {
-			embarquesPanel.mostrarError("No existe ningun embarque con el codigo " + codEmbarque);
+			embarquesPanel.mostrarError(resultado);
 		}
 	}
 
@@ -129,22 +129,26 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 		}
 
 		String aviso = "";
+		String resultado;
 		Embarque embarque = EmbarquesGestor.getInstance().buscarPorCodigo(codigo);
 		if (embarque == null) {
 			Embarque existente = EmbarquesGestor.getInstance().buscarPorReserva(codReserva);
 			if (existente == null) {
-				EmbarquesGestor.getInstance().insertarEmbarque(codigo, codReserva, fechaHora.toString(), puerta, estado, observaciones);
+				resultado = EmbarquesGestor.getInstance().insertarEmbarque(codigo, codReserva, fechaHora.toString(), puerta, estado, observaciones);
 			}
 			else {
-				EmbarquesGestor.getInstance().modificarEmbarque(existente, fechaHora.toString(), puerta, estado, observaciones);
+				resultado = EmbarquesGestor.getInstance().modificarEmbarque(existente, fechaHora.toString(), puerta, estado, observaciones);
 				codigo = existente.getCodEmbarque();
 				aviso = codReserva + " ya tenia el embarque " + codigo + ": actualizado.";
 			}
 		} else {
-			EmbarquesGestor.getInstance().modificarEmbarque(embarque, fechaHora.toString(), puerta, estado, observaciones);
+			resultado = EmbarquesGestor.getInstance().modificarEmbarque(embarque, fechaHora.toString(), puerta, estado, observaciones);
 		}
 
-		if (aviso.equals("")) {
+		if (!resultado.equals("")) {
+			aviso = resultado;
+		}
+		else if (aviso.equals("")) {
 			aviso = EmbarquesGestor.getInstance().comprobarHorarioEmbarque(obtenerVuelo(codReserva), fechaHora);
 		}
 

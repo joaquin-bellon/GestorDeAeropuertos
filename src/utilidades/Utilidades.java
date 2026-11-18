@@ -18,6 +18,10 @@ public class Utilidades {
 	public static final String RUTA_INCIDENCIAS = "archivos/incidencias.txt";
 	
 	public static final String RUTA_USUARIOS = "archivos/usuarios.csv";
+
+	public static String errorGuardar(String ruta) {
+		return "No se han podido guardar los cambios en " + ruta + ".";
+	}
 	
 	public static void insertarImagen(String ruta, JLabel label) {
 		ImageIcon original = new ImageIcon("resources/"+ ruta);

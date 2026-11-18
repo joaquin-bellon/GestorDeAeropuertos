@@ -61,15 +61,15 @@ public class ReservasGestor {
 		return reservas;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_RESERVAS)))) {
 			StatefulBeanToCsv<Reserva> beantoCsv = new StatefulBeanToCsvBuilder<Reserva>(writer).withOrderedResults(true)
 					.withApplyQuotesToAll(false).build();
 			beantoCsv.write(reservas);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 	}
 
 	public void imprimirReserva(Reserva reserva) {
@@ -151,9 +151,12 @@ public class ReservasGestor {
 
 
 
-	public void insertarReserva(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
+	public String insertarReserva(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
 		aniadirReservaAlArray(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
+		return "";
 	}
 
 
@@ -204,7 +207,9 @@ public class ReservasGestor {
 			return "La reserva " + codReserva + " ya esta cancelada.";
 		}
 		reserva.setEstado("CANCELADA");
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
 		return "";
 	}
 
@@ -244,10 +249,13 @@ public class ReservasGestor {
 
 
 
-	public void modificarReserva(Reserva reserva, String asiento, double precio) {
+	public String modificarReserva(Reserva reserva, String asiento, double precio) {
 		reserva.setAsiento(asiento);
 		reserva.setPrecio(precio);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
+		return "";
 	}
 
 

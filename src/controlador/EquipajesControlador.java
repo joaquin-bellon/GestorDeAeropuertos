@@ -101,13 +101,13 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 
 	private void eliminar() {
 		String codEquipaje = String.valueOf(equipajesPanel.getTabla().getValueAt(equipajesPanel.getTabla().getSelectedRow(), 0));
-		boolean eliminado = EquipajesGestor.getInstance().eliminarEquipaje(codEquipaje);
-		if (eliminado) {
+		String resultado = EquipajesGestor.getInstance().eliminarEquipaje(codEquipaje);
+		if (resultado.equals("")) {
 			recargarPanel();
 			equipajesPanel.mostrarExito("Se ha dado de baja el equipaje " + codEquipaje + ".");
 		}
 		else {
-			equipajesPanel.mostrarError("No existe ningun equipaje con el codigo " + codEquipaje);
+			equipajesPanel.mostrarError(resultado);
 		}
 	}
 
@@ -127,18 +127,24 @@ public class EquipajesControlador implements ActionListener, ListSelectionListen
 
 		Equipaje equipaje = EquipajesGestor.getInstance().buscarPorCodigo(codigo);
 		String mensaje;
+		String resultado;
 		if (equipaje == null) {
-			EquipajesGestor.getInstance().insertarEquipaje(codigo, codReserva, peso, tipo, estado, prioridad);
+			resultado = EquipajesGestor.getInstance().insertarEquipaje(codigo, codReserva, peso, tipo, estado, prioridad);
 			mensaje = "Equipaje " + codigo + " registrado correctamente.";
 		} else {
-			EquipajesGestor.getInstance().modificarEquipaje(equipaje, peso, tipo, estado, prioridad);
+			resultado = EquipajesGestor.getInstance().modificarEquipaje(equipaje, peso, tipo, estado, prioridad);
 			mensaje = "Equipaje " + codigo + " modificado correctamente.";
 		}
 
 		recargarPanel();
 		equipajesPanel.modoEdicion(false);
 		seleccionarEnTabla(codigo);
-		equipajesPanel.mostrarExito(mensaje);
+		if (resultado.equals("")) {
+			equipajesPanel.mostrarExito(mensaje);
+		}
+		else {
+			equipajesPanel.mostrarError(resultado);
+		}
 	}
 
 	private String comprobarFormulario() {

@@ -59,15 +59,15 @@ public class EquipajesGestor {
 		return equipajes;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_EQUIPAJES)))) {
 			StatefulBeanToCsv<Equipaje> beantoCsv = new StatefulBeanToCsvBuilder<Equipaje>(writer).withOrderedResults(true)
 					.withApplyQuotesToAll(false).build();
 			beantoCsv.write(equipajes);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 	}
 
 	public ArrayList<Equipaje> buscarEquipajesPorReserva( String codReserva) {
@@ -110,21 +110,27 @@ public class EquipajesGestor {
 
 	}
 
-	public void insertarEquipaje(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
+	public String insertarEquipaje(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
 		aniadirEquipajeAlArray(codigo, codReserva, peso, tipo, estado, prioridad);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EQUIPAJES);
+		}
+		return "";
 	}
 
 	private void aniadirEquipajeAlArray(String codigo, String codReserva, double peso, String tipo, String estado, String prioridad) {
 		equipajes.add(new Equipaje(codigo, codReserva, peso, tipo, estado, prioridad));
 	}
 
-	public void modificarEquipaje(Equipaje equipaje, double peso, String tipo, String estado, String prioridad) {
+	public String modificarEquipaje(Equipaje equipaje, double peso, String tipo, String estado, String prioridad) {
 		equipaje.setPeso(peso);
 		equipaje.setTipo(tipo);
 		equipaje.setEstado(estado);
 		equipaje.setPrioridad(prioridad);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EQUIPAJES);
+		}
+		return "";
 	}
 
 	public String crearIdentificador() {
@@ -138,14 +144,16 @@ public class EquipajesGestor {
 		return String.format("EQ%04d", dato + 1);
 	}
 
-	public boolean eliminarEquipaje(String codEquipaje) {
+	public String eliminarEquipaje(String codEquipaje) {
 		Equipaje equipaje = buscarPorCodigo(codEquipaje);
 		if (equipaje == null) {
-			return false;
+			return "No existe ningun equipaje con el codigo " + codEquipaje + ".";
 		}
 		equipajes.remove(equipaje);
-		volcarEnCSV();
-		return true;
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EQUIPAJES);
+		}
+		return "";
 	}
 
 	public double obtenerPesoMaximo(String tipo) {

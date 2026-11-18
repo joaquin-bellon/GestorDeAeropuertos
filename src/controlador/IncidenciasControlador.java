@@ -187,7 +187,11 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		Incidencia incidencia = IncidenciasGestor.getInstance().buscarIncidenciaPorCodigo(codigo);
 		String mensaje;
 		if (incidencia == null) {
-			IncidenciasGestor.getInstance().insertarIncidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad);
+			String resultado = IncidenciasGestor.getInstance().insertarIncidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad);
+			if (!resultado.equals("")) {
+				incidenciasPanel.mostrarError(resultado);
+				return;
+			}
 			mensaje = "Incidencia " + codigo + " creada correctamente.";
 		} else {
 			String resultado = IncidenciasGestor.getInstance().modificarIncidencia(incidencia, fecha, vuelo, tipo, duracion, descripcion, prioridad, rolUsuario);

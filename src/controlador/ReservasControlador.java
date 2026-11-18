@@ -158,17 +158,23 @@ public class ReservasControlador implements ActionListener, ListSelectionListene
 
 		Reserva reserva = ReservasGestor.getInstance().buscarPorCodigo(codigo);
 		String mensaje;
+		String resultado;
 		if (reserva == null) {
-			ReservasGestor.getInstance().insertarReserva(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
+			resultado = ReservasGestor.getInstance().insertarReserva(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
 			mensaje = "Reserva añadida correctamente.";
 		} else {
-			ReservasGestor.getInstance().modificarReserva(reserva, asiento, precio);
+			resultado = ReservasGestor.getInstance().modificarReserva(reserva, asiento, precio);
 			mensaje = "Reserva modificada correctamente.";
 		}
 
 		recargarPanel();
 		reservasPanel.modoEdicion(false);
-		reservasPanel.mostrarExito(mensaje);
+		if (resultado.equals("")) {
+			reservasPanel.mostrarExito(mensaje);
+		}
+		else {
+			reservasPanel.mostrarError(resultado);
+		}
 	}
 
 	private String comprobarFormulario() {
