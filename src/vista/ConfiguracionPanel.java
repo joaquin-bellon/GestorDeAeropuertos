@@ -29,7 +29,7 @@ public class ConfiguracionPanel extends JPanel {
 	private JLabel lblRol;
 	private JLabel lblValorRol;
 	private JLabel lblExplicacion;
-	private JButton btnHacerAdmin;
+	private JButton btnCambiarRol;
 	private JLabel lblConfirmar;
 	private JButton btnSiConfirmar;
 	private JButton btnNoConfirmar;
@@ -98,13 +98,13 @@ public class ConfiguracionPanel extends JPanel {
 		lblValorRol.setBounds(100, 90, 200, 26);
 		panelUsuario.add(lblValorRol);
 
-		lblExplicacion = new JLabel("<html>Selecciona un usuario con rol USER para darle permisos de ADMIN.</html>");
+		lblExplicacion = new JLabel("<html>Selecciona un usuario para cambiar su rol entre USER y ADMIN. No puedes cambiar tu propio rol.</html>");
 		lblExplicacion.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		lblExplicacion.setBounds(20, 130, 280, 50);
 		panelUsuario.add(lblExplicacion);
 
-		btnHacerAdmin = crearBoton("Hacer ADMIN", 20);
-		btnHacerAdmin.setEnabled(false);
+		btnCambiarRol = crearBoton("Cambiar rol", 20);
+		btnCambiarRol.setEnabled(false);
 
 		lblConfirmar = new JLabel("");
 		lblConfirmar.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -112,7 +112,7 @@ public class ConfiguracionPanel extends JPanel {
 		lblConfirmar.setVisible(false);
 		add(lblConfirmar);
 
-		btnSiConfirmar = crearBoton("Sí, hacer ADMIN", 324);
+		btnSiConfirmar = crearBoton("Sí, cambiar", 324);
 		btnSiConfirmar.putClientProperty("FlatLaf.style", "arc: 12; background: $Boton.guardarFondo; foreground: #FFFFFF");
 		btnSiConfirmar.setVisible(false);
 
@@ -129,9 +129,9 @@ public class ConfiguracionPanel extends JPanel {
 		return boton;
 	}
 
-	public void modoConfirmar(boolean confirmando, String usuario) {
-		btnHacerAdmin.setVisible(!confirmando);
-		lblConfirmar.setText("¿Hacer ADMIN a " + usuario + "?");
+	public void modoConfirmar(boolean confirmando, String pregunta) {
+		btnCambiarRol.setVisible(!confirmando);
+		lblConfirmar.setText(pregunta);
 		lblConfirmar.setVisible(confirmando);
 		btnSiConfirmar.setVisible(confirmando);
 		btnNoConfirmar.setVisible(confirmando);
@@ -164,8 +164,8 @@ public class ConfiguracionPanel extends JPanel {
 		return lblValorRol;
 	}
 
-	public JButton getBtnHacerAdmin() {
-		return btnHacerAdmin;
+	public JButton getBtnCambiarRol() {
+		return btnCambiarRol;
 	}
 
 	public JButton getBtnSiConfirmar() {

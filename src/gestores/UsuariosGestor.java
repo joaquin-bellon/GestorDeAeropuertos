@@ -93,6 +93,25 @@ public class UsuariosGestor {
 		return "";
 	}
 
+	public String quitarAdmin(String nombre, String usuarioSesion, String rolUsuario) {
+		if (!rolUsuario.equals("ADMIN")) {
+			return "Solo un ADMIN puede cambiar roles.";
+		}
+		if (nombre.equals(usuarioSesion)) {
+			return "No puedes quitarte el rol ADMIN a ti mismo.";
+		}
+		Usuario usuario = buscarUsuarioPorNombre(nombre);
+		if (usuario == null) {
+			return "El usuario " + nombre + " no existe.";
+		}
+		if (!usuario.isAdmin()) {
+			return nombre + " ya es USER.";
+		}
+		usuario.setRol("USER");
+		volcarEnCSV();
+		return "";
+	}
+
 	public void volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_USUARIOS)))) {
 			StatefulBeanToCsv<Usuario> beantoCsv = new StatefulBeanToCsvBuilder<Usuario>(writer).withOrderedResults(true).withApplyQuotesToAll(false).build();

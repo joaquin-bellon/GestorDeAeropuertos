@@ -29,7 +29,7 @@ public class ConfiguracionControlador implements ActionListener, ListSelectionLi
 
 	private void implementarListeners() {
 		configuracionPanel.getTablaUsuarios().getSelectionModel().addListSelectionListener(this);
-		configuracionPanel.getBtnHacerAdmin().addActionListener(this);
+		configuracionPanel.getBtnCambiarRol().addActionListener(this);
 		configuracionPanel.getBtnSiConfirmar().addActionListener(this);
 		configuracionPanel.getBtnNoConfirmar().addActionListener(this);
 	}
@@ -49,7 +49,8 @@ public class ConfiguracionControlador implements ActionListener, ListSelectionLi
 	private void vaciarUsuarioSeleccionado() {
 		configuracionPanel.getLblValorUsuario().setText("-");
 		configuracionPanel.getLblValorRol().setText("-");
-		configuracionPanel.getBtnHacerAdmin().setEnabled(false);
+		configuracionPanel.getBtnCambiarRol().setEnabled(false);
+		configuracionPanel.getBtnCambiarRol().setText("Cambiar rol");
 	}
 
 	private String obtenerUsuarioSeleccionado() {
@@ -79,31 +80,47 @@ public class ConfiguracionControlador implements ActionListener, ListSelectionLi
 				Usuario usuario = UsuariosGestor.getInstance().buscarUsuarioPorNombre(nombre);
 				configuracionPanel.getLblValorUsuario().setText(usuario.getUsuario());
 				configuracionPanel.getLblValorRol().setText(usuario.getRol());
-				configuracionPanel.getBtnHacerAdmin().setEnabled(!usuario.isAdmin());
+				configuracionPanel.getBtnCambiarRol().setEnabled(!nombre.equals(principalControlador.getUsuario().getUsuario()));
+				if (usuario.isAdmin()) {
+					configuracionPanel.getBtnCambiarRol().setText("Hacer USER");
+				}
+				else {
+					configuracionPanel.getBtnCambiarRol().setText("Hacer ADMIN");
+				}
 			}
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == configuracionPanel.getBtnHacerAdmin()) {
-			configuracionPanel.modoConfirmar(true, obtenerUsuarioSeleccionado());
+		if (e.getSource() == configuracionPanel.getBtnCambiarRol()) {
+			String nombre = obtenerUsuarioSeleccionado();
+			configuracionPanel.modoConfirmar(true, "¿" + configuracionPanel.getBtnCambiarRol().getText() + " a " + nombre + "?");
 		}
 		else if (e.getSource() == configuracionPanel.getBtnSiConfirmar()) {
-			hacerAdmin();
+			cambiarRol();
 		}
 		else if (e.getSource() == configuracionPanel.getBtnNoConfirmar()) {
 			configuracionPanel.modoConfirmar(false, "");
 		}
 	}
 
-	private void hacerAdmin() {
+	private void cambiarRol() {
 		String nombre = obtenerUsuarioSeleccionado();
-		String error = UsuariosGestor.getInstance().hacerAdmin(nombre, rolUsuario);
+		String nuevoRol;
+		String error;
+		if (UsuariosGestor.getInstance().buscarUsuarioPorNombre(nombre).isAdmin()) {
+			nuevoRol = "USER";
+			error = UsuariosGestor.getInstance().quitarAdmin(nombre, principalControlador.getUsuario().getUsuario(), rolUsuario);
+		}
+		else {
+			nuevoRol = "ADMIN";
+			error = UsuariosGestor.getInstance().hacerAdmin(nombre, rolUsuario);
+		}
 		if (error.isEmpty()) {
 			recargarPanel();
 			seleccionarEnTabla(nombre);
-			configuracionPanel.mostrarExito(nombre + " ahora es ADMIN.");
+			configuracionPanel.mostrarExito(nombre + " ahora es " + nuevoRol + ".");
 		}
 		else {
 			configuracionPanel.modoConfirmar(false, "");

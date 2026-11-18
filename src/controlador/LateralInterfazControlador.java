@@ -41,6 +41,7 @@ public class LateralInterfazControlador implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == lateralInterfazPanel.getBtnConfiguracion()) {
 			principalControlador.getConfiguracionControlador().recargarPanel();
+			lateralInterfazPanel.getButtonGroup().clearSelection();
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getConfiguracionPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnInicio()) {
