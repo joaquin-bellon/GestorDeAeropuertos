@@ -7,12 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,12 +19,11 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import modelo.Embarque;
-import modelo.Equipaje;
 import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class ReservasGestor {
 
@@ -67,28 +62,15 @@ public class ReservasGestor {
 		return reservas;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_RESERVAS)))) {
 			StatefulBeanToCsv<Reserva> beantoCsv = new StatefulBeanToCsvBuilder<Reserva>(writer).withOrderedResults(true)
 					.withApplyQuotesToAll(false).build();
 			beantoCsv.write(reservas);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
-	}
-
-	public void mostrarReservas () {
-		for (Reserva reserva : reservas) {
-			imprimirReserva(reserva);
-		}
-	}
-
-	public void mostrarArrayReservas (ArrayList<Reserva> arrayReservas) {
-		for (Reserva reserva : arrayReservas) {
-			System.out.println("---------------------------------");
-			System.out.println(reserva);
-		}
+		return true;
 	}
 
 	public void imprimirReserva(Reserva reserva) {
@@ -110,66 +92,6 @@ public class ReservasGestor {
 		}
 		System.out.println("==================================");
 	}
-	public void buscarReservas (Scanner sc) {
-		int opcion;
-		Reserva reserva;
-		System.out.println("--------------------------------");
-		System.out.println("Escoge un criterio de busqueda: 1.Id Reserva 2.Pasajero 3.Vuelos");
-		opcion = Utilidades.leerOpcion(sc, 1, 3);
-		System.out.println("--------------------------------");
-
-		switch (opcion) {
-		case 1:
-			System.out.println("Introduce el id de la reserva");
-			String idReserva = sc.nextLine().trim().toUpperCase();
-			reserva = buscarPorCodigo(idReserva);
-			if (reserva == null) {
-				System.out.println("Reserva no encontrada");
-			}
-			else {
-				imprimirReserva(reserva);
-			}
-			break;
-		case 2:
-			System.out.println("Inserte el id del pasajero:");
-			String pasajero = sc.nextLine().trim().toUpperCase();
-			if (!gestorPasajeros.existeCodPasajero(pasajero)) {
-				System.out.println("No se ha encontrado el pasajero.");
-			}
-			else {
-				ArrayList<Reserva> reservasPasajero = buscarResevasPorPasajero(pasajero);
-				if (reservasPasajero.size() == 0) {
-					System.out.println("Este usuario no ha efectuado ninguna reserva.");
-				}
-				else {
-					for (Reserva reservaPasajero : reservasPasajero) {
-						imprimirReserva(reservaPasajero);
-					}
-				}
-			}
-			break;
-		case 3:
-			System.out.println("Inserte el codigo del vuelo:");
-			String vueloString = sc.nextLine().trim().toUpperCase();
-			Vuelo vuelo = gestorVuelos.buscarPorCodigo(vueloString);
-			if (vuelo== null) {
-				System.out.println("No se ha encontrado el vuelo.");
-			}
-			else {
-				ArrayList<Reserva> reservasVuelo = buscarResevasPorVuelo(vuelo.getCodigo());
-				if (reservasVuelo.size() == 0) {
-					System.out.println("Este vuelo no tiene asociada ninguna reserva.");
-				}
-				else {
-					for (Reserva reservaVuelo : reservasVuelo) {
-						imprimirReserva(reservaVuelo);
-					}
-				}
-			}
-			break;
-		}
-
-	}
 
 
 
@@ -186,7 +108,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> buscarResevaConfirmadasPorVuelo(String vuelo) {
 		ArrayList<Reserva> reservasVuelo = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				reservasVuelo.add(reserva);
 			}
 		}
@@ -198,7 +120,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> buscarResevaCanceladasPorVuelo(String vuelo) {
 		ArrayList<Reserva> reservasVuelo = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals("CANCELADA")) {
+			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 				reservasVuelo.add(reserva);
 			}
 		}
@@ -230,15 +152,18 @@ public class ReservasGestor {
 
 
 
-	public void insertarReserva(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
+	public String insertarReserva(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
 		aniadirReservaAlArray(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
+		return "";
 	}
 
 
 
 	private void aniadirReservaAlArray(String codigo, String pasajero, String vuelo, String asiento, String clase, double precio, String fecha, String canal) {
-		reservas.add(new Reserva(codigo, pasajero, vuelo, asiento, clase, precio, "EUR", "CONFIRMADA", fecha, canal));
+		reservas.add(new Reserva(codigo, pasajero, vuelo, asiento, clase, precio, Constantes.MONEDA, Constantes.RESERVA_CONFIRMADA, fecha, canal));
 	}
 
 
@@ -279,11 +204,13 @@ public class ReservasGestor {
 		if (reserva == null) {
 			return "No existe ninguna reserva con el codigo " + codReserva + ".";
 		}
-		if (reserva.getEstado().equals("CANCELADA")) {
+		if (reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 			return "La reserva " + codReserva + " ya esta cancelada.";
 		}
-		reserva.setEstado("CANCELADA");
-		volcarEnCSV();
+		reserva.setEstado(Constantes.RESERVA_CANCELADA);
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
 		return "";
 	}
 
@@ -306,34 +233,6 @@ public class ReservasGestor {
 
 	}
 
-	public Reserva pedirReserva(Scanner sc, String accion) {
-		Reserva reserva;
-		System.out.println("Introduce el código de la reserva " + accion + ":");
-		do {
-			reserva = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (reserva == null) {
-				System.err.println("No se ha encontrado la reserva. Inténtelo de nuevo:");
-			}
-		} while (reserva == null);
-		return reserva;
-	}
-
-	public Reserva pedirReservaConfirmada(Scanner sc, String accion) {
-		Reserva reserva;
-		System.out.println("Introduce el código de la reserva " + accion + ":");
-		do {
-			reserva = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (reserva == null) {
-				System.err.println("No se ha encontrado la reserva. Inténtelo de nuevo:");
-			}
-			else if (!reserva.getEstado().equals("CONFIRMADA")) {
-				System.err.println("La reserva no esta confirmada. Introduce otra:");
-				reserva = null;
-			}
-		} while (reserva == null);
-		return reserva;
-	}
-
 
 	public ArrayList<Reserva> getReservas() {
 		return reservas;
@@ -351,10 +250,13 @@ public class ReservasGestor {
 
 
 
-	public void modificarReserva(Reserva reserva, String asiento, double precio) {
+	public String modificarReserva(Reserva reserva, String asiento, double precio) {
 		reserva.setAsiento(asiento);
 		reserva.setPrecio(precio);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
+		return "";
 	}
 
 
@@ -391,7 +293,7 @@ public class ReservasGestor {
 	public boolean comprobarAsiento(String vuelo, String asiento) {
 		boolean ocupado = false;
 		for (Reserva reserva : reservas) {
-			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getVuelo().equals(vuelo) && reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				if (reserva.getAsiento().equals(asiento)) {
 					ocupado = true;
 				}
@@ -406,35 +308,10 @@ public class ReservasGestor {
 		this.reservas = reservas;
 	}
 
-
-
-	public void comprobarPosibleEmbarquePendiente(Scanner sc,Vuelo vuelo) {
-		System.out.println("-------------------------------------------");
-		System.out.println("Comprobando si es posible embarcar:");
-		LocalDateTime horaSalidaDelVuelo = vuelo.getSalida();
-		Long apertura = Long.parseLong(vuelo.getMinutosInicioEmbarque());
-		Long cierre = Long.parseLong(vuelo.getMinutosCierreEmbarque());
-		LocalDateTime fechaUsuario = LocalDateTime.of(Utilidades.pedirFecha(sc, "Introduce la fecha actual"), Utilidades.pedirHora(sc, "Introduce la hora actual"));
-		long difMinutos = ChronoUnit.MINUTES.between(fechaUsuario, horaSalidaDelVuelo);
-		if (difMinutos > apertura) {
-			System.out.println("Todavia es demasiado pronto para embarcar. La ventana se abrirá en " + (difMinutos-apertura) + " minutos");
-		}
-		else if (difMinutos < cierre) {
-			System.out.println("Ya se ha pasado la hora del embarque. La ventana esta cerrada");
-		}
-		else if (difMinutos-cierre <= 10) {
-			System.out.println("La puerta está próxima a cerrar");
-		}
-		else {
-			System.out.println("La ventana está abierta y cerrara en " + (difMinutos-cierre) + " minutos");
-		}
-
-	}
-
 	public ArrayList<Reserva> obtenerReservasConfirmadas () {
 		ArrayList<Reserva> reservasConfirmadas = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				reservasConfirmadas.add(reserva);
 			}
 		}
@@ -444,7 +321,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> obtenerReservasCanceladas () {
 		ArrayList<Reserva> reservasCanceladas = new ArrayList<Reserva>();
 		for (Reserva reserva : reservas) {
-			if (reserva.getEstado().equals("CANCELADA")) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 				reservasCanceladas.add(reserva);
 			}
 		}
@@ -467,7 +344,7 @@ public class ReservasGestor {
 			try {
 				estadoDelEmbarque= gestorEmbarques.buscarPorReserva(reserva.getIdReserva()).getEstado();
 			}catch(NullPointerException e) {
-				estadoDelEmbarque = "PENDIENTE";
+				estadoDelEmbarque = Constantes.EMBARQUE_PENDIENTE;
 			}
 
 			if (estadoDelEmbarque.equals(estado)) {
@@ -482,7 +359,7 @@ public class ReservasGestor {
 	public ArrayList<Reserva> obtenerReservasSinEmbarqueYConVueloAsignado (ArrayList<Reserva> arrayReservas, EmbarquesGestor gestorEmbarques) {
 		ArrayList<Reserva> reservasSinEmbarqueYConVuelo = new ArrayList<Reserva>();
 		for (Reserva reserva : arrayReservas) {
-			if (gestorEmbarques.buscarPorReserva(reserva.getIdReserva()) == null && !gestorVuelos.buscarPorCodigo(reserva.getVuelo()).getEstado().equals("CANCELADO")) {
+			if (gestorEmbarques.buscarPorReserva(reserva.getIdReserva()) == null && !gestorVuelos.buscarPorCodigo(reserva.getVuelo()).getEstado().equals(Constantes.VUELO_CANCELADO)) {
 				reservasSinEmbarqueYConVuelo.add(reserva);
 			}
 		}

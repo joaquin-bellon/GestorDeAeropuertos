@@ -6,6 +6,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import utilidades.Constantes;
 
 public class EquipajesPanel extends PanelGenerico {
 
@@ -96,7 +97,7 @@ public class EquipajesPanel extends PanelGenerico {
 		getPanelFormulario().add(lblTipo);
 
 		comboBoxTipo = new JComboBox<String>();
-		comboBoxTipo.setModel(new DefaultComboBoxModel<String>(new String[] {"FACTURADO", "MANO", "ESPECIAL"}));
+		comboBoxTipo.setModel(new DefaultComboBoxModel<String>(Constantes.TIPOS_EQUIPAJE));
 		comboBoxTipo.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxTipo.setBounds(125, 265, 175, 30);
 		getPanelFormulario().add(comboBoxTipo);
@@ -107,7 +108,7 @@ public class EquipajesPanel extends PanelGenerico {
 		getPanelFormulario().add(lblEstado);
 
 		comboBoxEstado = new JComboBox<String>();
-		comboBoxEstado.setModel(new DefaultComboBoxModel<String>(new String[] {"REGISTRADO", "CARGADO", "EN_TRANSITO", "ENTREGADO", "PERDIDO"}));
+		comboBoxEstado.setModel(new DefaultComboBoxModel<String>(Constantes.ESTADOS_EQUIPAJE));
 		comboBoxEstado.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxEstado.setBounds(125, 307, 175, 30);
 		getPanelFormulario().add(comboBoxEstado);
@@ -118,7 +119,7 @@ public class EquipajesPanel extends PanelGenerico {
 		getPanelFormulario().add(lblPrioridad);
 
 		comboBoxPrioridad = new JComboBox<String>();
-		comboBoxPrioridad.setModel(new DefaultComboBoxModel<String>(new String[] {"NORMAL", "PRIORITARIO", "FRAGIL"}));
+		comboBoxPrioridad.setModel(new DefaultComboBoxModel<String>(Constantes.PRIORIDADES_EQUIPAJE));
 		comboBoxPrioridad.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxPrioridad.setBounds(125, 349, 175, 30);
 		getPanelFormulario().add(comboBoxPrioridad);

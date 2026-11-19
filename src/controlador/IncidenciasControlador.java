@@ -26,6 +26,8 @@ import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
 import vista.IncidenciasPanel;
+import utilidades.Constantes;
+import utilidades.Utilidades;
 
 public class IncidenciasControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -46,12 +48,8 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		habilitarBotonesSeleccion(null);
 	}
 
-	private boolean esAdmin() {
-		return rolUsuario.equals("ADMIN");
-	}
-
 	private void aplicarPermisos() {
-		if (!esAdmin()) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			incidenciasPanel.remove(incidenciasPanel.getBtnModificar());
 			incidenciasPanel.remove(incidenciasPanel.getBtnEliminar());
 			incidenciasPanel.getPanelFormulario().remove(incidenciasPanel.getBtnCerrarIncidencia());
@@ -85,13 +83,13 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		if (e.getSource() == incidenciasPanel.getBtnAniadir()) {
 			aniadir();
 		} else if (e.getSource() == incidenciasPanel.getBtnModificar()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				incidenciasPanel.mostrarError("Solo un administrador puede modificar.");
 				return;
 			}
 			modificar();
 		} else if (e.getSource() == incidenciasPanel.getBtnEliminar()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				incidenciasPanel.mostrarError("Solo un administrador puede eliminar.");
 				return;
 			}
@@ -113,7 +111,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 			eliminar();
 			incidenciasPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == incidenciasPanel.getBtnCerrarIncidencia()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				incidenciasPanel.mostrarError("Solo un administrador puede cerrarla.");
 				return;
 			}
@@ -134,7 +132,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		cambiarEditarFormulario(true);
 		incidenciasPanel.getTextFieldCodigo().setText(IncidenciasGestor.getInstance().crearNuevoIdentificador());
 		incidenciasPanel.getTextFieldFecha().setText(String.valueOf(LocalDate.now()));
-		incidenciasPanel.getTextFieldEstado().setText("ABIERTA");
+		incidenciasPanel.getTextFieldEstado().setText(Constantes.INCIDENCIA_ABIERTA);
 		incidenciasPanel.modoEdicion(true);
 	}
 
@@ -187,7 +185,11 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		Incidencia incidencia = IncidenciasGestor.getInstance().buscarIncidenciaPorCodigo(codigo);
 		String mensaje;
 		if (incidencia == null) {
-			IncidenciasGestor.getInstance().insertarIncidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad);
+			String resultado = IncidenciasGestor.getInstance().insertarIncidencia(fecha, codigo, vuelo, tipo, duracion, descripcion, prioridad);
+			if (!resultado.equals("")) {
+				incidenciasPanel.mostrarError(resultado);
+				return;
+			}
 			mensaje = "Incidencia " + codigo + " creada correctamente.";
 		} else {
 			String resultado = IncidenciasGestor.getInstance().modificarIncidencia(incidencia, fecha, vuelo, tipo, duracion, descripcion, prioridad, rolUsuario);
@@ -256,7 +258,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		int confirmadas = 0;
 		for (Reserva reserva : reservas) {
 			incidenciasPanel.getModeloReservas().addRow(new Object[] {reserva.getIdReserva(), reserva.getPasajero(), reserva.getAsiento(), reserva.getEstado()});
-			if (reserva.getEstado().equals("CONFIRMADA")) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CONFIRMADA)) {
 				confirmadas++;
 			}
 
@@ -325,7 +327,7 @@ public class IncidenciasControlador implements ActionListener, ListSelectionList
 		boolean seleccion = incidencia != null;
 		incidenciasPanel.habilitarBtnEliminarYModificar(seleccion);
 		incidenciasPanel.getBtnVerRelacionados().setEnabled(seleccion);
-		incidenciasPanel.getBtnCerrarIncidencia().setEnabled(seleccion && incidencia.getEstado().equals("ABIERTA"));
+		incidenciasPanel.getBtnCerrarIncidencia().setEnabled(seleccion && incidencia.getEstado().equals(Constantes.INCIDENCIA_ABIERTA));
 	}
 
 	private void desactivarFormulario() {

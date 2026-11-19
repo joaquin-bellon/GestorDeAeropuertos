@@ -20,6 +20,7 @@ import modelo.Equipaje;
 import modelo.Pasajero;
 import modelo.Usuario;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class UsuariosGestor {
 	private ArrayList<Usuario> usuarios;
@@ -72,19 +73,61 @@ public class UsuariosGestor {
 		}
 		return usuario;
 	}
-	public void añadirUsuario(Usuario usuario) {
+	public String añadirUsuario(Usuario usuario) {
 		usuarios.add(usuario);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
+		}
+		return "";
 	}
 	
-	public void volcarEnCSV() {
+	public String hacerAdmin(String nombre, String rolUsuario) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
+			return "Solo un ADMIN puede cambiar roles.";
+		}
+		Usuario usuario = buscarUsuarioPorNombre(nombre);
+		if (usuario == null) {
+			return "El usuario " + nombre + " no existe.";
+		}
+		if (usuario.isAdmin()) {
+			return nombre + " ya es ADMIN.";
+		}
+		usuario.setRol(Constantes.ROL_ADMIN);
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
+		}
+		return "";
+	}
+
+	public String quitarAdmin(String nombre, String usuarioSesion, String rolUsuario) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
+			return "Solo un ADMIN puede cambiar roles.";
+		}
+		if (nombre.equals(usuarioSesion)) {
+			return "No puedes quitarte el rol ADMIN a ti mismo.";
+		}
+		Usuario usuario = buscarUsuarioPorNombre(nombre);
+		if (usuario == null) {
+			return "El usuario " + nombre + " no existe.";
+		}
+		if (!usuario.isAdmin()) {
+			return nombre + " ya es USER.";
+		}
+		usuario.setRol(Constantes.ROL_USER);
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_USUARIOS);
+		}
+		return "";
+	}
+
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_USUARIOS)))) {
 			StatefulBeanToCsv<Usuario> beantoCsv = new StatefulBeanToCsvBuilder<Usuario>(writer).withOrderedResults(true).withApplyQuotesToAll(false).build();
 			beantoCsv.write(usuarios);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 	}
 	
 	public static void setInstancia(UsuariosGestor instancia) {

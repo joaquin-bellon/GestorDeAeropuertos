@@ -14,6 +14,13 @@ public class LateralInterfazControlador implements ActionListener {
 		this.lateralInterfazPanel = principalControlador.getFrame().getLateralInterfazPanel();
 		
 		implementarListeners();
+		aplicarPermisos();
+	}
+
+	private void aplicarPermisos() {
+		if (!principalControlador.getUsuario().isAdmin()) {
+			lateralInterfazPanel.getBtnConfiguracion().setVisible(false);
+		}
 	}
 
 	private void implementarListeners() {
@@ -33,6 +40,8 @@ public class LateralInterfazControlador implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == lateralInterfazPanel.getBtnConfiguracion()) {
+			principalControlador.getConfiguracionControlador().recargarPanel();
+			lateralInterfazPanel.getButtonGroup().clearSelection();
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getConfiguracionPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnInicio()) {
@@ -64,7 +73,8 @@ public class LateralInterfazControlador implements ActionListener {
 			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getIncidenciasPanel());
 		}
 		else if (e.getSource() == lateralInterfazPanel.getTglbtnInformes()) {
-			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getCuadroDeMandosPanel());
+			principalControlador.getInformesControlador().recargarPanel();
+			principalControlador.getFrame().mostrarElPanelPorBoton(principalControlador.getFrame().getInformesPanel());
 		}
 	}
 }

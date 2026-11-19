@@ -6,6 +6,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import utilidades.Constantes;
 
 public class EmbarquesPanel extends PanelGenerico {
 
@@ -25,7 +26,7 @@ public class EmbarquesPanel extends PanelGenerico {
 
 	public EmbarquesPanel() {
 		super("Embarques", "Consulta y gestiona los embarques", "Datos del embarque",
-				new String[] {"Fecha"},
+				new String[] {Constantes.EMBARQUE_FECHADESDE, Constantes.EMBARQUE_FECHAHASTA},
 				new String[] {"Código", "Reserva", "Fecha y hora", "Puerta", "Estado"},
 				new String [] {"Código", "Fecha", "Puerta", "Estado"});
 
@@ -79,7 +80,7 @@ public class EmbarquesPanel extends PanelGenerico {
 		getPanelFormulario().add(lblEstado);
 
 		comboBoxEstado = new JComboBox<String>();
-		comboBoxEstado.setModel(new DefaultComboBoxModel<String>(new String[] {"EMBARCANDO", "EMBARCADO", "NO_EMBARCADO"}));
+		comboBoxEstado.setModel(new DefaultComboBoxModel<String>(Constantes.ESTADOS_EMBARQUE));
 		comboBoxEstado.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxEstado.setBounds(125, 223, 175, 30);
 		getPanelFormulario().add(comboBoxEstado);

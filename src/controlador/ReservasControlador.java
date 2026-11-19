@@ -23,6 +23,7 @@ import modelo.Equipaje;
 import modelo.Reserva;
 import modelo.Vuelo;
 import vista.ReservasPanel;
+import utilidades.Constantes;
 
 public class ReservasControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -93,7 +94,7 @@ public class ReservasControlador implements ActionListener, ListSelectionListene
 		cambiarEditarFormulario(true, true);
 		reservasPanel.getTextFieldCodigo().setText(ReservasGestor.getInstance().crearNuevoIdentificador());
 		reservasPanel.getTextFieldFecha().setText(String.valueOf(LocalDate.now()));
-		reservasPanel.getTextFieldEstado().setText("CONFIRMADA");
+		reservasPanel.getTextFieldEstado().setText(Constantes.RESERVA_CONFIRMADA);
 		reservasPanel.modoEdicion(true);
 	}
 
@@ -158,17 +159,23 @@ public class ReservasControlador implements ActionListener, ListSelectionListene
 
 		Reserva reserva = ReservasGestor.getInstance().buscarPorCodigo(codigo);
 		String mensaje;
+		String resultado;
 		if (reserva == null) {
-			ReservasGestor.getInstance().insertarReserva(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
+			resultado = ReservasGestor.getInstance().insertarReserva(codigo, pasajero, vuelo, asiento, clase, precio, fecha, canal);
 			mensaje = "Reserva añadida correctamente.";
 		} else {
-			ReservasGestor.getInstance().modificarReserva(reserva, asiento, precio);
+			resultado = ReservasGestor.getInstance().modificarReserva(reserva, asiento, precio);
 			mensaje = "Reserva modificada correctamente.";
 		}
 
 		recargarPanel();
 		reservasPanel.modoEdicion(false);
-		reservasPanel.mostrarExito(mensaje);
+		if (resultado.equals("")) {
+			reservasPanel.mostrarExito(mensaje);
+		}
+		else {
+			reservasPanel.mostrarError(resultado);
+		}
 	}
 
 	private String comprobarFormulario() {
@@ -192,7 +199,7 @@ public class ReservasControlador implements ActionListener, ListSelectionListene
 		if (vuelo == null) {
 			return "No existe el vuelo " + codVuelo + ".";
 		}
-		if (vuelo.getEstado().equals("CANCELADO")) {
+		if (vuelo.getEstado().equals(Constantes.VUELO_CANCELADO)) {
 			return "El vuelo " + codVuelo + " esta cancelado.";
 		}
 

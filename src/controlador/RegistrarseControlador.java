@@ -10,6 +10,7 @@ import modelo.Usuario;
 import temas.Tema;
 import utilidades.HiloAvisos;
 import vista.RegistrarsePanel;
+import utilidades.Constantes;
 
 public class RegistrarseControlador implements ActionListener, MouseListener {
 	private PrincipalControlador principalControlador;
@@ -37,7 +38,7 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 			String contrasenia = new String(registrarsePanel.getPasswordFieldContrasenia().getPassword());
 			String contraseniaRepetida = new String(registrarsePanel.getPasswordFieldRepetir().getPassword());
 			
-			if (nombre.isBlank() || contrasenia.isBlank() || contrasenia.isBlank()) {
+			if (nombre.isBlank() || contrasenia.isBlank() || contraseniaRepetida.isBlank()) {
 				HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), "Rellene todos los campos.");
 				hiloErrores.start();
 			}else {
@@ -54,10 +55,16 @@ public class RegistrarseControlador implements ActionListener, MouseListener {
 					hiloErrores.start();
 				}
 				else {
-					Usuario usuarioCreado = new Usuario(nombre,contrasenia,"USER");
-					UsuariosGestor.getInstance().añadirUsuario(usuarioCreado);
-					principalControlador.crearPanelesYControladores(usuarioCreado);
-					registrarsePanel.setVisible(false);
+					Usuario usuarioCreado = new Usuario(nombre,contrasenia,Constantes.ROL_USER);
+					String resultado = UsuariosGestor.getInstance().añadirUsuario(usuarioCreado);
+					if (resultado.equals("")) {
+						principalControlador.crearPanelesYControladores(usuarioCreado);
+						registrarsePanel.setVisible(false);
+					}
+					else {
+						HiloAvisos hiloErrores = new HiloAvisos(registrarsePanel.getLblError(), resultado);
+						hiloErrores.start();
+					}
 				}
 			}
 			

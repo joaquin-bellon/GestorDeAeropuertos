@@ -18,7 +18,7 @@ public class AppFrame extends JFrame {
 	private EquipajesPanel equipajesPanel;
 	private EmbarquesPanel embarquesPanel;
 	private IncidenciasPanel incidenciasPanel;
-	private CuadroDeMandosPanel cuadroDeMandosPanel;
+	private InformesPanel informesPanel;
 	private InicioPanel inicioPanel;
 	private LateralInterfazPanel lateralInterfazPanel;
 	private SuperiorInterfazPanel superiorInterfazPanel;
@@ -105,12 +105,12 @@ public class AppFrame extends JFrame {
 		this.incidenciasPanel = incidenciasPanel;
 	}
 
-	public CuadroDeMandosPanel getCuadroDeMandosPanel() {
-		return cuadroDeMandosPanel;
+	public InformesPanel getInformesPanel() {
+		return informesPanel;
 	}
 
-	public void setCuadroDeMandosPanel(CuadroDeMandosPanel cuadroDeMandosPanel) {
-		this.cuadroDeMandosPanel = cuadroDeMandosPanel;
+	public void setInformesPanel(InformesPanel informesPanel) {
+		this.informesPanel = informesPanel;
 	}
 
 	public InicioPanel getInicioPanel() {
@@ -163,7 +163,7 @@ public class AppFrame extends JFrame {
 		embarquesPanel.setVisible(false);
 		equipajesPanel.setVisible(false);
 		incidenciasPanel.setVisible(false);
-		cuadroDeMandosPanel.setVisible(false);
+		informesPanel.setVisible(false);
 		configuracionPanel.setVisible(false);
 		
 		jPanel.setVisible(true);

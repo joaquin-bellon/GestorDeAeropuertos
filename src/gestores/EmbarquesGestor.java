@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -58,21 +57,15 @@ public class EmbarquesGestor {
 		return embarques;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_EMBARQUES)))) {
 			StatefulBeanToCsv<Embarque> beantoCsv = new StatefulBeanToCsvBuilder<Embarque>(writer).withOrderedResults(true)
 					.withApplyQuotesToAll(false).build();
 			beantoCsv.write(embarques);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-	}
-
-	public void mostrarEmbarques() {
-		for (Embarque embarque : embarques) {
-			System.out.println(embarque);
-		}
-		System.out.println("========================================");
+		return true;
 	}
 
 	public void imprimirEmbarque(Embarque embarque) {
@@ -83,79 +76,6 @@ public class EmbarquesGestor {
 		}
 		else {
 			System.out.println("Reserva " + embarque.getCodReserva() + " no encontrada");
-		}
-	}
-
-	public void buscarEmbarques(Scanner sc) {
-		int opcion;
-		System.out.println("--------------------------------");
-		System.out.println("Escoge un criterio de busqueda: 1.Código embarque 2.Reserva 3.Vuelo 4.Estado");
-		opcion = Utilidades.leerOpcion(sc, 1, 4);
-		System.out.println("--------------------------------");
-
-		Embarque embarque;
-		switch (opcion) {
-		case 1:
-			System.out.println("Inserte el código del embarque:");
-			embarque = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (embarque != null) {
-				imprimirEmbarque(embarque);
-			}
-			else {
-				System.out.println("No existe ese embarque.");
-			}
-			break;
-		case 2:
-			System.out.println("Inserte el código de la reserva:");
-			embarque = buscarPorReserva(sc.nextLine().trim().toUpperCase());
-			if (embarque != null) {
-				imprimirEmbarque(embarque);
-			}
-			else {
-				System.out.println("Esa reserva no tiene registro de embarque.");
-			}
-			break;
-		case 3:
-			System.out.println("Inserte el código del vuelo:");
-			mostrarEmbarquesVuelo(sc.nextLine().trim().toUpperCase());
-			break;
-		case 4:
-			ArrayList<Embarque> embarquesEstado = buscarPorEstado(escogerEstado(sc));
-			if (embarquesEstado.size() != 0) {
-				for (Embarque embarqueEstado : embarquesEstado) {
-					System.out.println(embarqueEstado);
-				}
-			}
-			else {
-				System.out.println("No hay embarques en ese estado.");
-			}
-			break;
-		}
-	}
-
-	public void mostrarEmbarquesVuelo(String codVuelo) {
-		Vuelo vuelo = gestorVuelos.buscarPorCodigo(codVuelo);
-		if (vuelo == null) {
-			System.out.println("No se ha encontrado el vuelo.");
-		}
-		else {
-			boolean hayEmbarque = false;
-			System.out.println("Embarques asociados al vuelo " + codVuelo + ":");
-			ArrayList<Reserva> reservasVuelo = gestorReservas.buscarResevasPorVuelo(codVuelo);
-			if (reservasVuelo.size() != 0) {
-				for (Reserva reserva :reservasVuelo ) {
-						Embarque embarque = buscarPorReserva(reserva.getIdReserva());
-						if (embarque != null) {
-							System.out.println(embarque);
-							hayEmbarque = true;
-					}
-				}
-			}
-			
-			if (!hayEmbarque) {
-				System.out.println("No hay Embarques asociados al vuelo");
-			}
-			
 		}
 	}
 
@@ -175,18 +95,6 @@ public class EmbarquesGestor {
 		else {
 			return null;
 		}
-	}
-
-	public Embarque pedirEmbarque(Scanner sc, String accion) {
-		Embarque embarque;
-		System.out.println("Introduce el código del embarque " + accion + ":");
-		do {
-			embarque = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (embarque == null) {
-				System.err.println("No se ha encontrado el embarque. Inténtelo de nuevo:");
-			}
-		} while (embarque == null);
-		return embarque;
 	}
 
 	public Embarque buscarPorReserva(String codReserva) {
@@ -217,9 +125,12 @@ public class EmbarquesGestor {
 		return embarquesEstado;
 	}
 
-	public void insertarEmbarque(String codigo, String codReserva, String fechaHora, String puerta, String estado, String observaciones) {
+	public String insertarEmbarque(String codigo, String codReserva, String fechaHora, String puerta, String estado, String observaciones) {
 		aniadirEmbarqueAlArray(codigo, codReserva, fechaHora, puerta, estado, observaciones);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		return "";
 	}
 
 	private void aniadirEmbarqueAlArray(String codigo, String codReserva, String fechaHora, String puerta, String estado, String observaciones) {
@@ -235,25 +146,6 @@ public class EmbarquesGestor {
 		return "";
 	}
 
-	private String escogerEstado(Scanner sc) {
-		int opcion;
-		System.out.println("Escoja un estado: 1.EMBARCADO - 2.EMBARCANDO - 3.NO_EMBARCADO");
-		opcion = Utilidades.leerOpcion(sc, 1, 3);
-		String estado = "";
-		switch (opcion) {
-		case 1:
-			estado = "EMBARCADO";
-			break;
-		case 2:
-			estado = "EMBARCANDO";
-			break;
-		case 3:
-			estado = "NO_EMBARCADO";
-			break;
-		}
-		return estado;
-	}
-
 	public String crearIdentificador() {
 		int dato = 0;
 		for (Embarque embarque : embarques) {
@@ -265,29 +157,45 @@ public class EmbarquesGestor {
 		return String.format("E%04d", dato + 1);
 	}
 
-	public void modificarEmbarque(Embarque embarque, String fechaHora, String puerta, String estado, String observaciones) {
+	public String modificarEmbarque(Embarque embarque, String fechaHora, String puerta, String estado, String observaciones) {
 		embarque.setFechaHora(fechaHora);
 		embarque.setPuerta(puerta);
 		embarque.setEstado(estado);
 		embarque.setObservaciones(observaciones);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		return "";
 	}
 
-	public boolean eliminarEmbarque(String codEmbarque) {
+	public String eliminarEmbarque(String codEmbarque) {
 		Embarque embarque = buscarPorCodigo(codEmbarque);
 		if (embarque == null) {
-			return false;
+			return "No existe ningun embarque con el codigo " + codEmbarque + ".";
 		}
 		embarques.remove(embarque);
-		volcarEnCSV();
-		return true;
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		return "";
 	}
 
-	public ArrayList<Embarque> filtrarPorFecha(LocalDate fecha) {
+	public ArrayList<Embarque> filtrarDesdeFecha(LocalDate fecha) {
 		ArrayList<Embarque> embarquesFiltrados = new ArrayList<Embarque>();
 		for (Embarque embarque : embarques) {
 			LocalDate fechaEmbarque = LocalDateTime.parse(embarque.getFechaHora()).toLocalDate();
 			if (!fechaEmbarque.isBefore(fecha)) {
+				embarquesFiltrados.add(embarque);
+			}
+		}
+		return embarquesFiltrados;
+	}
+	
+	public ArrayList<Embarque> filtrarHastaFecha(LocalDate fecha) {
+		ArrayList<Embarque> embarquesFiltrados = new ArrayList<Embarque>();
+		for (Embarque embarque : embarques) {
+			LocalDate fechaEmbarque = LocalDateTime.parse(embarque.getFechaHora()).toLocalDate();
+			if (!fechaEmbarque.isAfter(fecha)) {
 				embarquesFiltrados.add(embarque);
 			}
 		}

@@ -5,11 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -26,11 +22,10 @@ import org.w3c.dom.NodeList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import modelo.Equipaje;
-import modelo.Reserva;
 import modelo.Servicio;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class VuelosGestor {
 	private Document doc;
@@ -52,62 +47,6 @@ public class VuelosGestor {
 		nodoVuelos = (Element) doc.getElementsByTagName("Vuelos").item(0);
 		vuelos = cargarVuelos();
 		this.gestorConfiguracion = ConfiguracionGestor.getInstance();
-	}
-
-	public void mostrarVueloPorReservaYEmbarque(Scanner sc, ReservasGestor gestorReservas, EmbarquesGestor gestorEmbarques) {
-		mostrarVuelos();
-		Vuelo vuelo = pedirVuelo(sc, "a consultar");
-		ArrayList<Reserva> reservas = gestorReservas.buscarResevasPorVuelo(vuelo.getCodigo());
-		if (reservas.size() != 0) {
-			Iterator<Reserva> iterator = reservas.iterator();
-			while (iterator.hasNext()) {
-				Reserva reserva = iterator.next();
-				if (reserva.getEstado().equals("CANCELADA")) {
-					iterator.remove();
-				}
-			}
-			System.out.println("EMBARCADO:");
-			ArrayList<Reserva> reservasEmbarcadas = gestorReservas.filtrarReservasVueloPorEstado(reservas, "EMBARCADO", gestorEmbarques);
-			if (reservasEmbarcadas.size() != 0) {
-				gestorReservas.mostrarArrayReservas(reservasEmbarcadas);
-			}
-			else {
-				System.out.println("No hay reservas embarcadas para este vuelo.");
-			}
-
-
-			System.out.println("EMBARCANDO:");
-			ArrayList<Reserva> reservasEmbarcando = gestorReservas.filtrarReservasVueloPorEstado(reservas, "EMBARCANDO", gestorEmbarques);
-			if (reservasEmbarcando.size() != 0) {
-			gestorReservas.mostrarArrayReservas(reservasEmbarcando);
-			}
-			else {
-				System.out.println("No hay reservas que estén siendo embarcadas.");
-			}
-			System.out.println("NO EMBARCADO:");
-			ArrayList<Reserva> reservasNoEmbarcadas = gestorReservas.filtrarReservasVueloPorEstado(reservas, "NO_EMBARCADO", gestorEmbarques);
-			if (reservasNoEmbarcadas.size() != 0) {
-			gestorReservas.mostrarArrayReservas(reservasNoEmbarcadas);
-			}
-			else {
-				System.out.println("No hay reservas que no hayan sido embarcadas.");
-			}
-
-			System.out.println("PENDIENTE:");
-			ArrayList<Reserva> reservasPendientes = gestorReservas.filtrarReservasVueloPorEstado(reservas, "PENDIENTE", gestorEmbarques);
-			if (reservasPendientes.size() != 0) {
-				gestorReservas.mostrarArrayReservas(reservasPendientes);
-				gestorReservas.comprobarPosibleEmbarquePendiente(sc, vuelo);
-
-			}
-			else {
-				System.out.println("No hay reservas pendientes para este vuelo");
-			}
-		}
-		else {
-			System.out.println("Este vuelo no tiene reservas asociadas.");
-		}
-
 	}
 
 	private Document abrirDoc() {
@@ -227,7 +166,7 @@ public class VuelosGestor {
 		return elementoVuelo;
 	}
 
-	public void volcarEnXML() {
+	public boolean volcarEnXML() {
 		NodeList hijos = nodoVuelos.getChildNodes();
 		for (int i = hijos.getLength() - 1; i >= 0; i--) {
 			nodoVuelos.removeChild(hijos.item(i));
@@ -241,14 +180,9 @@ public class VuelosGestor {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.transform(new DOMSource(doc), new StreamResult(new File(Utilidades.RUTA_AEROPUERTO)));
 		} catch (TransformerException e) {
-			e.printStackTrace();
+			return false;
 		}
-	}
-
-	public void mostrarVuelos() {
-		for (Vuelo vuelo : vuelos) {
-			System.out.println(vuelo);
-		}
+		return true;
 	}
 
 	public Vuelo buscarPorCodigo(String codVuelo) {
@@ -260,18 +194,6 @@ public class VuelosGestor {
 		return null;
 	}
 
-	public Vuelo pedirVuelo(Scanner sc, String accion) {
-		Vuelo vuelo;
-		System.out.println("Introduce el código del vuelo " + accion + ":");
-		do {
-			vuelo = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (vuelo == null) {
-				System.err.println("No existe un vuelo con ese código. Inténtelo de nuevo:");
-			}
-		} while (vuelo == null);
-		return vuelo;
-	}
-
 	public ArrayList<Vuelo> buscarPorDestino(String destino) {
 		ArrayList<Vuelo> vuelosDestino = new ArrayList<Vuelo>();
 		for (Vuelo vuelo : vuelos) {
@@ -280,38 +202,6 @@ public class VuelosGestor {
 			}
 		}
 		return vuelosDestino;
-	}
-
-	public void buscarVuelos(Scanner sc) {
-		int opcion = 0;
-		System.out.println("--------------------------------");
-		System.out.println("Escoja el criterio : 1.Codigo_vuelo 2. Destino");
-
-		opcion = Utilidades.leerOpcion(sc, 1, 2);
-		System.out.println("--------------------------------");
-
-		switch (opcion) {
-		case 1:
-			System.out.println("Ingrese el código del vuelo:");
-			Vuelo vuelo = buscarPorCodigo(sc.nextLine().trim().toUpperCase());
-			if (vuelo == null) {
-				System.out.println("No se ha encontrado ningún vuelo con ese código");
-			} else {
-				System.out.println(vuelo);
-			}
-			break;
-		case 2:
-			System.out.println("Inserte el código de destino:");
-			ArrayList<Vuelo> vuelosDestino = buscarPorDestino(sc.nextLine().trim().toUpperCase());
-			if (vuelosDestino.size() != 0) {
-				for (Vuelo vueloDestino : vuelosDestino) {
-					System.out.println(vueloDestino);
-				}
-			} else {
-				System.out.println("No hay ningún vuelo con ese destino");
-			}
-			break;
-		}
 	}
 
 	public Element buscarEn(String contenedor, String etiqueta, String atributo, String valor) {
@@ -333,17 +223,19 @@ public class VuelosGestor {
 
 	public String insertarVuelo(String codigo, String aerolinea, String avion, String terminal, String puerta, String destino,
 			LocalDateTime salida, LocalDateTime llegada, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede añadir vuelos.";
 		}
 		vuelos.add(new Vuelo(codigo, aerolinea, avion, terminal, puerta, destino, salida, llegada));
-		volcarEnXML();
+		if (!volcarEnXML()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_AEROPUERTO);
+		}
 		return "";
 	}
 
 	public String modificarVuelo(Vuelo vuelo, String terminal, String puerta, LocalDateTime salida, LocalDateTime llegada,
 			String estado, String rolUsuario) {
-		if (!rolUsuario.equals("ADMIN")) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			return "Solo un administrador puede modificar vuelos.";
 		}
 		vuelo.setTerminal(terminal);
@@ -351,7 +243,9 @@ public class VuelosGestor {
 		vuelo.setSalida(salida);
 		vuelo.setLlegada(llegada);
 		vuelo.setEstado(estado);
-		volcarEnXML();
+		if (!volcarEnXML()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_AEROPUERTO);
+		}
 		return "";
 	}
 
@@ -392,31 +286,6 @@ public class VuelosGestor {
 		return arrayVuelos;
 	}
 
-	public String pedirEstadoVuelo(Scanner sc) {
-		String string = "";
-		System.out.println("Estado: 1.RETRASADO - 2.PROGRAMADO - 3.CANCELADO - 4.EMBARCANDO - 5.CERRADO");
-		int num = Utilidades.leerOpcion(sc, 1, 5);
-
-		switch (num) {
-		case 1:
-			string = "RETRASADO";
-			break;
-		case 2:
-			string = "PROGRAMADO";
-			break;
-		case 3:
-			string = "CANCELADO";
-			break;
-		case 4:
-			string = "EMBARCANDO";
-			break;
-		case 5:
-			string = "CERRADO";
-			break;
-		}
-		return string;
-	}
-
 	private Element crearHijo(Element padre, String etiqueta) {
 		Element hijo = doc.createElement(etiqueta);
 		padre.appendChild(hijo);
@@ -449,50 +318,6 @@ public class VuelosGestor {
 		Element avion = buscarEn("Aviones", "Avion", "matricula", avionString);
 		int numPasajeros = Integer.parseInt(avion.getElementsByTagName("Pasajeros").item(0).getTextContent().trim());
 		return numPasajeros;
-	}
-
-	public void consultarEquipajesDeVuelo(Scanner sc, EquipajesGestor gestorEquipajes) {
-		Vuelo vuelo = pedirVuelo(sc, "a consultar");
-		ArrayList<Equipaje> equipajesDelVuelo = gestorEquipajes.buscarEquipajesAsociadosAVuelo(vuelo.getCodigo());
-		System.out.println("========================================");
-		System.out.println("Resumen de equipajes del vuelo " + vuelo.getCodigo());
-		System.out.println("========================================");
-		if (equipajesDelVuelo.size() != 0) {
-			System.out.println("Cantidad total de bultos: " + equipajesDelVuelo.size());
-			System.out.printf("Peso total: %.2f kg%n", gestorEquipajes.calcularPesoTotal(equipajesDelVuelo));
-
-			System.out.println("----------------------------------------");
-			System.out.println("Bultos por tipo:");
-			HashMap<String, Integer> cantidadPorTipos = gestorEquipajes.filtrarArrayEquipajesPorTipo(equipajesDelVuelo);
-			for (Map.Entry<String,Integer> k : cantidadPorTipos.entrySet()) {
-				System.out.println("   " + k.getKey() + ": " + k.getValue());
-			}
-
-			System.out.println("----------------------------------------");
-			System.out.println("Bultos por estado:");
-			HashMap<String, Integer> cantidadPorEstado = gestorEquipajes.filtrarArrayEquipajesPorEstado(equipajesDelVuelo);
-			for (Map.Entry<String,Integer> k : cantidadPorEstado.entrySet()) {
-				System.out.println("   " + k.getKey() + ": " + k.getValue());
-			}
-
-			System.out.println("----------------------------------------");
-			ArrayList<Equipaje> equipajesPerdidos = gestorEquipajes.filtrarArrayEquipajesPorPerdidos(equipajesDelVuelo);
-			System.out.println("Equipajes perdidos: " + equipajesPerdidos.size());
-			for (Equipaje equipaje : equipajesPerdidos) {
-				System.out.println("   " + equipaje);
-			}
-
-			System.out.println("----------------------------------------");
-			ArrayList<Equipaje> equipajesConExcesoDePeso = gestorEquipajes.filtrarArrayEquipajesPorExcesoDePeso(equipajesDelVuelo);
-			System.out.println("Equipajes con exceso de peso: " + equipajesConExcesoDePeso.size());
-			for (Equipaje equipaje : equipajesConExcesoDePeso) {
-				System.out.println("   " + equipaje);
-			}
-			System.out.println("========================================");
-		}
-		else {
-			System.out.println("No hay equipajes asociados a este vuelo.");
-		}
 	}
 
 	
@@ -545,7 +370,7 @@ public class VuelosGestor {
 	public ArrayList<Vuelo> obtenerVuelosActivos() {
 		ArrayList<Vuelo> vuelosActivos = new ArrayList<Vuelo>();
 		for (Vuelo vuelo : vuelos) {
-			if (!vuelo.getEstado().equals("CANCELADO") && !vuelo.getEstado().equals("CERRADO")) {
+			if (!vuelo.getEstado().equals(Constantes.VUELO_CANCELADO) && !vuelo.getEstado().equals(Constantes.VUELO_CERRADO)) {
 				vuelosActivos.add(vuelo);
 			}
 		}

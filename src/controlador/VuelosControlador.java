@@ -22,6 +22,8 @@ import modelo.Incidencia;
 import modelo.Reserva;
 import modelo.Vuelo;
 import vista.VuelosPanel;
+import utilidades.Constantes;
+import utilidades.Utilidades;
 
 public class VuelosControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -42,12 +44,8 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		habilitarBotonesSeleccion(false);
 	}
 
-	private boolean esAdmin() {
-		return rolUsuario.equals("ADMIN");
-	}
-
 	private void aplicarPermisos() {
-		if (!esAdmin()) {
+		if (!Utilidades.esAdmin(rolUsuario)) {
 			vuelosPanel.remove(vuelosPanel.getBtnAniadir());
 			vuelosPanel.remove(vuelosPanel.getBtnModificar());
 			vuelosPanel.remove(vuelosPanel.getBtnFicha());
@@ -74,19 +72,19 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == vuelosPanel.getBtnAniadir()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				vuelosPanel.mostrarError("Solo un administrador puede añadir.");
 				return;
 			}
 			aniadir();
 		} else if (e.getSource() == vuelosPanel.getBtnModificar()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				vuelosPanel.mostrarError("Solo un administrador puede modificar.");
 				return;
 			}
 			modificar();
 		} else if (e.getSource() == vuelosPanel.getBtnFicha()) {
-			if (!esAdmin()) {
+			if (!Utilidades.esAdmin(rolUsuario)) {
 				vuelosPanel.mostrarError("Solo un administrador puede ver la ficha.");
 				return;
 			}
@@ -109,8 +107,8 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 	private void aniadir() {
 		vaciarFormulario();
 		cambiarEditarFormulario(true, true);
-		vuelosPanel.getTextFieldOrigen().setText("MAD");
-		vuelosPanel.getComboBoxEstado().setSelectedItem("PROGRAMADO");
+		vuelosPanel.getTextFieldOrigen().setText(Constantes.AEROPUERTO_ORIGEN);
+		vuelosPanel.getComboBoxEstado().setSelectedItem(Constantes.VUELO_PROGRAMADO);
 		vuelosPanel.modoEdicion(true);
 	}
 
@@ -193,7 +191,7 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 			if (!elementoAvion.getAttribute("aerolinea").equals(aerolinea)) {
 				return "El avion " + avion + " no es de " + aerolinea + ".";
 			}
-			if (destino.equals("MAD")) {
+			if (destino.equals(Constantes.AEROPUERTO_ORIGEN)) {
 				return "El destino no puede ser el origen.";
 			}
 			if (gestor.buscarEn("Destinos", "Destino", "codigo", destino) == null) {
@@ -202,7 +200,7 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		}
 
 		Element elementoTerminal = gestor.buscarEn("Terminales", "Terminal", "codigo", terminal);
-		if (elementoTerminal == null || !elementoTerminal.getAttribute("estado").equals("OPERATIVA")) {
+		if (elementoTerminal == null || !elementoTerminal.getAttribute("estado").equals(Constantes.ESTADO_OPERATIVA)) {
 			return "Terminal no valida o no operativa.";
 		}
 		Element elementoPuerta = gestor.buscarEn("Puertas", "Puerta", "codigo", puerta);
@@ -212,7 +210,7 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		if (!elementoPuerta.getAttribute("terminal").equals(terminal)) {
 			return "La puerta " + puerta + " no es de la " + terminal + ".";
 		}
-		if (!elementoPuerta.getAttribute("estado").equals("OPERATIVA")) {
+		if (!elementoPuerta.getAttribute("estado").equals(Constantes.ESTADO_OPERATIVA)) {
 			return "La puerta " + puerta + " no esta operativa.";
 		}
 
@@ -252,7 +250,7 @@ public class VuelosControlador implements ActionListener, ListSelectionListener,
 		vuelosPanel.getModeloIncidencias().setRowCount(0);
 		for (Incidencia incidencia : incidencias) {
 			vuelosPanel.getModeloIncidencias().addRow(new Object[] {incidencia.getCodigo(), incidencia.getTipo(), incidencia.getPrioridad(), incidencia.getEstado()});
-			if (incidencia.getEstado().equals("ABIERTA")) {
+			if (incidencia.getEstado().equals(Constantes.INCIDENCIA_ABIERTA)) {
 				abiertas++;
 			}
 		}

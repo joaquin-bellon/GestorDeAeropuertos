@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Scanner;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -24,6 +23,7 @@ import modelo.Pasajero;
 import modelo.Reserva;
 import modelo.Vuelo;
 import utilidades.Utilidades;
+import utilidades.Constantes;
 
 public class PasajerosGestor {
 	private ArrayList<Pasajero> pasajeros;
@@ -54,15 +54,15 @@ public class PasajerosGestor {
 		return pasajeros;
 	}
 
-	public void volcarEnCSV() {
+	public boolean volcarEnCSV() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Utilidades.RUTA_PASAJEROS)))) {
 			StatefulBeanToCsv<Pasajero> beantoCsv = new StatefulBeanToCsvBuilder<Pasajero>(writer)
 					.withOrderedResults(true).withApplyQuotesToAll(false).build();
 			beantoCsv.write(pasajeros);
 		} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 	}
 
 	public ArrayList<Pasajero> filtrarPasajeros(String criterio, String texto) {
@@ -92,13 +92,16 @@ public class PasajerosGestor {
 		return arrayPasajeros;
 	}
 
-	public void insertarPasajero(String codigo, String nombre, String apellidos, String documento, String pais,
+	public String insertarPasajero(String codigo, String nombre, String apellidos, String documento, String pais,
 			String correo, String tipo) {
 		pasajeros.add(new Pasajero(codigo, nombre, apellidos, documento, pais, correo, tipo));
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_PASAJEROS);
+		}
+		return "";
 	}
 
-	public void modificarPasajero(Pasajero pasajero, String codigo, String nombre, String apellidos, String documento,
+	public String modificarPasajero(Pasajero pasajero, String codigo, String nombre, String apellidos, String documento,
 			String pais, String correo, String tipo) {
 		pasajero.setCodPasajero(codigo);
 		pasajero.setNombre(nombre);
@@ -107,13 +110,16 @@ public class PasajerosGestor {
 		pasajero.setPais(pais);
 		pasajero.setCorreo(correo);
 		pasajero.setTipo(tipo);
-		volcarEnCSV();
+		if (!volcarEnCSV()) {
+			return Utilidades.errorGuardar(Utilidades.RUTA_PASAJEROS);
+		}
+		return "";
 	}
 
-	public boolean eliminarPasajero(String codPasajero) {
+	public String eliminarPasajero(String codPasajero) {
 		Pasajero pasajero = buscarPorCodPasajero(codPasajero);
 		if (pasajero == null) {
-			return false;
+			return "No existe ningun pasajero con el codigo " + codPasajero + ".";
 		}
 
 		ReservasGestor gestorReservas = ReservasGestor.getInstance();
@@ -140,18 +146,22 @@ public class PasajerosGestor {
 			gestorReservas.getReservas().remove(reserva);
 		}
 
-		if (reservaEliminada) {
-			gestorReservas.volcarEnCSV();
-		}
-		if (equipajeEliminado) {
-			gestorEquipajes.volcarEnCSV();
-		}
-		if (embarqueEliminado) {
-			gestorEmbarques.volcarEnCSV();
-		}
 		pasajeros.remove(pasajero);
-		volcarEnCSV();
-		return true;
+
+		String error = "";
+		if (reservaEliminada && !gestorReservas.volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_RESERVAS);
+		}
+		if (equipajeEliminado && !gestorEquipajes.volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_EQUIPAJES);
+		}
+		if (embarqueEliminado && !gestorEmbarques.volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_EMBARQUES);
+		}
+		if (!volcarEnCSV()) {
+			error = Utilidades.errorGuardar(Utilidades.RUTA_PASAJEROS);
+		}
+		return error;
 	}
 
 	public String crearNuevoIdentificador() {
@@ -223,112 +233,6 @@ public class PasajerosGestor {
 		return existe;
 	}
 
-	public Pasajero pedirPasajero(Scanner sc, String accion) {
-		Pasajero pasajero;
-		System.out.println("Introduce el código del pasajero " + accion + ":");
-		do {
-			pasajero = buscarPorCodPasajero(sc.nextLine().trim().toUpperCase());
-			if (pasajero == null) {
-				System.err.println("Este código no es válido. Inténtelo de nuevo:");
-			}
-		} while (pasajero == null);
-		return pasajero;
-	}
-
-	private Pasajero escogerPasajero(Scanner sc, String accion) {
-		System.out.println("---------------------------------------");
-		System.out.println("Pasajeros:");
-		return pedirPasajero(sc, "a " + accion);
-	}
-
-	public void actualizarPasajero(Scanner sc) {
-		Pasajero pasajero = escogerPasajero(sc, "actualizar");
-		System.out.println("---------------------------------");
-		System.out.println("""
-				1. Nombre
-				2. Apellidos
-				3. Documento Identificativo
-				4. Pais
-				5. correo electronico
-				6. Tipo
-				¿Que dato quieres editar?:""");
-		int opcion = Utilidades.leerOpcion(sc, 1, 6);
-		switch (opcion - 1) {
-
-		case 0:// Nombre
-			System.out.println("Introduce el nuevo nombre:");
-			pasajero.setNombre(sc.nextLine().trim());
-			System.out.println("Nombre cambiado con éxito");
-			break;
-
-		case 1:// Apellidos
-			System.out.println("Introduce los nuevos apellidos:");
-			pasajero.setApellidos(sc.nextLine().trim());
-			System.out.println("Apellidos cambiados con éxito");
-			break;
-
-		case 2:// Documento Identificativo
-			System.out.println("Introduce el nuevo documento identificativo:");
-			boolean documentoExistente = false;
-			String documento;
-			System.out.println("Documento identificativo:");
-			do {
-				documento = sc.nextLine().trim();
-				documentoExistente = existeDNI(documento);
-				if (documentoExistente) {
-					System.err.println("Este Documento identificativo ya está en uso.Inténtelo con otro:");
-				}
-			} while (documentoExistente);
-			pasajero.setDocumentoIdentificativo(documento);
-			System.out.println("Documento Identificativo cambiado con éxito");
-			break;
-
-		case 3:// Pais
-			System.out.println("Introduce el nuevo país:");
-			pasajero.setPais(sc.nextLine().trim());
-			System.out.println("País cambiada con éxito");
-			break;
-
-		case 4:// Correo
-			System.out.println("Introduce el nuevo correo electrónico:");
-			boolean correoExistente = false;
-			String correo = "";
-			correoExistente = false;
-			do {
-				correo = sc.nextLine().trim();
-				correoExistente = existeCorreo(correo);
-				if (correoExistente) {
-					System.err.println("Este correo ya está en uso. Inténtelo de nuevo:");
-				}
-			} while (correoExistente);
-			pasajero.setCorreo(correo);
-			System.out.println("Correo electrónico cambiado con éxito");
-			break;
-
-		case 5:// Tipo
-			String tipo = "";
-			System.out.println("Escoja el nuevo tipo: 1.ADULTO - 2.VIP - 3.MENOR");
-			int num = Utilidades.leerOpcion(sc, 1, 3);
-			switch (num) {
-			case 1:
-				tipo = "ADULTO";
-				break;
-			case 2:
-				tipo = "VIP";
-				break;
-			case 3:
-				tipo = "MENOR";
-				break;
-			}
-
-			pasajero.setTipo(tipo);
-			System.out.println("Tipo actualizado correctamente");
-
-			break;
-		}
-		volcarEnCSV();
-	}
-
 	public ArrayList<Pasajero> filtrarPorPais(String pais) {
 		ArrayList<Pasajero> pasajerosNacionalidad = new ArrayList<Pasajero>();
 		for (Pasajero pasajero : pasajeros) {
@@ -373,7 +277,7 @@ public class PasajerosGestor {
 	public HashSet<Pasajero> obtenerPasajerosConReservaConfirmadaEnVueloCancelado(VuelosGestor gestorVuelos,
 			ReservasGestor gestorReservas) {
 		HashSet<Pasajero> pasajerosConReservaConfirmadaEnVueloCancelado = new HashSet<Pasajero>();
-		ArrayList<Vuelo> vuelosCancelados = gestorVuelos.buscarVuelosPorEstado("CANCELADO");
+		ArrayList<Vuelo> vuelosCancelados = gestorVuelos.buscarVuelosPorEstado(Constantes.VUELO_CANCELADO);
 		for (Vuelo vueloCancelado : vuelosCancelados) {
 			ArrayList<Reserva> reservasConfirmadasDelVuelo = gestorReservas
 					.buscarResevaConfirmadasPorVuelo(vueloCancelado.getCodigo());

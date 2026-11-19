@@ -11,6 +11,7 @@ import gestores.VuelosGestor;
 import modelo.Incidencia;
 import modelo.Vuelo;
 import vista.InicioPanel;
+import utilidades.Constantes;
 
 public class InicioControlador {
 	private PrincipalControlador principalControlador;
@@ -30,7 +31,7 @@ public class InicioControlador {
 		inicioPanel.getLblTotalEquipajes().setText(String.valueOf(EquipajesGestor.getInstance().getEquipajes().size()));
 		inicioPanel.getLblTotalEmbarques().setText(String.valueOf(EmbarquesGestor.getInstance().getEmbarques().size()));
 
-		ArrayList<Incidencia> incidenciasAbiertas = IncidenciasGestor.getInstance().buscarPorEstado("ABIERTA");
+		ArrayList<Incidencia> incidenciasAbiertas = IncidenciasGestor.getInstance().buscarPorEstado(Constantes.INCIDENCIA_ABIERTA);
 
 		inicioPanel.getLblTotalIncidencias().setText(String.valueOf(incidenciasAbiertas.size()));
 

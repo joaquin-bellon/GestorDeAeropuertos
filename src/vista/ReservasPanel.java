@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import utilidades.Constantes;
 
 public class ReservasPanel extends PanelGenerico {
 
@@ -103,7 +104,7 @@ public class ReservasPanel extends PanelGenerico {
 		getPanelFormulario().add(lblClase);
 
 		comboBoxClase = new JComboBox<String>();
-		comboBoxClase.setModel(new DefaultComboBoxModel<String>(new String[] {"ECONOMICA", "BUSINESS", "PRIMERA"}));
+		comboBoxClase.setModel(new DefaultComboBoxModel<String>(Constantes.CLASES_RESERVA));
 		comboBoxClase.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxClase.setBounds(125, 223, 175, 30);
 		getPanelFormulario().add(comboBoxClase);
@@ -134,7 +135,7 @@ public class ReservasPanel extends PanelGenerico {
 		getPanelFormulario().add(lblCanal);
 
 		comboBoxCanal = new JComboBox<String>();
-		comboBoxCanal.setModel(new DefaultComboBoxModel<String>(new String[] {"WEB", "APP", "TAQUILLA", "AGENCIA"}));
+		comboBoxCanal.setModel(new DefaultComboBoxModel<String>(Constantes.CANALES_RESERVA));
 		comboBoxCanal.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		comboBoxCanal.setBounds(125, 349, 175, 30);
 		getPanelFormulario().add(comboBoxCanal);

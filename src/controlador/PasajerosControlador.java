@@ -97,14 +97,14 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 
 	private void eliminar() {
 		String codPasajero = String.valueOf(pasajerosPanel.getTabla().getValueAt(pasajerosPanel.getTabla().getSelectedRow(), 0));
-		boolean eliminado = PasajerosGestor.getInstance().eliminarPasajero(codPasajero);
-		if (eliminado) {
+		String resultado = PasajerosGestor.getInstance().eliminarPasajero(codPasajero);
+		if (resultado.equals("")) {
 			recargarPanel();
 			pasajerosPanel.mostrarExito("Se ha eliminado al pasajero " + codPasajero + " y sus relacionados");
 			
 		}
 		else {
-			pasajerosPanel.mostrarError("No existe ningun pasajero con el codigo " + codPasajero);
+			pasajerosPanel.mostrarError(resultado);
 		}
 		
 	}
@@ -126,17 +126,23 @@ public class PasajerosControlador implements ActionListener, ListSelectionListen
 
 		Pasajero pasajero = PasajerosGestor.getInstance().buscarPorCodPasajero(codigo);
 		String mensaje;
+		String resultado;
 		if (pasajero == null) {
-			PasajerosGestor.getInstance().insertarPasajero(codigo, nombre, apellidos, documento, pais, correo, tipo);
+			resultado = PasajerosGestor.getInstance().insertarPasajero(codigo, nombre, apellidos, documento, pais, correo, tipo);
 			mensaje = "Pasajero añadido correctamente.";
 		} else {
-			PasajerosGestor.getInstance().modificarPasajero(pasajero, codigo, nombre, apellidos, documento, pais, correo, tipo);
+			resultado = PasajerosGestor.getInstance().modificarPasajero(pasajero, codigo, nombre, apellidos, documento, pais, correo, tipo);
 			mensaje = "Pasajero modificado correctamente.";
 		}
 
 		recargarPanel();
 		pasajerosPanel.modoEdicion(false);
-		pasajerosPanel.mostrarExito(mensaje);
+		if (resultado.equals("")) {
+			pasajerosPanel.mostrarExito(mensaje);
+		}
+		else {
+			pasajerosPanel.mostrarError(resultado);
+		}
 	}
 	
 	private String comprobarFormulario() {

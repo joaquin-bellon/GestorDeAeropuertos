@@ -21,6 +21,7 @@ import modelo.Embarque;
 import modelo.Reserva;
 import modelo.Vuelo;
 import vista.EmbarquesPanel;
+import utilidades.Constantes;
 
 public class EmbarquesControlador implements ActionListener, ListSelectionListener, KeyListener {
 	private PrincipalControlador principalControlador;
@@ -81,6 +82,12 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 			eliminar();
 			embarquesPanel.modoConfirmarEliminar(false);
 		} else if (e.getSource() == embarquesPanel.getComboBoxFiltro()) {
+			if (embarquesPanel.getComboBoxFiltro().getSelectedItem().equals(Constantes.EMBARQUE_FECHADESDE)) {
+				embarquesPanel.getTextFieldBuscar().putClientProperty("JTextField.placeholderText", "Desde aaaa-mm-dd");
+			}
+			else {
+				embarquesPanel.getTextFieldBuscar().putClientProperty("JTextField.placeholderText", "Hasta aaaa-mm-dd");
+			}
 			filtrar();
 		} else if (e.getSource() == embarquesPanel.getComboBoxOrdenar()) {
 			filtrar();
@@ -101,13 +108,13 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 
 	private void eliminar() {
 		String codEmbarque = String.valueOf(embarquesPanel.getTabla().getValueAt(embarquesPanel.getTabla().getSelectedRow(), 0));
-		boolean eliminado = EmbarquesGestor.getInstance().eliminarEmbarque(codEmbarque);
-		if (eliminado) {
+		String resultado = EmbarquesGestor.getInstance().eliminarEmbarque(codEmbarque);
+		if (resultado.equals("")) {
 			recargarPanel();
 			embarquesPanel.mostrarExito("Se ha eliminado el embarque " + codEmbarque + ".");
 		}
 		else {
-			embarquesPanel.mostrarError("No existe ningun embarque con el codigo " + codEmbarque);
+			embarquesPanel.mostrarError(resultado);
 		}
 	}
 
@@ -129,22 +136,26 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 		}
 
 		String aviso = "";
+		String resultado;
 		Embarque embarque = EmbarquesGestor.getInstance().buscarPorCodigo(codigo);
 		if (embarque == null) {
 			Embarque existente = EmbarquesGestor.getInstance().buscarPorReserva(codReserva);
 			if (existente == null) {
-				EmbarquesGestor.getInstance().insertarEmbarque(codigo, codReserva, fechaHora.toString(), puerta, estado, observaciones);
+				resultado = EmbarquesGestor.getInstance().insertarEmbarque(codigo, codReserva, fechaHora.toString(), puerta, estado, observaciones);
 			}
 			else {
-				EmbarquesGestor.getInstance().modificarEmbarque(existente, fechaHora.toString(), puerta, estado, observaciones);
+				resultado = EmbarquesGestor.getInstance().modificarEmbarque(existente, fechaHora.toString(), puerta, estado, observaciones);
 				codigo = existente.getCodEmbarque();
 				aviso = codReserva + " ya tenia el embarque " + codigo + ": actualizado.";
 			}
 		} else {
-			EmbarquesGestor.getInstance().modificarEmbarque(embarque, fechaHora.toString(), puerta, estado, observaciones);
+			resultado = EmbarquesGestor.getInstance().modificarEmbarque(embarque, fechaHora.toString(), puerta, estado, observaciones);
 		}
 
-		if (aviso.equals("")) {
+		if (!resultado.equals("")) {
+			aviso = resultado;
+		}
+		else if (aviso.equals("")) {
 			aviso = EmbarquesGestor.getInstance().comprobarHorarioEmbarque(obtenerVuelo(codReserva), fechaHora);
 		}
 
@@ -186,11 +197,11 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 			return "La puerta del vuelo " + vuelo.getCodigo() + " es " + vuelo.getPuerta() + ".";
 		}
 
-		if (!estado.equals("NO_EMBARCADO")) {
-			if (reserva.getEstado().equals("CANCELADA")) {
+		if (!estado.equals(Constantes.EMBARQUE_NO_EMBARCADO)) {
+			if (reserva.getEstado().equals(Constantes.RESERVA_CANCELADA)) {
 				return "No se puede embarcar: reserva cancelada.";
 			}
-			if (vuelo.getEstado().equals("CANCELADO")) {
+			if (vuelo.getEstado().equals(Constantes.VUELO_CANCELADO)) {
 				return "No se puede embarcar: vuelo cancelado.";
 			}
 		}
@@ -326,6 +337,7 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 	}
 
 	private void filtrar() {
+		String filtro = String.valueOf(embarquesPanel.getComboBoxFiltro().getSelectedItem());
 		String texto = embarquesPanel.getTextFieldBuscar().getText().trim();
 		if (texto.isEmpty()) {
 			cargarTabla(EmbarquesGestor.getInstance().getEmbarques());
@@ -333,7 +345,14 @@ public class EmbarquesControlador implements ActionListener, ListSelectionListen
 		}
 		try {
 			LocalDate fecha = LocalDate.parse(texto);
-			cargarTabla(EmbarquesGestor.getInstance().filtrarPorFecha(fecha));
+			if(filtro.equals(Constantes.EMBARQUE_FECHADESDE)) {
+				cargarTabla(EmbarquesGestor.getInstance().filtrarDesdeFecha(fecha));
+			}else {
+				cargarTabla(EmbarquesGestor.getInstance().filtrarHastaFecha(fecha));
+			}
+			
+			
+			
 		} catch (DateTimeParseException e) {
 		}
 	}
