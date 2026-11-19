@@ -29,6 +29,13 @@ public class Constantes {
 
 	public static final String EMBARQUE_FECHADESDE = "Fecha (Desde)";
 	public static final String EMBARQUE_FECHAHASTA = "Fecha (Hasta)";
+
+	public static final String INFORME_TOTALES = "Totales";
+	public static final String INFORME_OCUPACION = "Ocupación de vuelos";
+	public static final String INFORME_ALERTAS = "Alertas";
+	public static final String INFORME_VUELOS_ESTADO = "Vuelos por estado";
+	public static final String INFORME_INCIDENCIAS_ABIERTAS = "Incidencias abiertas";
+	public static final String[] INFORMES = {INFORME_TOTALES, INFORME_OCUPACION, INFORME_ALERTAS, INFORME_VUELOS_ESTADO, INFORME_INCIDENCIAS_ABIERTAS};
 	public static final String EMBARQUE_PENDIENTE = "PENDIENTE";
 	public static final String EMBARQUE_EMBARCANDO = "EMBARCANDO";
 	public static final String EMBARQUE_EMBARCADO = "EMBARCADO";

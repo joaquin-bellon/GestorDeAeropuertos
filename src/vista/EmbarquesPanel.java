@@ -26,7 +26,7 @@ public class EmbarquesPanel extends PanelGenerico {
 
 	public EmbarquesPanel() {
 		super("Embarques", "Consulta y gestiona los embarques", "Datos del embarque",
-				new String[] {"Fecha (Desde)", "Fecha (Hasta)"},
+				new String[] {Constantes.EMBARQUE_FECHADESDE, Constantes.EMBARQUE_FECHAHASTA},
 				new String[] {"Código", "Reserva", "Fecha y hora", "Puerta", "Estado"},
 				new String [] {"Código", "Fecha", "Puerta", "Estado"});
 

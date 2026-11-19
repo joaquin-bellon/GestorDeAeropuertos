@@ -2,6 +2,7 @@ package vista;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -15,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
+import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.PieChart;
@@ -23,6 +25,7 @@ import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.PieStyler.LabelType;
 import org.knowm.xchart.style.Styler;
 
+import utilidades.Constantes;
 import utilidades.HiloAvisos;
 
 public class InformesPanel extends JPanel implements ImagenesConTema {
@@ -35,6 +38,7 @@ public class InformesPanel extends JPanel implements ImagenesConTema {
 	private JLabel lblSubtitulo;
 	private JComboBox<String> comboBoxInforme;
 	private JButton btnExportarCsv;
+	private JButton btnExportarPdf;
 	private JLabel lblAdvertencia;
 	private JLabel lblTotalPasajeros;
 	private JLabel lblTotalVuelos;
@@ -69,16 +73,22 @@ public class InformesPanel extends JPanel implements ImagenesConTema {
 		add(lblSubtitulo);
 
 		comboBoxInforme = new JComboBox<String>();
-		comboBoxInforme.setModel(new DefaultComboBoxModel<String>(new String[] {"Totales", "Ocupación de vuelos", "Alertas"}));
+		comboBoxInforme.setModel(new DefaultComboBoxModel<String>(Constantes.INFORMES));
 		comboBoxInforme.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		comboBoxInforme.setBounds(590, 22, 190, 32);
+		comboBoxInforme.setBounds(410, 22, 180, 32);
 		add(comboBoxInforme);
 
 		btnExportarCsv = new JButton("Exportar a CSV");
 		btnExportarCsv.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		btnExportarCsv.setBounds(790, 22, 170, 32);
+		btnExportarCsv.setBounds(600, 22, 175, 32);
 		btnExportarCsv.putClientProperty("FlatLaf.style", "arc: 12");
 		add(btnExportarCsv);
+
+		btnExportarPdf = new JButton("Exportar a PDF");
+		btnExportarPdf.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		btnExportarPdf.setBounds(785, 22, 175, 32);
+		btnExportarPdf.putClientProperty("FlatLaf.style", "arc: 12");
+		add(btnExportarPdf);
 
 		lblAdvertencia = new JLabel("");
 		lblAdvertencia.setFont(new Font("SansSerif", Font.PLAIN, 13));
@@ -252,6 +262,27 @@ public class InformesPanel extends JPanel implements ImagenesConTema {
 		styler.setLegendBackgroundColor(fondo);
 		styler.setChartFontColor(texto);
 	}
+	
+	public BufferedImage obtenerImagenClara(CategoryChart grafico) {
+		colorearGrafico(grafico.getStyler(), Color.WHITE, Color.BLACK);
+		grafico.getStyler().setAxisTickLabelsColor(Color.BLACK);
+		grafico.getStyler().setPlotGridLinesColor(new Color(220, 220, 220));
+
+		BufferedImage imagen = BitmapEncoder.getBufferedImage(grafico);
+
+		actualizarImagenes();
+		return imagen;
+	}
+	
+	public BufferedImage obtenerImagenClara(PieChart grafico) {
+		colorearGrafico(grafico.getStyler(), Color.WHITE, Color.BLACK);
+		grafico.getStyler().setLabelsFontColor(Color.BLACK);
+
+		BufferedImage imagen = BitmapEncoder.getBufferedImage(grafico);
+
+		actualizarImagenes();
+		return imagen;
+	}
 
 	public JComboBox<String> getComboBoxInforme() {
 		return comboBoxInforme;
@@ -265,6 +296,10 @@ public class InformesPanel extends JPanel implements ImagenesConTema {
 	public void mostrarExito(String texto) {
 		lblAdvertencia.putClientProperty("FlatLaf.style", "foreground: $Mensaje.exito");
 		new HiloAvisos(lblAdvertencia, texto).start();
+	}
+
+	public JButton getBtnExportarPdf() {
+		return btnExportarPdf;
 	}
 
 	public JButton getBtnExportarCsv() {
@@ -302,5 +337,31 @@ public class InformesPanel extends JPanel implements ImagenesConTema {
 	public DefaultTableModel getModeloOcupacion() {
 		return modeloOcupacion;
 	}
+
+	public CategoryChart getGraficoEstados() {
+		return graficoEstados;
+	}
+
+	public void setGraficoEstados(CategoryChart graficoEstados) {
+		this.graficoEstados = graficoEstados;
+	}
+
+	public PieChart getGraficoPrioridades() {
+		return graficoPrioridades;
+	}
+
+	public void setGraficoPrioridades(PieChart graficoPrioridades) {
+		this.graficoPrioridades = graficoPrioridades;
+	}
+
+	public CategoryChart getGraficoOcupacion() {
+		return graficoOcupacion;
+	}
+
+	public void setGraficoOcupacion(CategoryChart graficoOcupacion) {
+		this.graficoOcupacion = graficoOcupacion;
+	}
+	
+	
 
 }

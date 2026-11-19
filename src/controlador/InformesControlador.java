@@ -44,6 +44,7 @@ public class InformesControlador implements ActionListener{
 	private void aplicarPermisos() {
 		if (!Utilidades.esAdmin(rolUsuario)) {
 			informesPanel.getBtnExportarCsv().setVisible(false);
+			informesPanel.getBtnExportarPdf().setVisible(false);
 			informesPanel.getComboBoxInforme().setVisible(false);
 		}
 		
@@ -96,6 +97,8 @@ public class InformesControlador implements ActionListener{
 
 	private void implementarListeners() {
 		informesPanel.getBtnExportarCsv().addActionListener(this);
+		informesPanel.getBtnExportarPdf().addActionListener(this);
+		informesPanel.getComboBoxInforme().addActionListener(this);
 		
 	}
 
@@ -134,21 +137,30 @@ public class InformesControlador implements ActionListener{
 		}
 	}
 
+	private void habilitarBtnExportarCsv() {
+		String informe = (String) informesPanel.getComboBoxInforme().getSelectedItem();
+		boolean tieneCsv = !informe.equals(Constantes.INFORME_VUELOS_ESTADO) && !informe.equals(Constantes.INFORME_INCIDENCIAS_ABIERTAS);
+		informesPanel.getBtnExportarCsv().setEnabled(tieneCsv);
+	}
+
 	private void exportarCsv() {
 		String informe = (String) informesPanel.getComboBoxInforme().getSelectedItem();
 		String error;
 		String ruta;
-		if (informe.equals("Totales")) {
-			error = InformesGestor.getInstance().exportarTotales();
+		if (informe.equals(Constantes.INFORME_TOTALES)) {
+			error = InformesGestor.getInstance().exportarTotalesCsv();
 			ruta = "informes/totales.csv";
 		}
-		else if (informe.equals("Ocupación de vuelos")) {
-			error = InformesGestor.getInstance().exportarOcupacion();
+		else if (informe.equals(Constantes.INFORME_OCUPACION)) {
+			error = InformesGestor.getInstance().exportarOcupacionCsv();
 			ruta = "informes/ocupacion_vuelos.csv";
 		}
-		else {
-			error = InformesGestor.getInstance().exportarAlertas();
+		else if (informe.equals(Constantes.INFORME_ALERTAS)) {
+			error = InformesGestor.getInstance().exportarAlertasCsv();
 			ruta = "informes/alertas.csv";
+		}
+		else {
+			return;
 		}
 
 		if (error.isEmpty()) {
@@ -187,6 +199,47 @@ public class InformesControlador implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == informesPanel.getBtnExportarCsv()) {
 			exportarCsv();
+		}
+		else if (e.getSource() == informesPanel.getComboBoxInforme()) {
+			habilitarBtnExportarCsv();
+		}
+		else if (e.getSource() == informesPanel.getBtnExportarPdf()) {
+			exportarPdf();
+		}
+		
+	}
+
+	private void exportarPdf() {
+		String informe = (String) informesPanel.getComboBoxInforme().getSelectedItem();
+		String error;
+		String ruta;
+		if (informe.equals(Constantes.INFORME_TOTALES)) {
+			error = InformesGestor.getInstance().exportarTotalesPdf();
+			ruta = "informes/totales(fecha_Actual).pdf";
+		}
+		else if (informe.equals(Constantes.INFORME_OCUPACION)) {
+			error = InformesGestor.getInstance().exportarOcupacionPdf(principalControlador);
+			ruta = "informes/ocupacion_vuelos(fecha_Actual).pdf";
+		}
+		else if (informe.equals(Constantes.INFORME_ALERTAS)) {
+			error = InformesGestor.getInstance().exportarAlertasPdf(principalControlador);
+			ruta = "informes/alertas(fecha_Actual).pdf";
+		}else if(informe.equals(Constantes.INFORME_VUELOS_ESTADO)) {
+			error = InformesGestor.getInstance().exportarVuelosEstadoPdf(principalControlador);
+			ruta = "informes/estadoVuelos(fecha_actual).pdf";
+		}else if(informe.equals(Constantes.INFORME_INCIDENCIAS_ABIERTAS)) {
+			error = InformesGestor.getInstance().exportarIncidenciasAbiertasPdf(principalControlador);
+			ruta = "informes/incidenciasAbiertas(fecha_actual).pdf";
+		}
+		else {
+			return;
+		}
+
+		if (error.isEmpty()) {
+			informesPanel.mostrarExito("Informe exportado en " + ruta);
+		}
+		else {
+			informesPanel.mostrarError(error);
 		}
 		
 	}

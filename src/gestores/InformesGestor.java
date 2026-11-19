@@ -1,9 +1,14 @@
 package gestores;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,11 +17,26 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.table.DefaultTableModel;
+
+import org.openpdf.text.Document;
+import org.openpdf.text.Element;
+import org.openpdf.text.Font;
+import org.openpdf.text.FontFactory;
+import org.openpdf.text.Image;
+import org.openpdf.text.Paragraph;
+import org.openpdf.text.Phrase;
+import org.openpdf.text.pdf.PdfPCell;
+import org.openpdf.text.pdf.PdfPTable;
+import org.openpdf.text.pdf.PdfWriter;
+
+import controlador.PrincipalControlador;
 import modelo.Equipaje;
 import modelo.Incidencia;
 import modelo.Reserva;
 import modelo.Vuelo;
 import utilidades.Constantes;
+import vista.InformesPanel;
 
 public class InformesGestor {
 	private PasajerosGestor gestorPasajeros;
@@ -323,7 +343,7 @@ public class InformesGestor {
 		
 	}
 
-	public String exportarTotales() {
+	public String exportarTotalesCsv() {
 		String texto = "";
 		texto += "Pasajeros," + gestorPasajeros.getPasajeros().size() + "\n";
 		texto += "Vuelos," + gestorVuelos.getVuelos().size() + "\n";
@@ -334,7 +354,7 @@ public class InformesGestor {
 		return escribirInforme("informes/totales.csv", texto);
 	}
 
-	public String exportarOcupacion() {
+	public String exportarOcupacionCsv() {
 		String texto = "";
 		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
 			int capacidad = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
@@ -345,7 +365,7 @@ public class InformesGestor {
 		return escribirInforme("informes/ocupacion_vuelos.csv", texto);
 	}
 
-	public String exportarAlertas() {
+	public String exportarAlertasCsv() {
 		String texto = "";
 		for (Vuelo vuelo : buscarVuelosEnSobreventa()) {
 			int capacidad = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
@@ -375,6 +395,192 @@ public class InformesGestor {
 		} catch (IOException e) {
 			return "No se ha podido escribir el informe en " + ruta;
 		}
+	}
+
+	public String exportarTotalesPdf() {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+		String fecha = LocalDateTime.now().format(formato);
+		String ruta = "informes/totales"+ fecha + ".pdf";
+		Document document = new Document();
+		try {
+			PdfWriter.getInstance(document, new FileOutputStream(ruta));
+			
+			document.open();
+		}catch (Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+		  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+		  
+		  document.add(new Paragraph("Datos totales del Aeropueto a " + fecha, tituloFont));
+		  document.add(new Paragraph("\n"));
+		  document.add(new Paragraph("- Pasajeros: " + gestorPasajeros.getPasajeros().size(), cuerpoFont));
+          document.add(new Paragraph("- Vuelos: " + gestorVuelos.getVuelos().size(), cuerpoFont));
+          document.add(new Paragraph("- Reservas: " + gestorReservas.getReservas().size(), cuerpoFont));
+          document.add(new Paragraph("- Equipajes: " + gestorEquipajes.getEquipajes().size(), cuerpoFont));
+          document.add(new Paragraph("- Embarques: " + gestorEmbarques.getEmbarques().size(), cuerpoFont));
+          document.add(new Paragraph("- Incidencias: " + gestorIncidencias.getIncidencias().size(), cuerpoFont));
+          
+          document.close();
+		return "";
+	}
+
+	public String exportarOcupacionPdf(PrincipalControlador principalControlador) {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+		String fecha = LocalDateTime.now().format(formato);
+		String ruta = "informes/ocupacion"+ fecha + ".pdf";
+		Document document = new Document();
+		try {
+			PdfWriter.getInstance(document, new FileOutputStream(ruta));
+			
+			document.open();
+		  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+		  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+		  
+		  document.add(new Paragraph("Datos de ocupacion del Aeropueto a " + fecha, tituloFont));
+		  document.add(new Paragraph("\n"));
+		  
+		  DefaultTableModel modeloTabla = principalControlador.getFrame().getInformesPanel().getModeloOcupacion();
+		  
+		  Font fuenteCabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
+			Font fuenteCuerpo = FontFactory.getFont(FontFactory.HELVETICA, 10);
+
+			PdfPTable tabla = crearTablaPdf(modeloTabla);
+          
+			document.add(tabla);
+			document.add(new Paragraph("\n\n", tituloFont));
+		  InformesPanel informesPanel = principalControlador.getFrame().getInformesPanel();
+		  BufferedImage image = informesPanel.obtenerImagenClara(informesPanel.getGraficoOcupacion());
+		  Image imagenPdf = Image.getInstance(image, null);
+		  imagenPdf.scaleToFit(500, 300);
+		  imagenPdf.setAlignment(Image.MIDDLE);
+		  document.add(imagenPdf);
+			
+          document.close();
+		}catch (Exception e) {
+  			return "No se ha podido escribir el informe en " + ruta;
+  		}
+		return "";
+	}
+
+	public String exportarAlertasPdf(PrincipalControlador principalControlador) {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+		String fecha = LocalDateTime.now().format(formato);
+		String ruta = "informes/alertas"+ fecha + ".pdf";
+		Document document = new Document();
+		try {
+			PdfWriter.getInstance(document, new FileOutputStream(ruta));
+			
+			document.open();
+		  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+		  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+		  
+		  document.add(new Paragraph("Datos de Alertas del Aeropueto a " + fecha, tituloFont));
+		  document.add(new Paragraph("\n"));
+		  
+		  DefaultTableModel modeloTabla = principalControlador.getFrame().getInformesPanel().getModeloAlertas();
+		  
+		  Font fuenteCabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
+			Font fuenteCuerpo = FontFactory.getFont(FontFactory.HELVETICA, 10);
+
+			PdfPTable tabla = crearTablaPdf(modeloTabla);
+          
+			document.add(tabla);
+			
+          document.close();
+		}catch (Exception e) {
+  			return "No se ha podido escribir el informe en " + ruta;
+  		}
+		return "";
+	}
+	
+	public String exportarVuelosEstadoPdf (PrincipalControlador principalControlador) {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+		String fecha = LocalDateTime.now().format(formato);
+		String ruta = "informes/estadoVuelos"+ fecha + ".pdf";
+		Document document = new Document();
+		try {
+			PdfWriter.getInstance(document, new FileOutputStream(ruta));
+			document.open();
+			
+			  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+			  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+			  
+			  document.add(new Paragraph("Datos del estado de los Vuelos del Aeropueto a " + fecha, tituloFont));
+			  document.add(new Paragraph("\n"));
+			  
+			  InformesPanel informesPanel = principalControlador.getFrame().getInformesPanel();
+			  BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoEstados());
+			  Image imagenPdf = Image.getInstance(imagen, null);
+			  imagenPdf.scaleToFit(500, 300);
+			  imagenPdf.setAlignment(Image.MIDDLE);
+			  document.add(imagenPdf);
+			  
+			  document.close();
+		}catch(Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		return "";
+		
+	}
+	
+	public String exportarIncidenciasAbiertasPdf (PrincipalControlador principalControlador) {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+		String fecha = LocalDateTime.now().format(formato);
+		String ruta = "informes/incidenciasAbiertas" + fecha + ".pdf";
+		Document document = new Document();
+		try {
+			PdfWriter.getInstance(document, new FileOutputStream(ruta));
+			document.open();
+
+			Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+
+			document.add(new Paragraph("Incidencias abiertas por prioridad del Aeropuerto a " + fecha, tituloFont));
+			document.add(new Paragraph("\n"));
+
+			InformesPanel informesPanel = principalControlador.getFrame().getInformesPanel();
+			BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoPrioridades());
+			Image imagenPdf = Image.getInstance(imagen, null);
+			imagenPdf.scaleToFit(400, 300);
+			imagenPdf.setAlignment(Image.MIDDLE);
+			document.add(imagenPdf);
+
+			document.close();
+		} catch (Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		return "";
+	}
+	
+	public static PdfPTable crearTablaPdf(DefaultTableModel modelo) {
+		Font fuenteCabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
+		Font fuenteCuerpo = FontFactory.getFont(FontFactory.HELVETICA, 10);
+
+		PdfPTable tabla = new PdfPTable(modelo.getColumnCount());
+		tabla.setWidthPercentage(100);
+		tabla.setHeaderRows(1);
+
+		for (int columna = 0; columna < modelo.getColumnCount(); columna++) {
+			PdfPCell celda = new PdfPCell(new Phrase(modelo.getColumnName(columna), fuenteCabecera));
+			celda.setBackgroundColor(new Color(37, 99, 235));
+			celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+			celda.setPadding(6);
+			tabla.addCell(celda);
+		}
+
+		for (int fila = 0; fila < modelo.getRowCount(); fila++) {
+			for (int columna = 0; columna < modelo.getColumnCount(); columna++) {
+				PdfPCell celda = new PdfPCell(new Phrase(String.valueOf(modelo.getValueAt(fila, columna)), fuenteCuerpo));
+				celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+				celda.setPadding(5);
+				if (fila % 2 == 1) {
+					celda.setBackgroundColor(new Color(241, 245, 249));
+				}
+				tabla.addCell(celda);
+			}
+		}
+
+		return tabla;
 	}
 
 }
