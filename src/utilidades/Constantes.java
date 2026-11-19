@@ -1,5 +1,7 @@
 package utilidades;
 
+import java.time.format.DateTimeFormatter;
+
 public class Constantes {
 	public static final String ROL_ADMIN = "ADMIN";
 	public static final String ROL_USER = "USER";
@@ -51,4 +53,16 @@ public class Constantes {
 	public static final String PRIORIDAD_ALTA = "ALTA";
 	public static final String PRIORIDAD_CRITICA = "CRITICA";
 	public static final String[] PRIORIDADES_INCIDENCIA = {PRIORIDAD_BAJA, PRIORIDAD_MEDIA, PRIORIDAD_ALTA, PRIORIDAD_CRITICA};
+
+	public static final DateTimeFormatter FORMATO_FECHA_ARCHIVO = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+	public static final DateTimeFormatter FORMATO_FECHA_TITULO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	public static final String CARPETA_INFORMES = "informes";
+	public static final String CARPETA_CSV = "CSVs";
+	public static final String CARPETA_PDF = "PDFs";
+	public static final String ARCHIVO_TOTALES = "totales";
+	public static final String ARCHIVO_ALERTAS = "alertas";
+	public static final String ARCHIVO_OCUPACION = "ocupacion";
+	public static final String ARCHIVO_ESTADO_VUELOS = "estadoVuelos";
+	public static final String ARCHIVO_INCIDENCIAS_ABIERTAS = "incidenciasAbiertas";
 }

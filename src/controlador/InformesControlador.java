@@ -148,16 +148,16 @@ public class InformesControlador implements ActionListener{
 		String error;
 		String ruta;
 		if (informe.equals(Constantes.INFORME_TOTALES)) {
-			error = InformesGestor.getInstance().exportarTotalesCsv();
-			ruta = "informes/totales.csv";
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_CSV, Constantes.ARCHIVO_TOTALES, "csv");
+			error = InformesGestor.getInstance().exportarTotalesCsv(ruta);
 		}
 		else if (informe.equals(Constantes.INFORME_OCUPACION)) {
-			error = InformesGestor.getInstance().exportarOcupacionCsv();
-			ruta = "informes/ocupacion_vuelos.csv";
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_CSV, Constantes.ARCHIVO_OCUPACION, "csv");
+			error = InformesGestor.getInstance().exportarOcupacionCsv(ruta);
 		}
 		else if (informe.equals(Constantes.INFORME_ALERTAS)) {
-			error = InformesGestor.getInstance().exportarAlertasCsv();
-			ruta = "informes/alertas.csv";
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_CSV, Constantes.ARCHIVO_ALERTAS, "csv");
+			error = InformesGestor.getInstance().exportarAlertasCsv(ruta);
 		}
 		else {
 			return;
@@ -214,22 +214,24 @@ public class InformesControlador implements ActionListener{
 		String error;
 		String ruta;
 		if (informe.equals(Constantes.INFORME_TOTALES)) {
-			error = InformesGestor.getInstance().exportarTotalesPdf();
-			ruta = "informes/totales(fecha_Actual).pdf";
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_PDF, Constantes.ARCHIVO_TOTALES, "pdf");
+			error = InformesGestor.getInstance().exportarTotalesPdf(ruta);
 		}
 		else if (informe.equals(Constantes.INFORME_OCUPACION)) {
-			error = InformesGestor.getInstance().exportarOcupacionPdf(principalControlador);
-			ruta = "informes/ocupacion_vuelos(fecha_Actual).pdf";
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_PDF, Constantes.ARCHIVO_OCUPACION, "pdf");
+			error = InformesGestor.getInstance().exportarOcupacionPdf(ruta, informesPanel);
 		}
 		else if (informe.equals(Constantes.INFORME_ALERTAS)) {
-			error = InformesGestor.getInstance().exportarAlertasPdf(principalControlador);
-			ruta = "informes/alertas(fecha_Actual).pdf";
-		}else if(informe.equals(Constantes.INFORME_VUELOS_ESTADO)) {
-			error = InformesGestor.getInstance().exportarVuelosEstadoPdf(principalControlador);
-			ruta = "informes/estadoVuelos(fecha_actual).pdf";
-		}else if(informe.equals(Constantes.INFORME_INCIDENCIAS_ABIERTAS)) {
-			error = InformesGestor.getInstance().exportarIncidenciasAbiertasPdf(principalControlador);
-			ruta = "informes/incidenciasAbiertas(fecha_actual).pdf";
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_PDF, Constantes.ARCHIVO_ALERTAS, "pdf");
+			error = InformesGestor.getInstance().exportarAlertasPdf(ruta, informesPanel);
+		}
+		else if (informe.equals(Constantes.INFORME_VUELOS_ESTADO)) {
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_PDF, Constantes.ARCHIVO_ESTADO_VUELOS, "pdf");
+			error = InformesGestor.getInstance().exportarVuelosEstadoPdf(ruta, informesPanel);
+		}
+		else if (informe.equals(Constantes.INFORME_INCIDENCIAS_ABIERTAS)) {
+			ruta = Utilidades.crearRutaInforme(Constantes.CARPETA_PDF, Constantes.ARCHIVO_INCIDENCIAS_ABIERTAS, "pdf");
+			error = InformesGestor.getInstance().exportarIncidenciasAbiertasPdf(ruta, informesPanel);
 		}
 		else {
 			return;
@@ -241,7 +243,6 @@ public class InformesControlador implements ActionListener{
 		else {
 			informesPanel.mostrarError(error);
 		}
-		
 	}
 	
 	

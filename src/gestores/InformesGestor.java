@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import org.openpdf.text.pdf.PdfPCell;
 import org.openpdf.text.pdf.PdfPTable;
 import org.openpdf.text.pdf.PdfWriter;
 
-import controlador.PrincipalControlador;
 import modelo.Equipaje;
 import modelo.Incidencia;
 import modelo.Reserva;
@@ -343,7 +341,7 @@ public class InformesGestor {
 		
 	}
 
-	public String exportarTotalesCsv() {
+	public String exportarTotalesCsv(String ruta) {
 		String texto = "";
 		texto += "Pasajeros," + gestorPasajeros.getPasajeros().size() + "\n";
 		texto += "Vuelos," + gestorVuelos.getVuelos().size() + "\n";
@@ -351,10 +349,10 @@ public class InformesGestor {
 		texto += "Equipajes," + gestorEquipajes.getEquipajes().size() + "\n";
 		texto += "Embarques," + gestorEmbarques.getEmbarques().size() + "\n";
 		texto += "Incidencias," + gestorIncidencias.getIncidencias().size() + "\n";
-		return escribirInforme("informes/totales.csv", texto);
+		return escribirInforme(ruta, texto);
 	}
 
-	public String exportarOcupacionCsv() {
+	public String exportarOcupacionCsv(String ruta) {
 		String texto = "";
 		for (Vuelo vuelo : gestorVuelos.getVuelos()) {
 			int capacidad = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
@@ -362,10 +360,10 @@ public class InformesGestor {
 			int porcentaje = reservas * 100 / capacidad;
 			texto += vuelo.getCodigo() + "," + capacidad + "," + reservas + "," + (capacidad - reservas) + "," + porcentaje + "%\n";
 		}
-		return escribirInforme("informes/ocupacion_vuelos.csv", texto);
+		return escribirInforme(ruta, texto);
 	}
 
-	public String exportarAlertasCsv() {
+	public String exportarAlertasCsv(String ruta) {
 		String texto = "";
 		for (Vuelo vuelo : buscarVuelosEnSobreventa()) {
 			int capacidad = gestorVuelos.recogerTamanioDelAvionDeUnVuelo(vuelo.getAvion());
@@ -384,11 +382,11 @@ public class InformesGestor {
 		for (Incidencia incidencia : buscarIncidenciasAbiertasPorPrioridad(Constantes.PRIORIDAD_ALTA)) {
 			texto += "Incidencia ALTA," + incidencia.getCodigo() + ",\"Vuelo " + incidencia.getVuelo() + "\"\n";
 		}
-		return escribirInforme("informes/alertas.csv", texto);
+		return escribirInforme(ruta, texto);
 	}
 
 	private String escribirInforme(String ruta, String texto) {
-		new File("informes").mkdir();
+		new File(ruta).getParentFile().mkdirs();
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ruta)))) {
 			writer.write(texto);
 			return "";
@@ -397,153 +395,37 @@ public class InformesGestor {
 		}
 	}
 
-	public String exportarTotalesPdf() {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-		String fecha = LocalDateTime.now().format(formato);
-		String ruta = "informes/totales"+ fecha + ".pdf";
+	private Document abrirDocumentoPdf(String ruta, String titulo) throws IOException {
+		new File(ruta).getParentFile().mkdirs();
 		Document document = new Document();
-		try {
-			PdfWriter.getInstance(document, new FileOutputStream(ruta));
-			
-			document.open();
-		}catch (Exception e) {
-			return "No se ha podido escribir el informe en " + ruta;
-		}
-		  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-		  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-		  
-		  document.add(new Paragraph("Datos totales del Aeropueto a " + fecha, tituloFont));
-		  document.add(new Paragraph("\n"));
-		  document.add(new Paragraph("- Pasajeros: " + gestorPasajeros.getPasajeros().size(), cuerpoFont));
-          document.add(new Paragraph("- Vuelos: " + gestorVuelos.getVuelos().size(), cuerpoFont));
-          document.add(new Paragraph("- Reservas: " + gestorReservas.getReservas().size(), cuerpoFont));
-          document.add(new Paragraph("- Equipajes: " + gestorEquipajes.getEquipajes().size(), cuerpoFont));
-          document.add(new Paragraph("- Embarques: " + gestorEmbarques.getEmbarques().size(), cuerpoFont));
-          document.add(new Paragraph("- Incidencias: " + gestorIncidencias.getIncidencias().size(), cuerpoFont));
-          
-          document.close();
-		return "";
+		PdfWriter.getInstance(document, new FileOutputStream(ruta));
+		document.open();
+
+		Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+		String fecha = LocalDateTime.now().format(Constantes.FORMATO_FECHA_TITULO);
+		document.add(new Paragraph(titulo + " a " + fecha, tituloFont));
+		document.add(new Paragraph("\n"));
+		return document;
 	}
 
-	public String exportarOcupacionPdf(PrincipalControlador principalControlador) {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-		String fecha = LocalDateTime.now().format(formato);
-		String ruta = "informes/ocupacion"+ fecha + ".pdf";
-		Document document = new Document();
-		try {
-			PdfWriter.getInstance(document, new FileOutputStream(ruta));
-			
-			document.open();
-		  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-		  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-		  
-		  document.add(new Paragraph("Datos de ocupacion del Aeropueto a " + fecha, tituloFont));
-		  document.add(new Paragraph("\n"));
-		  
-		  DefaultTableModel modeloTabla = principalControlador.getFrame().getInformesPanel().getModeloOcupacion();
-		  
-		  Font fuenteCabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
-			Font fuenteCuerpo = FontFactory.getFont(FontFactory.HELVETICA, 10);
-
-			PdfPTable tabla = crearTablaPdf(modeloTabla);
-          
-			document.add(tabla);
-			document.add(new Paragraph("\n\n", tituloFont));
-		  InformesPanel informesPanel = principalControlador.getFrame().getInformesPanel();
-		  BufferedImage image = informesPanel.obtenerImagenClara(informesPanel.getGraficoOcupacion());
-		  Image imagenPdf = Image.getInstance(image, null);
-		  imagenPdf.scaleToFit(500, 300);
-		  imagenPdf.setAlignment(Image.MIDDLE);
-		  document.add(imagenPdf);
-			
-          document.close();
-		}catch (Exception e) {
-  			return "No se ha podido escribir el informe en " + ruta;
-  		}
-		return "";
+	private Image crearImagenPdf(BufferedImage imagen, float ancho, float alto) throws IOException {
+		Image imagenPdf = Image.getInstance(imagen, null);
+		imagenPdf.scaleToFit(ancho, alto);
+		imagenPdf.setAlignment(Image.MIDDLE);
+		return imagenPdf;
 	}
 
-	public String exportarAlertasPdf(PrincipalControlador principalControlador) {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-		String fecha = LocalDateTime.now().format(formato);
-		String ruta = "informes/alertas"+ fecha + ".pdf";
-		Document document = new Document();
+	public String exportarTotalesPdf(String ruta) {
 		try {
-			PdfWriter.getInstance(document, new FileOutputStream(ruta));
-			
-			document.open();
-		  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-		  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-		  
-		  document.add(new Paragraph("Datos de Alertas del Aeropueto a " + fecha, tituloFont));
-		  document.add(new Paragraph("\n"));
-		  
-		  DefaultTableModel modeloTabla = principalControlador.getFrame().getInformesPanel().getModeloAlertas();
-		  
-		  Font fuenteCabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
-			Font fuenteCuerpo = FontFactory.getFont(FontFactory.HELVETICA, 10);
+			Document document = abrirDocumentoPdf(ruta, "Datos totales del Aeropuerto");
+			Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
 
-			PdfPTable tabla = crearTablaPdf(modeloTabla);
-          
-			document.add(tabla);
-			
-          document.close();
-		}catch (Exception e) {
-  			return "No se ha podido escribir el informe en " + ruta;
-  		}
-		return "";
-	}
-	
-	public String exportarVuelosEstadoPdf (PrincipalControlador principalControlador) {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-		String fecha = LocalDateTime.now().format(formato);
-		String ruta = "informes/estadoVuelos"+ fecha + ".pdf";
-		Document document = new Document();
-		try {
-			PdfWriter.getInstance(document, new FileOutputStream(ruta));
-			document.open();
-			
-			  Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-			  Font cuerpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-			  
-			  document.add(new Paragraph("Datos del estado de los Vuelos del Aeropueto a " + fecha, tituloFont));
-			  document.add(new Paragraph("\n"));
-			  
-			  InformesPanel informesPanel = principalControlador.getFrame().getInformesPanel();
-			  BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoEstados());
-			  Image imagenPdf = Image.getInstance(imagen, null);
-			  imagenPdf.scaleToFit(500, 300);
-			  imagenPdf.setAlignment(Image.MIDDLE);
-			  document.add(imagenPdf);
-			  
-			  document.close();
-		}catch(Exception e) {
-			return "No se ha podido escribir el informe en " + ruta;
-		}
-		return "";
-		
-	}
-	
-	public String exportarIncidenciasAbiertasPdf (PrincipalControlador principalControlador) {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-		String fecha = LocalDateTime.now().format(formato);
-		String ruta = "informes/incidenciasAbiertas" + fecha + ".pdf";
-		Document document = new Document();
-		try {
-			PdfWriter.getInstance(document, new FileOutputStream(ruta));
-			document.open();
-
-			Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-
-			document.add(new Paragraph("Incidencias abiertas por prioridad del Aeropuerto a " + fecha, tituloFont));
-			document.add(new Paragraph("\n"));
-
-			InformesPanel informesPanel = principalControlador.getFrame().getInformesPanel();
-			BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoPrioridades());
-			Image imagenPdf = Image.getInstance(imagen, null);
-			imagenPdf.scaleToFit(400, 300);
-			imagenPdf.setAlignment(Image.MIDDLE);
-			document.add(imagenPdf);
+			document.add(new Paragraph("- Pasajeros: " + gestorPasajeros.getPasajeros().size(), cuerpoFont));
+			document.add(new Paragraph("- Vuelos: " + gestorVuelos.getVuelos().size(), cuerpoFont));
+			document.add(new Paragraph("- Reservas: " + gestorReservas.getReservas().size(), cuerpoFont));
+			document.add(new Paragraph("- Equipajes: " + gestorEquipajes.getEquipajes().size(), cuerpoFont));
+			document.add(new Paragraph("- Embarques: " + gestorEmbarques.getEmbarques().size(), cuerpoFont));
+			document.add(new Paragraph("- Incidencias: " + gestorIncidencias.getIncidencias().size(), cuerpoFont));
 
 			document.close();
 		} catch (Exception e) {
@@ -551,7 +433,65 @@ public class InformesGestor {
 		}
 		return "";
 	}
-	
+
+	public String exportarOcupacionPdf(String ruta, InformesPanel informesPanel) {
+		try {
+			Document document = abrirDocumentoPdf(ruta, "Datos de ocupación del Aeropuerto");
+
+			document.add(crearTablaPdf(informesPanel.getModeloOcupacion()));
+			document.add(new Paragraph("\n\n"));
+
+			BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoOcupacion());
+			document.add(crearImagenPdf(imagen, 500, 300));
+
+			document.close();
+		} catch (Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		return "";
+	}
+
+	public String exportarAlertasPdf(String ruta, InformesPanel informesPanel) {
+		try {
+			Document document = abrirDocumentoPdf(ruta, "Datos de alertas del Aeropuerto");
+
+			document.add(crearTablaPdf(informesPanel.getModeloAlertas()));
+
+			document.close();
+		} catch (Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		return "";
+	}
+
+	public String exportarVuelosEstadoPdf(String ruta, InformesPanel informesPanel) {
+		try {
+			Document document = abrirDocumentoPdf(ruta, "Datos del estado de los vuelos del Aeropuerto");
+
+			BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoEstados());
+			document.add(crearImagenPdf(imagen, 500, 300));
+
+			document.close();
+		} catch (Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		return "";
+	}
+
+	public String exportarIncidenciasAbiertasPdf(String ruta, InformesPanel informesPanel) {
+		try {
+			Document document = abrirDocumentoPdf(ruta, "Incidencias abiertas por prioridad del Aeropuerto");
+
+			BufferedImage imagen = informesPanel.obtenerImagenClara(informesPanel.getGraficoPrioridades());
+			document.add(crearImagenPdf(imagen, 400, 300));
+
+			document.close();
+		} catch (Exception e) {
+			return "No se ha podido escribir el informe en " + ruta;
+		}
+		return "";
+	}
+
 	public static PdfPTable crearTablaPdf(DefaultTableModel modelo) {
 		Font fuenteCabecera = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
 		Font fuenteCuerpo = FontFactory.getFont(FontFactory.HELVETICA, 10);

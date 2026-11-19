@@ -1,6 +1,7 @@
 package utilidades;
 
 import java.awt.Image;
+import java.time.LocalDateTime;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -21,6 +22,11 @@ public class Utilidades {
 
 	public static boolean esAdmin(String rol) {
 		return rol.equals(Constantes.ROL_ADMIN);
+	}
+
+	public static String crearRutaInforme(String carpetaFormato, String nombreArchivo, String extension) {
+		String fecha = LocalDateTime.now().format(Constantes.FORMATO_FECHA_ARCHIVO);
+		return Constantes.CARPETA_INFORMES + "/" + carpetaFormato + "/" + nombreArchivo + "/" + nombreArchivo + "_" + fecha + "." + extension;
 	}
 
 	public static String errorGuardar(String ruta) {
