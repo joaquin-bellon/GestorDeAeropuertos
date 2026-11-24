@@ -38,6 +38,7 @@ public class PrincipalControlador {
 	private LateralInterfazControlador lateralInterfazControlador;
 	private SuperiorInterfazControlador superiorInterfazControlador;
 	private ConfiguracionControlador configuracionControlador;
+	private CerrarSesionControlador cerrarSesionControlador;
 	
 	
 	public PrincipalControlador () {
@@ -56,6 +57,7 @@ public class PrincipalControlador {
 		listPanelesConImagenesConTema.add(registrarsePanel);
 		
 		registrarseControlador = new RegistrarseControlador(this);
+		cerrarSesionControlador = new CerrarSesionControlador(this);
 		
 		frame.setVisible(true);
 	}
@@ -312,6 +314,14 @@ public class PrincipalControlador {
 
 	public void setSuperiorInterfazControlador(SuperiorInterfazControlador superiorInterfazControlador) {
 		this.superiorInterfazControlador = superiorInterfazControlador;
+	}
+
+	public CerrarSesionControlador getCerrarSesionControlador() {
+		return cerrarSesionControlador;
+	}
+
+	public void setCerrarSesionControlador(CerrarSesionControlador cerrarSesionControlador) {
+		this.cerrarSesionControlador = cerrarSesionControlador;
 	}
 
 	public ConfiguracionControlador getConfiguracionControlador() {
