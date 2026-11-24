@@ -93,14 +93,14 @@ public class VuelosGestor {
 		vuelo.setAvion(elementoVuelo.getAttribute("avion"));
 		vuelo.setEstado(elementoVuelo.getAttribute("estado"));
 
-		//Ruta
+		
 		Element origen = getHijo(elementoVuelo, "Origen");
 		vuelo.setOrigen(origen.getAttribute("codigo"));
 		vuelo.setTerminal(getTexto(origen, "Terminal"));
 		vuelo.setPuerta(getTexto(origen, "Puerta"));
 		vuelo.setDestino(getHijo(elementoVuelo, "Destino").getAttribute("codigo"));
 
-		//Horario
+		
 		Element salida = getHijo(elementoVuelo, "Salida");
 		vuelo.setSalida(LocalDateTime.of(LocalDate.parse(salida.getAttribute("fecha")),
 				LocalTime.parse(getTexto(salida, "Hora"))));
@@ -111,13 +111,13 @@ public class VuelosGestor {
 				LocalTime.parse(getTexto(llegada, "Hora"))));
 		vuelo.setZonaHorariaLlegada(llegada.getAttribute("zonaHoraria"));
 
-		//Embarque
+		
 		Element embarque = getHijo(elementoVuelo, "Embarque");
 		vuelo.setEstadoEmbarque(embarque.getAttribute("estado"));
 		vuelo.setMinutosInicioEmbarque(getHijo(embarque, "Inicio").getAttribute("minutosAntes"));
 		vuelo.setMinutosCierreEmbarque(getHijo(embarque, "Cierre").getAttribute("minutosAntes"));
 
-		//Operaciones
+		
 		NodeList servicios = elementoVuelo.getElementsByTagName("Servicio");
 		for (int i = 0; i < servicios.getLength(); i++) {
 			Element servicio = (Element) servicios.item(i);
