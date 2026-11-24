@@ -23,6 +23,7 @@ public class AppFrame extends JFrame {
 	private LateralInterfazPanel lateralInterfazPanel;
 	private SuperiorInterfazPanel superiorInterfazPanel;
 	private ConfiguracionPanel configuracionPanel;
+	private CerrarSesionPanel cerrarSesionPanel;
 
 	public AppFrame(IniciarSesionPanel logInPanel) {
 		setTitle("Gestor De Aeropuertos");
@@ -39,6 +40,17 @@ public class AppFrame extends JFrame {
 		
 		contentPane.add(logInPanel);
 
+		cerrarSesionPanel = new CerrarSesionPanel();
+		setGlassPane(cerrarSesionPanel);
+
+	}
+
+	public CerrarSesionPanel getCerrarSesionPanel() {
+		return cerrarSesionPanel;
+	}
+
+	public void setCerrarSesionPanel(CerrarSesionPanel cerrarSesionPanel) {
+		this.cerrarSesionPanel = cerrarSesionPanel;
 	}
 
 	public IniciarSesionPanel getIniciarSesionPanel() {

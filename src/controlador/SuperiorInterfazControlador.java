@@ -32,7 +32,7 @@ public class SuperiorInterfazControlador implements ActionListener {
 			Tema.cambiarTema(principalControlador.getListPanelesConImagenesConTema());
 		} 
 		else if (e.getSource() == superiorInterfazPanel.getBtnSalir()) {
-			principalControlador.cerrarSesion();
+			principalControlador.getCerrarSesionControlador().mostrarConfirmacion();
 			
 		}
 		
