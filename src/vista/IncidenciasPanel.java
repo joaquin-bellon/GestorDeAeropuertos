@@ -184,7 +184,7 @@ public class IncidenciasPanel extends PanelGenerico {
 		JTable tabla = new JTable(modelo);
 		tabla.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		tabla.setRowHeight(24);
-	//	tabla.setDefaultEditor(Object.class, null);
+		tabla.setDefaultEditor(Object.class, null);
 		tabla.setRowSelectionAllowed(false);
 		tabla.getTableHeader().setReorderingAllowed(false);
 		tabla.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
